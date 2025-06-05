@@ -1,0 +1,63 @@
+---
+description: Running commands for python package management.
+globs: 
+alwaysApply: false
+---
+# Python Setup
+
+This project uses UV as the default Python package manager. UV is a fast, modern Python package manager that provides better performance and reliability compared to pip.
+
+## Package Management
+
+All Python package management should be done using UV commands:
+
+```bash
+# Install packages
+uv pip install <package>
+
+# Add dependencies to pyproject.toml
+uv add <package>
+
+# Remove packages
+uv remove <package>
+
+# Update packages
+uv pip install --upgrade <package>
+
+# Sync dependencies
+uv sync
+```
+
+## Virtual Environment
+
+The project uses a virtual environment managed by UV. To activate it:
+
+```bash
+# Windows
+.venv\Scripts\activate
+
+# Unix/MacOS
+source .venv/bin/activate
+```
+
+## Configuration
+
+The project's UV configuration is defined in `pyproject.toml`:
+
+```toml
+[tool.uv]
+python = "3.10"
+```
+
+## Dependencies
+
+Project dependencies are managed in `pyproject.toml`. To add new dependencies:
+
+1. Add them to the `dependencies` list in `pyproject.toml`
+2. Run `uv sync` to update the virtual environment
+
+## Development
+
+When developing, always ensure you're working within the virtual environment and using UV for package management. This ensures consistent dependency management across all developers.
+
+
