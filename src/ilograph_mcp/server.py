@@ -5,7 +5,8 @@ This module sets up the FastMCP server and registers all tools, resources, and p
 """
 
 from fastmcp import FastMCP
-from .tools.validation import register_validation_tools
+from .tools import register_all_tools
+from .resources import register_all_resources
 
 
 def create_server() -> FastMCP:
@@ -18,12 +19,10 @@ def create_server() -> FastMCP:
     mcp = FastMCP("Ilograph Context Server")
     
     # Register all tools
-    register_validation_tools(mcp)
+    register_all_tools(mcp)
     
-    # TODO: Register resources when implemented
-    # register_syntax_resources(mcp)
-    # register_template_resources(mcp)
-    # register_icon_resources(mcp)
+    # Register all resources  
+    register_all_resources(mcp)
     
     # TODO: Register prompts when implemented
     # register_diagram_prompts(mcp)
@@ -31,9 +30,7 @@ def create_server() -> FastMCP:
     return mcp
 
 
-# Create the global server instance
-mcp = create_server()
-
-
 if __name__ == "__main__":
+    # Only create server when run directly
+    mcp = create_server()
     mcp.run() 

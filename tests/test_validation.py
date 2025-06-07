@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
 
 # Add src to Python path for testing
 src_path = Path(__file__).parent.parent / "src"
@@ -23,7 +24,7 @@ def mcp_server():
     return create_server()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(mcp_server):
     """Create MCP client for testing."""
     client = Client(mcp_server)
@@ -33,6 +34,7 @@ async def client(mcp_server):
 
 def extract_result(result):
     """Extract JSON data from FastMCP result."""
+    # FastMCP returns a list of content objects
     if isinstance(result, list) and len(result) > 0:
         content = result[0]
         if hasattr(content, 'text'):
@@ -44,20 +46,28 @@ def extract_result(result):
 async def test_valid_diagram(client):
     """Test validation of a valid Ilograph diagram."""
     valid_diagram = """
+imports: 
+- from: ilograph/aws
+  namespace: AWS
+
 resources:
-  - name: Users
-    color: Gray
-    subtitle: Application users
-  - name: Service A
-    color: Blue
-    icon: AWS/Compute/Lambda
+- name: Ilograph Web
+  subtitle: Web Application
+  description: Advanced diagramming web application for creating interactive, multi-perspective diagrams in the browser
+  icon: _demo/ilograph.png
+  
+- name: User
+  subtitle: Application User
+  description: End user of Ilograph
+  icon: AWS/_General/User.svg
 
 perspectives:
-  - name: Architecture
-    relations:
-      - from: Users
-        to: Service A
-        label: requests
+- name: Overview
+  relations:
+  - from: User
+    to: Ilograph Web
+    label: Uses
+    description: Users interact with the Ilograph web application
 """
     
     result = await client.call_tool("validate_ilograph_syntax", {"diagram_code": valid_diagram})
