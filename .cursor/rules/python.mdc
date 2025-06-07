@@ -1,0 +1,124 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are an expert in Python, FastMCP, and scalable MCP server development.
+
+Key Principles
+- Write concise, technical responses with accurate Python examples.
+- Use functional, declarative programming; avoid classes where possible except for custom error types.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., is_active, has_permission).
+- Use lowercase with underscores for directories and files (e.g., tools/data_tools.py).
+- Favor named exports for tools, resources, and utility functions.
+- Use the Receive an Object, Return an Object (RORO) pattern where applicable.
+
+Python/FastMCP
+- Use def for function definitions with proper type hints.
+- Use type hints for all function signatures where possible.
+- File structure: MCP server initialization, tools, resources, prompts, utilities, config.
+- Avoid unnecessary curly braces in conditional statements.
+- For single-line statements in conditionals, omit curly braces.
+- Use concise, one-line syntax for simple conditional statements (e.g., if condition: do_something()).
+- Prefer async/await for I/O operations and external API calls.
+
+Error Handling and Validation
+- Prioritize error handling and edge cases:
+  - Handle errors and edge cases at the beginning of functions.
+  - Use early returns for error conditions to avoid deeply nested if statements.
+  - Place the happy path last in the function for improved readability.
+  - Avoid unnecessary else statements; use the if-return pattern instead.
+  - Use guard clauses to handle preconditions and invalid states early.
+  - Implement proper error logging and user-friendly error messages.
+  - Use custom error types or error factories for consistent error handling.
+  - Handle MCP protocol errors gracefully and return meaningful responses.
+
+Dependencies
+- FastMCP (core MCP server framework)
+- Pydantic (for data validation and serialization)
+- httpx or aiohttp (for async HTTP requests)
+- pathlib (for file system operations)
+- typing (for advanced type hints)
+
+FastMCP-Specific Guidelines
+- Use FastMCP decorators for exposing functionality:
+  - `@mcp.tool()` for executable functions (like POST endpoints)
+  - `@mcp.resource()` for data exposure (like GET endpoints)  
+  - `@mcp.prompt()` for reusable interaction templates
+- Organize MCP capabilities using clear separation of concerns.
+- Use descriptive names for tools, resources, and prompts that clearly indicate their purpose.
+- Implement proper docstrings for all MCP-exposed functions as they serve as descriptions.
+- Use FastMCP's built-in validation and error handling capabilities.
+- Leverage FastMCP's automatic protocol handling rather than implementing low-level MCP details.
+- Use FastMCP's client capabilities for server-to-server communication when needed.
+- Implement proper logging using Python's logging module.
+
+Performance Optimization
+- Use async/await for I/O-bound operations to avoid blocking.
+- Implement caching for frequently accessed resources.
+- Use connection pooling for external API calls.
+- Implement proper session management for stateful operations.
+- Use background tasks for time-consuming operations when appropriate.
+- Consider resource lifecycle management (setup/teardown) for expensive resources.
+
+Key Conventions
+1. Use clear, descriptive function names that indicate the tool/resource purpose.
+2. Prioritize MCP server performance metrics (response time, resource availability).
+3. Structure the application:
+   - Use modular organization for different capability areas.
+   - Implement clear separation between tools, resources, and business logic.
+   - Use environment variables for configuration management.
+   - Group related functionality into logical modules.
+
+Data Handling and Validation
+- Use Pydantic models for complex data structures and validation.
+- Implement proper input validation for all tool parameters.
+- Use type hints extensively for better IDE support and runtime validation.
+- Handle different data formats (JSON, text, binary) appropriately.
+
+MCP Server Architecture
+- Initialize FastMCP server with descriptive names and metadata.
+- Organize tools by functional areas (e.g., file operations, API calls, data processing).
+- Implement resources for static or slowly-changing data.
+- Use prompts for common interaction patterns and templates.
+- Implement proper server lifecycle management (startup/shutdown hooks).
+
+Security and Access Control
+- Validate all inputs from MCP clients.
+- Implement proper authentication when required.
+- Use environment variables for sensitive configuration.
+- Follow principle of least privilege for file system and API access.
+- Sanitize file paths and prevent directory traversal attacks.
+
+Testing
+- Write unit tests using pytest with async support.
+- Use FastMCP's testing utilities for MCP protocol testing.
+- Implement integration tests for external API interactions.
+- Test error conditions and edge cases thoroughly.
+- Use fixtures for MCP server setup and teardown.
+
+Documentation and Discoverability
+- Write comprehensive docstrings for all tools, resources, and prompts.
+- Use clear parameter names and descriptions.
+- Implement proper type hints for better IDE integration.
+- Document expected input/output formats clearly.
+- Provide usage examples in docstrings when helpful.
+
+Deployment and Operations
+- Use proper Python packaging (pyproject.toml) for distribution.
+- Implement health checks and status reporting.
+- Use structured logging for better observability.
+- Handle graceful shutdown and cleanup.
+- Support multiple transport protocols (stdio, HTTP) when needed.
+
+FastMCP Best Practices
+- Keep tool functions focused and single-purpose.
+- Use resource URIs that are intuitive and hierarchical.
+- Implement prompt templates that are flexible and reusable.
+- Leverage FastMCP's automatic serialization and protocol handling.
+- Use FastMCP's client capabilities for composing servers.
+- Follow the "USB-C for AI" principle - make servers easily composable and interoperable.
+
+
+Refer to FastMCP documentation for detailed information on Tools, Resources, Prompts, and Client integration for best practices.

@@ -1,0 +1,907 @@
+AWS/Analytics/Analytics.svg
+AWS/Analytics/Athena.svg
+AWS/Analytics/CloudSearch.svg
+AWS/Analytics/CloudSearch_Search-documents.svg
+AWS/Analytics/Data-lake_Resource-icon.svg     
+AWS/Analytics/Data-Pipeline.svg
+AWS/Analytics/Elasticsearch-Service.svg       
+AWS/Analytics/EMR.svg
+AWS/Analytics/EMR_Cluster.svg
+AWS/Analytics/EMR_EMR-engine-MapR-M3.svg
+AWS/Analytics/EMR_EMR-engine-MapR-M5.svg
+AWS/Analytics/EMR_EMR-engine-MapR-M7.svg
+AWS/Analytics/EMR_EMR-engine.svg
+AWS/Analytics/EMR_HDFS-cluster.svg
+AWS/Analytics/Glue.svg
+AWS/Analytics/Glue_Crawlers.svg
+AWS/Analytics/Glue_Data-catalog.svg
+AWS/Analytics/Kinesis-Data-Analytics.svg
+AWS/Analytics/Kinesis-Data-Firehose.svg
+AWS/Analytics/Kinesis-Data-Streams.svg
+AWS/Analytics/Kinesis-Video-Streams.svg
+AWS/Analytics/Kinesis.svg
+AWS/Analytics/Lake-Formation.svg
+AWS/Analytics/Managed-Streaming-for-Kafka.svg
+AWS/Analytics/Quicksight.svg
+AWS/Analytics/Redshift.svg
+AWS/Analytics/Redshift_Dense-compute-node.svg
+AWS/Analytics/Redshift_Dense-storage-node.svg
+AWS/App Integration/Application-Integration.svg
+AWS/App Integration/Application-Integration_Event_Resource.svg
+AWS/App Integration/AppSync.svg
+AWS/App Integration/Console-Mobile-Application.svg
+AWS/App Integration/EventBridge.svg
+AWS/App Integration/MQ.svg
+AWS/App Integration/SNS.svg
+AWS/App Integration/SNS_Email-Notification.svg
+AWS/App Integration/SNS_HTTP-Notification.svg
+AWS/App Integration/SNS_Topic.svg
+AWS/App Integration/SQS.svg
+AWS/App Integration/SQS_Message.svg
+AWS/App Integration/SQS_Queue.svg
+AWS/App Integration/Step-Functions.svg
+AWS/AR & VR/AR-VR.svg
+AWS/AR & VR/Sumerian.svg
+AWS/Blockchain/Blockchain.svg
+AWS/Blockchain/Blockchain_Resource-Icon.svg
+AWS/Blockchain/Managed-Blockchain.svg
+AWS/Blockchain/Quantum-Ledger-Database-QLDB.svg
+AWS/Business Apps/Alexa-For-Business.svg
+AWS/Business Apps/Business-Applications.svg
+AWS/Business Apps/Chime.svg
+AWS/Business Apps/WorkMail.svg
+AWS/Compute/Application-Auto-Scaling.svg
+AWS/Compute/Batch.svg
+AWS/Compute/Compute.svg
+AWS/Compute/EC2-Auto-Scaling.svg
+AWS/Compute/EC2-Container-Registry.svg
+AWS/Compute/EC2-Container-Registry_Image.svg
+AWS/Compute/EC2-Container-Registry_Registry.svg
+AWS/Compute/EC2.svg
+AWS/Compute/EC2_AMI.svg
+AWS/Compute/EC2_Auto-Scaling.svg
+AWS/Compute/EC2_Elastic-IP-Address.svg
+AWS/Compute/EC2_Rescue.svg
+AWS/Compute/Elastic-Beanstalk.svg
+AWS/Compute/Elastic-Beanstalk_Application.svg
+AWS/Compute/Elastic-Beanstalk_Deployment.svg
+AWS/Compute/ECS.svg
+AWS/Compute/ECS_Container1.svg
+AWS/Compute/ECS_Container2.svg
+AWS/Compute/ECS_Service.svg
+AWS/Compute/ECS_Task.svg
+AWS/Compute/Elastic-Kubernetes-Service.svg
+AWS/Compute/Fargate.svg
+AWS/Compute/Lambda.svg
+AWS/Compute/Lambda_Lambda-Function.svg
+AWS/Compute/Lightsail.svg
+AWS/Compute/Outposts.svg
+AWS/Compute/Serverless-Application-Repository.svg
+AWS/Compute/Thinkbox-Deadline.svg
+AWS/Compute/Thinkbox-Draft.svg
+AWS/Compute/Thinkbox-Frost.svg
+AWS/Compute/Thinkbox-Krakatoa.svg
+AWS/Compute/Thinkbox-Sequoia.svg
+AWS/Compute/Thinkbox-Stoke.svg
+AWS/Compute/Thinkbox_XMesh.svg
+AWS/Compute/ECS_Container3.svg
+AWS/Compute/VMware-Cloud-On-AWS.svg
+AWS/Cost Mgmt/Budgets.svg
+AWS/Cost Mgmt/Cost-and-Usage-Report.svg
+AWS/Cost Mgmt/Cost-Explorer.svg
+AWS/Cost Mgmt/Cost-Management.svg
+AWS/Cost Mgmt/Reserved-Instance-Reporting.svg
+AWS/Customer Enablement/Customer-Enablement.svg
+AWS/Customer Enablement/IQ.svg
+AWS/Customer Enablement/Managed-Services.svg
+AWS/Customer Enablement/Professional-Services.svg
+AWS/Customer Enablement/Support.svg
+AWS/Customer Engagement/Connect.svg
+AWS/Customer Engagement/Customer-Engagement.svg
+AWS/Customer Engagement/Pinpoint.svg
+AWS/Customer Engagement/Simple-Email-Service-SES.svg
+AWS/Customer Engagement/Simple-Email-Service-SES_Email.svg
+AWS/Database/Aurora.svg
+AWS/Database/Database-Migration-Service.svg
+AWS/Database/Database-Migration-Service_Database-Migration-Workflow.svg
+AWS/Database/Database.svg
+AWS/Database/DocumentDB-with-MongoDB-compatibility.svg
+AWS/Database/DynamoDB.svg
+AWS/Database/DynamoDB_Attribute.svg
+AWS/Database/DynamoDB_Attributes.svg
+AWS/Database/DynamoDB_DAX.svg
+AWS/Database/DynamoDB_Global-Secondary-Index.svg
+AWS/Database/DynamoDB_Item.svg
+AWS/Database/DynamoDB_Items.svg
+AWS/Database/DynamoDB_Table.svg
+AWS/Database/ElastiCache.svg
+AWS/Database/ElastiCache_Cache-Node.svg
+AWS/Database/ElastiCache_For-Memcached.svg
+AWS/Database/ElastiCache_For-Redis.svg
+AWS/Database/Neptune.svg
+AWS/Database/Quantum-Ledger-Database_QLDB.svg
+AWS/Database/RDS-on-VMware.svg
+AWS/Database/RDS.svg
+AWS/Database/RDS_Aurora_instance-alt.svg
+AWS/Database/RDS_Aurora_instance.svg
+AWS/Database/RDS_instance-alt.svg
+AWS/Database/RDS_instance.svg
+AWS/Database/RDS_MariaDB_instance-alt.svg
+AWS/Database/RDS_MariaDB_instance.svg
+AWS/Database/RDS_MySQL_instance-alt.svg
+AWS/Database/RDS_MySQL_instance.svg
+AWS/Database/RDS_Oracle_instance-alt.svg
+AWS/Database/RDS_Oracle_instance.svg
+AWS/Database/RDS_PIOP.svg
+AWS/Database/RDS_PIOPS.svg
+AWS/Database/RDS_PostgreSQL_instance-alt.svg
+AWS/Database/RDS_PostgreSQL_instance.svg
+AWS/Database/RDS_SQL-Server_instance-alt.svg
+AWS/Database/RDS_SQL-Server_instance.svg
+AWS/Database/Redshift.svg
+AWS/Database/Redshift_Dense-Compute-Node.svg
+AWS/Database/Redshift_Dense-Storage-Node.svg
+AWS/Database/Timestream.svg
+AWS/Dev Tools/Cloud-Development-Kit.svg
+AWS/Dev Tools/Cloud9.svg
+AWS/Dev Tools/CodeBuild.svg
+AWS/Dev Tools/CodeCommit.svg
+AWS/Dev Tools/CodeDeploy.svg
+AWS/Dev Tools/CodePipeline.svg
+AWS/Dev Tools/CodeStar.svg
+AWS/Dev Tools/Command-Line-Interface.svg
+AWS/Dev Tools/Cloud9_Resource.svg
+AWS/Dev Tools/Tools-And-SDKs.svg
+AWS/Dev Tools/Developer-Tools.svg
+AWS/Dev Tools/X-Ray.svg
+AWS/End User Computing/Appstream-2.0.svg
+AWS/End User Computing/End-User-Computing.svg
+AWS/End User Computing/WorkDocs.svg
+AWS/End User Computing/WorkLink.svg
+AWS/End User Computing/Workspaces.svg
+AWS/Game Tech/Game-Tech.svg
+AWS/Game Tech/GameLift.svg
+AWS/IoT/FreeRTOS.svg
+AWS/IoT/Internet-of-Things.svg
+AWS/IoT/IoT-Analytics.svg
+AWS/IoT/IoT-Analytics_Channel.svg
+AWS/IoT/IoT-Analytics_Data-Set.svg
+AWS/IoT/IoT-Analytics_Data-Store.svg
+AWS/IoT/IoT-Analytics_Notebook.svg
+AWS/IoT/IoT-Analytics_Pipeline.svg
+AWS/IoT/IoT-Button.svg
+AWS/IoT/IoT-Core.svg
+AWS/IoT/IoT-1-Click.svg
+AWS/IoT/IoT-Device-Defender.svg
+AWS/IoT/IoT-Device-Management.svg
+AWS/IoT/IoT-Events.svg
+AWS/IoT/IoT-Greengrass.svg
+AWS/IoT/IoT-Greengrass_Connector.svg
+AWS/IoT/IoT-SiteWise.svg
+AWS/IoT/IoT-Things-Graph.svg
+AWS/IoT/IoT_Action.svg
+AWS/IoT/IoT_Actuator.svg
+AWS/IoT/IoT_Alexa-enabled-device.svg
+AWS/IoT/IoT_Alexa-skill.svg
+AWS/IoT/IoT_Alexa-voice-service.svg
+AWS/IoT/IoT_Bank.svg
+AWS/IoT/IoT_Bicycle.svg
+AWS/IoT/IoT_Camera.svg
+AWS/IoT/IoT_Car.svg
+AWS/IoT/IoT_Cart.svg
+AWS/IoT/IoT_Certificate-manager.svg
+AWS/IoT/IoT_Coffee-pot.svg
+AWS/IoT/IoT_Desired-state.svg
+AWS/IoT/IoT_Device-gateway.svg
+AWS/IoT/IoT_Door-lock.svg
+AWS/IoT/IoT_Echo.svg
+AWS/IoT/IoT_Factory.svg
+AWS/IoT/IoT_Fire-TV-stick.svg
+AWS/IoT/IoT_Fire-TV.svg
+AWS/IoT/IoT_Generic.svg
+AWS/IoT/IoT_Hardware-board.svg
+AWS/IoT/IoT_House.svg
+AWS/IoT/IoT_HTTP-2-protocol.svg
+AWS/IoT/IoT_HTTP-protocol.svg
+AWS/IoT/IoT_Lambda-function.svg
+AWS/IoT/IoT_Lightbulb.svg
+AWS/IoT/IoT_Medical-emergency.svg
+AWS/IoT/IoT_MQTT-protocol.svg
+AWS/IoT/IoT_Over-the-air-update.svg
+AWS/IoT/IoT_Police-emergency.svg
+AWS/IoT/IoT_Policy.svg
+AWS/IoT/IoT_Reported-state.svg
+AWS/IoT/IoT_Rule.svg
+AWS/IoT/IoT_Sensor.svg
+AWS/IoT/IoT_Servo.svg
+AWS/IoT/IoT_Shadow.svg
+AWS/IoT/IoT_Simulator.svg
+AWS/IoT/IoT_Thermostat.svg
+AWS/IoT/IoT_Topic.svg
+AWS/IoT/IoT_Travel.svg
+AWS/IoT/IoT_Utility.svg
+AWS/IoT/IoT_Windfarm.svg
+AWS/Media Services/Elastic-Transcoder.svg
+AWS/Media Services/Elemental-Conductor.svg
+AWS/Media Services/Elemental-Delta.svg
+AWS/Media Services/Elemental-Live.svg
+AWS/Media Services/Elemental-MediaConnect.svg
+AWS/Media Services/Elemental-MediaConvert.svg
+AWS/Media Services/Elemental-MediaLive.svg
+AWS/Media Services/Elemental-MediaPackage.svg
+AWS/Media Services/Elemental-MediaStore.svg
+AWS/Media Services/Elemental-MediaTailor.svg
+AWS/Media Services/Elemental-Server.svg
+AWS/Media Services/Kinesis-Video-Streams.svg
+AWS/Media Services/Media-Services.svg
+AWS/Mgmt & Gov/Auto-Scaling.svg
+AWS/Mgmt & Gov/CloudFormation.svg
+AWS/Mgmt & Gov/CloudFormation_Stack.svg
+AWS/Mgmt & Gov/CloudFormation_Change-Set.svg
+AWS/Mgmt & Gov/CloudFormation_Template.svg
+AWS/Mgmt & Gov/CloudWatch.svg
+AWS/Mgmt & Gov/CloudTrail.svg
+AWS/Mgmt & Gov/CloudWatch_Alarm.svg
+AWS/Mgmt & Gov/CloudWatch_Event-Time-Based.svg
+AWS/Mgmt & Gov/CloudWatch_Event-Event-Based.svg
+AWS/Mgmt & Gov/CloudWatch_Rule.svg
+AWS/Mgmt & Gov/Command-Line-Interface.svg
+AWS/Mgmt & Gov/Config.svg
+AWS/Mgmt & Gov/Control-Tower.svg
+AWS/Mgmt & Gov/License-Manager.svg
+AWS/Mgmt & Gov/Managed-Services.svg
+AWS/Mgmt & Gov/Management-and-Governance.svg
+AWS/Mgmt & Gov/Management-Console.svg
+AWS/Mgmt & Gov/OpsWorks.svg
+AWS/Mgmt & Gov/OpsWorks_Apps.svg
+AWS/Mgmt & Gov/OpsWorks_Deployments.svg
+AWS/Mgmt & Gov/OpsWorks_Instances.svg
+AWS/Mgmt & Gov/OpsWorks_Layers.svg
+AWS/Mgmt & Gov/OpsWorks_Monitoring.svg
+AWS/Mgmt & Gov/OpsWorks_Permissions.svg
+AWS/Mgmt & Gov/OpsWorks_Resources.svg
+AWS/Mgmt & Gov/OpsWorks_Stack2_Automation.svg
+AWS/Mgmt & Gov/Organizations.svg
+AWS/Mgmt & Gov/Organizations_Account.svg
+AWS/Mgmt & Gov/Organizations_Organizational-unit.svg
+AWS/Mgmt & Gov/Personal-Health-Dashboard.svg
+AWS/Mgmt & Gov/Service-Catalog.svg
+AWS/Mgmt & Gov/Systems-Manager.svg
+AWS/Mgmt & Gov/Systems-Manager_Automation.svg
+AWS/Mgmt & Gov/Systems-Manager_Documents.svg
+AWS/Mgmt & Gov/Systems-Manager_Inventory-Windows.svg
+AWS/Mgmt & Gov/Systems-Manager_Maintenance-Windows.svg
+AWS/Mgmt & Gov/Systems-Manager_OpsCenter.svg
+AWS/Mgmt & Gov/Systems-Manager_Parameter-Store.svg
+AWS/Mgmt & Gov/Systems-Manager_Patch-Manager.svg
+AWS/Mgmt & Gov/Systems-Manager_Run-Command.svg
+AWS/Mgmt & Gov/Systems-Manager_State-Manager.svg
+AWS/Mgmt & Gov/Trusted-Advisor.svg
+AWS/Mgmt & Gov/Trusted-Advisor_Checklist-Cost.svg
+AWS/Mgmt & Gov/Trusted-Advisor_Checklist-Fault-Tolerant.svg
+AWS/Mgmt & Gov/Trusted-Advisor_Checklist-Performance.svg
+AWS/Mgmt & Gov/Trusted-Advisor_Checklist-Security.svg
+AWS/Mgmt & Gov/Trusted-Advisor_Checklist.svg
+AWS/Mgmt & Gov/Well-Architected-Tool.svg
+AWS/Migration & Transfer/Application-Discovery-Service.svg
+AWS/Migration & Transfer/CloudEndure-Migration.svg
+AWS/Migration & Transfer/Database-Migration-Service.svg
+AWS/Migration & Transfer/DataSync.svg
+AWS/Migration & Transfer/DataSync_Agent.svg
+AWS/Migration & Transfer/Migration-and-Transfer.svg
+AWS/Migration & Transfer/Migration-Hub.svg
+AWS/Migration & Transfer/Server-Migration-Service.svg
+AWS/Migration & Transfer/Snowball-Edge.svg
+AWS/Migration & Transfer/Snowball.svg
+AWS/Migration & Transfer/Snowmobile.svg
+AWS/Migration & Transfer/Transfer-for-SFTP.svg
+AWS/ML/Apache-MXNet-on-AWS.svg
+AWS/ML/Comprehend.svg
+AWS/ML/Deep-Learning-AMIs.svg
+AWS/ML/DeepLens.svg
+AWS/ML/DeepRacer.svg
+AWS/ML/Elastic-Inference.svg
+AWS/ML/Deep-Learning-Containers.svg
+AWS/ML/Forecast.svg
+AWS/ML/Lex.svg
+AWS/ML/Machine-Learning.svg
+AWS/ML/Personalize.svg
+AWS/ML/Polly.svg
+AWS/ML/Rekognition.svg
+AWS/ML/Rekognition_Image.svg
+AWS/ML/Rekognition_Video.svg
+AWS/ML/SageMaker-Ground-Truth.svg
+AWS/ML/SageMaker.svg
+AWS/ML/SageMaker_Model.svg
+AWS/ML/SageMaker_Notebook.svg
+AWS/ML/SageMaker_Train.svg
+AWS/ML/TensorFlow-on-AWS.svg
+AWS/ML/Textract.svg
+AWS/ML/Transcribe.svg
+AWS/ML/Translate.svg
+AWS/Mobile/Amplify.svg
+AWS/Mobile/API-Gateway.svg
+AWS/Mobile/API-Gateway_Endpoint.svg
+AWS/Mobile/AppSync.svg
+AWS/Mobile/Device-Farm.svg
+AWS/Mobile/Mobile.svg
+AWS/Mobile/Pinpoint.svg
+AWS/Networking/API-Gateway.svg
+AWS/Networking/API-Gateway_Endpoint.svg
+AWS/Networking/App-Mesh.svg
+AWS/Networking/Client-VPN.svg
+AWS/Networking/Cloud-Map.svg
+AWS/Networking/CloudFront.svg
+AWS/Networking/CloudFront_Download-Distribution.svg
+AWS/Networking/CloudFront_Edge-Location.svg
+AWS/Networking/CloudFront_Streaming-Distribution.svg
+AWS/Networking/Direct-Connect.svg
+AWS/Networking/ELB_Application-load-balancer.svg
+AWS/Networking/ELB_Network-load-balancer.svg
+AWS/Networking/ELB.svg
+AWS/Networking/ELB_Classic-load-balancer.svg
+AWS/Networking/Networking-and-Content-Delivery.svg
+AWS/Networking/Global-Accelerator.svg
+AWS/Networking/Route-53.svg
+AWS/Networking/Route-53_Hosted-Zone.svg
+AWS/Networking/Route-53_Route-Table.svg
+AWS/Networking/Site-to-Site-VPN.svg
+AWS/Networking/Transit-Gateway.svg
+AWS/Networking/VPC-Traffic-Mirroring.svg
+AWS/Networking/VPC.svg
+AWS/Networking/VPC_Customer-Gateway.svg
+AWS/Networking/VPC_Elastic-Network-Adapter.svg
+AWS/Networking/VPC_Elastic-Network-Interface.svg
+AWS/Networking/VPC_Endpoints.svg
+AWS/Networking/VPC_NAT-Gateway.svg
+AWS/Networking/PrivateLink.svg
+AWS/Networking/VPC_Flow-Logs.svg
+AWS/Networking/VPC_Peering.svg
+AWS/Networking/VPC_Internet-Gateway.svg
+AWS/Networking/VPC_Router.svg
+AWS/Networking/VPC_VPN-Connection.svg
+AWS/Networking/VPC_Network-Access-Control-List.svg
+AWS/Robotics/RoboMaker.svg
+AWS/Robotics/RoboMaker_Cloud-Extension-ROS.svg
+AWS/Networking/VPC_VPN-Gateway.svg
+AWS/Robotics/RoboMaker_Fleet-Management.svg
+AWS/Robotics/Robotics.svg
+AWS/Robotics/RoboMaker_Development-Environment.svg
+AWS/Satellite/Ground-Station.svg
+AWS/Satellite/Satellite.svg
+AWS/SIC/AD-Connector.svg
+AWS/SIC/Artifact.svg
+AWS/Robotics/RoboMaker_Simulation.svg
+AWS/SIC/Certificate-Authority.svg
+AWS/SIC/Cloud-Directory.svg
+AWS/SIC/Certificate-Manager.svg
+AWS/SIC/Cognito.svg
+AWS/SIC/Directory-Service.svg
+AWS/SIC/CloudHSM.svg
+AWS/SIC/Firewall-Manager.svg
+AWS/SIC/GuardDuty.svg
+AWS/SIC/IAM_Add-on.svg
+AWS/SIC/IAM_AWS-STS-Alternate.svg
+AWS/SIC/IAM_AWS-STS.svg
+AWS/SIC/IAM_Data-Encryption-Key.svg
+AWS/SIC/IAM_Encrypted-Data.svg
+AWS/SIC/IAM_Long-term-Security-Credential.svg
+AWS/SIC/IAM_MFA-Token.svg
+AWS/SIC/IAM_Permissions.svg
+AWS/SIC/IAM_Role.svg
+AWS/SIC/IAM_Temporary-Security-Credential.svg
+AWS/SIC/Identity-and-Access-Management_IAM.svg
+AWS/SIC/Inspector.svg
+AWS/SIC/Inspector_Agent.svg
+AWS/SIC/Key-Management-Service.svg
+AWS/SIC/Macie.svg
+AWS/SIC/Managed-Microsoft-AD.svg
+AWS/SIC/Resource-Access-Manager.svg
+AWS/SIC/Secrets-Manager.svg
+AWS/SIC/Security-Hub.svg
+AWS/SIC/Security-Identity-and-Compliance.svg
+AWS/SIC/Shield.svg
+AWS/SIC/Shield_Shield-Advanced.svg
+AWS/SIC/Simple-AD.svg
+AWS/SIC/Single-Sign-On.svg
+AWS/SIC/WAF.svg
+AWS/SIC/WAF_Filtering-rule.svg
+AWS/Storage/Backup.svg
+AWS/Storage/CloudEndure-Disaster-Recovery.svg
+AWS/Storage/EBS.svg
+AWS/Storage/EBS_Snapshot.svg
+AWS/Storage/EBS_Volume.svg
+AWS/Storage/EFS-InfrequentAccess.svg
+AWS/Storage/EFS-Standard.svg
+AWS/Storage/EFS.svg
+AWS/Storage/EFS_File-system.svg
+AWS/Storage/FSx-for-Lustre.svg
+AWS/Storage/FSx-for-Windows-File-Server.svg
+AWS/Storage/FSx.svg
+AWS/Storage/Multiple-volumes_Resource-Icon.svg
+AWS/Storage/S3-Glacier.svg
+AWS/Storage/S3-Glacier_Archive.svg
+AWS/Storage/S3-Glacier_Vault.svg
+AWS/Storage/S3.svg
+AWS/Storage/S3_Bucket-with-Objects.svg
+AWS/Storage/S3_Bucket.svg
+AWS/Storage/S3_Object.svg
+AWS/Storage/Snow-Family_Snowball-Import-Export.svg
+AWS/Storage/Snowball-Edge.svg
+AWS/Storage/Snowball.svg
+AWS/Storage/Snowmobile.svg
+AWS/Storage/Storage-Gateway.svg
+AWS/Storage/Storage-Gateway_Cached-Volume.svg
+AWS/Storage/Storage-Gateway_Non-Cached-Volume.svg
+AWS/Storage/Storage-Gateway_Virtual-Tape-Library.svg
+AWS/Storage/Storage.svg
+AWS/_General/Client.svg
+AWS/_General/Disk.svg
+AWS/_General/Forums.svg
+AWS/_General/Generic-database.svg
+AWS/_General/Internet-alt1.svg
+AWS/_General/Internet-alt2.svg
+AWS/_General/Internet-gateway.svg
+AWS/_General/Mobile-client.svg
+AWS/_General/Multimedia.svg
+AWS/_General/Office-building.svg
+AWS/_General/SAML-token.svg
+AWS/_General/SDK.svg
+AWS/_General/SSL-padlock.svg
+AWS/_General/Tape-storage.svg
+AWS/_General/Toolkit.svg
+AWS/_General/Traditional-server.svg
+AWS/_General/User.svg
+AWS/_General/Users.svg
+AWS/_Group Icons/Auto-Scaling.svg
+AWS/_Group Icons/Cloud-alt.svg
+AWS/_Group Icons/Corporate-data-center.svg
+AWS/_Group Icons/EC2-instance-contents.svg
+AWS/_Group Icons/Elastic-Beanstalk-container.svg
+AWS/_Group Icons/Region.svg
+AWS/_Group Icons/Server-contents.svg
+AWS/_Group Icons/Spot-fleet.svg
+AWS/_Group Icons/Step-Function.svg
+AWS/_Group Icons/Virtual-private-cloud-VPC.svg
+AWS/_Group Icons/VPC-subnet-private.svg
+AWS/_Group Icons/Cloud.svg
+AWS/_Group Icons/VPC-subnet-public.svg
+AWS/Compute/Instances/EC2_A1-Instance.svg
+AWS/Compute/Instances/EC2_C4-Instance.svg
+AWS/Compute/Instances/EC2_C5-Instance.svg
+AWS/Compute/Instances/EC2_C5n-Instance.svg
+AWS/Compute/Instances/EC2_D2-Instance.svg
+AWS/Compute/Instances/EC2_DB-on-Instance.svg
+AWS/Compute/Instances/EC2_F1-Instance.svg
+AWS/Compute/Instances/EC2_G3-Instance.svg
+AWS/Compute/Instances/EC2_H1-Instance.svg
+AWS/Compute/Instances/EC2_High-Memory-Instance.svg
+AWS/Compute/Instances/EC2_I3-Instance.svg
+AWS/Compute/Instances/EC2_Instance-with-CloudWatch.svg
+AWS/Compute/Instances/EC2_Instance.svg
+AWS/Compute/Instances/EC2_Instances.svg
+AWS/Compute/Instances/EC2_M4-Instance.svg
+AWS/Compute/Instances/EC2_M5-Instance.svg
+AWS/Compute/Instances/EC2_M5a-Instance.svg
+AWS/Compute/Instances/EC2_Optimized-Instance.svg
+AWS/Compute/Instances/EC2_P2-Instance.svg
+AWS/Compute/Instances/EC2_P3-Instance.svg
+AWS/Compute/Instances/EC2_R4-Instance.svg
+AWS/Compute/Instances/EC2_R5-Instance.svg
+AWS/Compute/Instances/EC2_R5a-Instance.svg
+AWS/Compute/Instances/EC2_Spot-instance.svg
+AWS/Compute/Instances/EC2_T2-Instance.svg
+AWS/Compute/Instances/EC2_T3-Instance.svg
+AWS/Compute/Instances/EC2_T3a-Instance.svg
+AWS/Compute/Instances/EC2_X1-Instance.svg
+AWS/Compute/Instances/EC2_X1e-Instance.svg
+AWS/Compute/Instances/EC2_z1d-Instance.svg
+Azure/AI and ML/Batch AI.svg
+Azure/AI and ML/Bot Services.svg
+Azure/AI and ML/Cognitive Services.svg
+Azure/AI and ML/Genomics Accounts.svg
+Azure/AI and ML/ML Service Workspaces.svg
+Azure/AI and ML/ML Studio Web Service Plans.svg     
+Azure/AI and ML/ML Studio Web Services.svg
+Azure/AI and ML/ML Studio Workspaces.svg
+Azure/Companies/Azure Cache Redis Product icon.svg  
+Azure/Companies/Azure Databricks.svg
+Azure/Companies/Azure HDInsight_COLOR.svg
+Azure/Companies/Azure HockeyApp_COLOR.svg
+Azure/Companies/Azure OpenShift.svg
+Azure/Companies/Cloud_Cycle.svg
+Azure/Companies/HD-Insight.svg
+Azure/Companies/HockeyApp.svg
+Azure/Companies/Kubernetes.svg
+Azure/Companies/Logo-DC-OS.svg
+Azure/Companies/Logo-docker.svg
+Azure/Companies/logo_pluralsight_mono.svg
+Azure/Companies/logo_pluralsight_twotone.svg        
+Azure/Companies/StackOverflow.svg
+Azure/Companies/WebAppUmbraco.svg
+Azure/Companies/WebAppWordPress.svg
+Azure/Compute/Batch Accounts.svg
+Azure/Compute/Citrix Virtual Desktops Essentials.svg
+Azure/Compute/Cloud Services (Classic).svg
+Azure/Compute/Cloud Services.svg
+Azure/Compute/CloudSimple Virtual Machines.svg
+Azure/Compute/Disk Snapshots.svg
+Azure/Compute/Disks.svg
+Azure/Compute/Function Apps.svg
+Azure/Compute/Mesh Applications.svg
+Azure/Compute/SAP HANA on Azure.svg
+Azure/Compute/Service Fabric Clusters.svg
+Azure/Compute/VM Images.svg
+Azure/Container/Container Instances.svg
+Azure/Container/Container Registries.svg
+Azure/Container/Kubernetes Services.svg
+Azure/Databases/Azure Cache for Redis.svg
+Azure/Databases/Azure Cache plus Redis.svg
+Azure/Databases/Azure Cosmos DB.svg
+Azure/Databases/Azure Database (Generic).svg
+Azure/Databases/Azure Database for MariaDB servers.svg
+Azure/Databases/Azure Database for MySQL servers.svg
+Azure/Databases/Azure Database for PostgreSQL servers.svg
+Azure/Databases/Azure SQL DataWarehouse.svg
+Azure/Databases/Blob Storage.svg
+Azure/Databases/Data Lake.svg
+Azure/Databases/Elastic Database Pools.svg
+Azure/Databases/Elastic Job Agents.svg
+Azure/Databases/Managed Databases.svg
+Azure/Databases/SQL Databases.svg
+Azure/Databases/SQL Managed Instances.svg
+Azure/Databases/SQL Server stretch Databases.svg
+Azure/Databases/SQL Servers.svg
+Azure/Databases/Virtual Clusters.svg
+Azure/Databases/Virtual Datacenter.svg
+Azure/DevOps/Application Insights.svg
+Azure/DevOps/Azure Artifacts.svg
+Azure/DevOps/Azure Boards.svg
+Azure/DevOps/Azure DevOps.svg
+Azure/DevOps/Azure DevTest Labs.svg
+Azure/DevOps/Azure Pipelines.svg
+Azure/DevOps/Azure Repos.svg
+Azure/DevOps/Azure Test Plans.svg
+Azure/General/All Resources.svg
+Azure/General/Azure Home.svg
+Azure/General/DeveloperTools.svg
+Azure/General/Help + Support.svg
+Azure/General/Information.svg
+Azure/General/Management Groups.svg
+Azure/General/Marketplace.svg
+Azure/General/Quick Start Center.svg
+Azure/General/Recent.svg
+Azure/General/Reservations.svg
+Azure/General/Resource Groups.svg
+Azure/General/Resource.svg
+Azure/General/Service Health.svg
+Azure/General/Shared Dashboard.svg
+Azure/General/Subscriptions.svg
+Azure/General/Support Requests.svg
+Azure/General/Support.svg
+Azure/General/Tag.svg
+Azure/General/Tags.svg
+Azure/General/Templates.svg
+Azure/General/Two User Icon.svg
+Azure/General/User Health Icon.svg
+Azure/General/User Icon.svg
+Azure/General/User Privacy.svg
+Azure/General/User Resource.svg
+Azure/General/What's New.svg
+Azure/Identity/Access Review.svg
+Azure/Identity/Active Directory Connect Health.svg
+Azure/Identity/Active Directory.svg
+Azure/Identity/App Registrations.svg
+Azure/Identity/Azure AD B2C.svg
+Azure/Identity/Azure AD Domain Services.svg
+Azure/Identity/Azure AD Identity Protection.svg
+Azure/Identity/Azure AD Privileged Identity Management.svg
+Azure/Identity/Azure Information Protection.svg
+Azure/Identity/Conditional Access.svg
+Azure/Identity/Enterprise Applications.svg
+Azure/Identity/Identity governance.svg
+Azure/Identity/Managed Identities.svg
+Azure/Analytics/Analysis Services.svg
+Azure/Analytics/Azure Data Explorer Clusters.svg
+Azure/Analytics/Azure Databricks.svg
+Azure/Analytics/Data Factories.svg
+Azure/Analytics/Data Lake Store Gen1.svg
+Azure/Analytics/Event Hub Clusters.svg
+Azure/Analytics/Data Lake Analytics.svg
+Azure/Analytics/Event Hubs.svg
+Azure/Analytics/HDInsightClusters.svg
+Azure/Analytics/Log Analytics Workspaces.svg
+Azure/Analytics/Stream Analytics Jobs.svg
+Azure/Integration/API Management Services.svg
+Azure/Integration/App Configuration.svg
+Azure/Integration/Azure API for FHIR.svg
+Azure/Integration/Azure Data Catalog.svg
+Azure/Integration/Azure Service Bus Relays.svg
+Azure/Integration/Azure Service Bus.svg
+Azure/Integration/Azure StorSimple Device Managers.svg
+Azure/Integration/Event Grid Domains.svg
+Azure/Integration/Event Grid Subscriptions.svg
+Azure/Integration/Event Grid Topics.svg
+Azure/Integration/Integration Accounts.svg
+Azure/Integration/Integration Service Environments.svg
+Azure/Integration/Logic Apps Custom Connector.svg
+Azure/Integration/Logic Apps.svg
+Azure/Integration/SendGrid Accounts.svg
+Azure/Integration/Service Catalog Managed Application Definitions.svg
+Azure/Integration/Software as a Service (SaaS).svg
+Azure/Internet of Things/Azure Digital Twins.svg
+Azure/Internet of Things/Azure IoT Hub Security.svg
+Azure/Internet of Things/Azure IoT Hub.svg
+Azure/Internet of Things/Azure Maps.svg
+Azure/Internet of Things/Azure Sphere.svg
+Azure/Internet of Things/Device Provisioning Services.svg
+Azure/Internet of Things/IoT Central Applications.svg
+Azure/Internet of Things/Time Series Insights environments.svg
+Azure/Internet of Things/Time Series Insights Events Sources.svg
+Azure/Internet of Things/Windows 10 IoT Core Services.svg
+Azure/Intune/Client Apps.svg
+Azure/Intune/Dedicated Event Hub.svg
+Azure/Intune/Device Compliance.svg
+Azure/Intune/Device Config.svg
+Azure/Intune/Devices Groups.svg
+Azure/Intune/eBooks.svg
+Azure/Intune/Enrollment.svg
+Azure/Intune/Exchange On-Premises Access.svg
+Azure/Intune/Intune App Protection.svg
+Azure/Intune/Managed Desktop.svg
+Azure/Intune/Security Baselines.svg
+Azure/Intune/Tools.svg
+Azure/Intune/Software Update.svg
+Azure/M&G/Activity Log.svg
+Azure/M&G/Advisor.svg
+Azure/M&G/Alerts.svg
+Azure/M&G/Automation Accounts.svg
+Azure/M&G/Blueprints.svg
+Azure/M&G/Cost Management + Billing.svg
+Azure/M&G/Diagnostic Settings.svg
+Azure/M&G/Free Services.svg
+Azure/M&G/Guest Assignments.svg
+Azure/M&G/Managed Applications.svg
+Azure/M&G/Metrics.svg
+Azure/M&G/Monitor.svg
+Azure/M&G/Network Watcher.svg
+Azure/M&G/Policy.svg
+Azure/M&G/Recovery Services Vaults.svg
+Azure/M&G/Resource Graph Explorer.svg
+Azure/M&G/Scheduler Job Collections.svg
+Azure/M&G/Solutions.svg
+Azure/Migrate/Azure Database Migration Services.svg
+Azure/Migrate/Migration Projects.svg
+Azure/Migrate/Recovery Services Vaults.svg
+Azure/Mixed Reality/Spatial Anchor.svg
+Azure/Mobile/Azure App Service - Mobile.svg
+Azure/Mobile/Azure Mobile Engagement.svg
+Azure/Mobile/Notification Hubs.svg
+Azure/Networking/Application Gateway.svg
+Azure/Networking/Application Security Groups.svg
+Azure/Networking/Azure Firewall.svg
+Azure/Networking/CDN Profiles.svg
+Azure/Networking/Connections.svg
+Azure/Networking/DDOS Protection Plans.svg
+Azure/Networking/DNS Private Zones.svg
+Azure/Networking/DNS Zones.svg
+Azure/Networking/ExpressRoute Circuits.svg
+Azure/Networking/Front Doors.svg
+Azure/Networking/Load Balancers.svg
+Azure/Networking/Local Network Gateways.svg
+Azure/Networking/Network Interfaces.svg
+Azure/Networking/Network Security Groups (Classic).svg
+Azure/Networking/Network Watcher.svg
+Azure/Networking/On-premises Data Gateways.svg
+Azure/Networking/Public IP Addresses.svg
+Azure/Networking/Reserved IP Addresses (Classic).svg
+Azure/Networking/Route Filters.svg
+Azure/Networking/Route Tables.svg
+Azure/Networking/Service Endpoint Policies.svg
+Azure/Networking/Traffic Manager Profiles.svg
+Azure/Networking/Virtual Network (Classic).svg
+Azure/Networking/Virtual Network Gateways.svg
+Azure/Networking/Virtual Networks.svg
+Azure/Networking/Virtual WANs.svg
+Azure/Other/CloudSimple Nodes.svg
+Azure/Other/CloudSimple Services.svg
+Azure/Other/Controllers.svg
+Azure/Other/Customer Lockbox.svg
+Azure/Other/Education.svg
+Azure/Other/Image Definitions.svg
+Azure/Other/Image Versions.svg
+Azure/Other/Resource Explorer.svg
+Azure/Other/Shared Image Galleries.svg
+Azure/Other/Tenant Status.svg
+Azure/Other/Web App Firewall.svg
+Azure/Security/Azure Sentinel.svg
+Azure/Security/Key Vaults.svg
+Azure/Security/Security Center.svg
+Azure/Storage/Archive Storage.svg
+Azure/Storage/Azure NetApp files.svg
+Azure/Storage/Azure StorSimple Device Managers.svg
+Azure/Storage/AzureFXTEdgeFiler.svg
+Azure/Storage/Blob Storage.svg
+Azure/Storage/Data Box Edge _ Data Box Gateway.svg
+Azure/Storage/Data Box.svg
+Azure/Storage/Data Lake Storage.svg
+Azure/Storage/General Storage.svg
+Azure/Storage/Queues Storage.svg
+Azure/Storage/Storage Accounts (classic).svg
+Azure/Storage/Storage Accounts.svg
+Azure/Storage/Storage Explorer.svg
+Azure/Storage/Storage Sync Services.svg
+Azure/Storage/StorSimple Data Managers.svg
+Azure/Storage/StorSimple Device Managers.svg
+Azure/Storage/Table Storage.svg
+Azure/Web/API Connections.svg
+Azure/Web/App Service Domains.svg
+Azure/Web/App Service Certificates.svg
+Azure/Web/App Service Environments.svg
+Azure/Web/App Service Plans.svg
+Azure/Web/App Services.svg
+Azure/Web/Azure Search.svg
+Azure/Web/Azure Media Services.svg
+Azure/Web/Notification Hub Namespaces.svg
+Azure/Web/SignalR.svg
+Azure/Compute/VM/Availability Sets.svg
+Azure/Compute/VM/Non-azure-machine.svg
+Azure/Compute/VM/OS Images (Classic).svg
+Azure/Compute/VM/VM (Classic).svg
+Azure/Compute/VM/VM Scale Sets.svg
+Azure/Compute/VM/VM-Linux-non-azure.svg
+Azure/Compute/VM/VM-Linux.svg
+Azure/Compute/VM/VM-non-azure.svg
+Azure/Compute/VM/VM-windows-non-azure.svg
+Azure/Compute/VM/VM-windows.svg
+Azure/Compute/VM/VM.svg
+Azure/M&G/Media/Azure Media Player.svg
+Azure/M&G/Media/Content Protection.svg
+Azure/M&G/Media/Media Encoding.svg
+Azure/M&G/Media/Media On-Demand.svg
+GCP/Compute/App Engine.svg
+GCP/Compute/Cloud Functions.svg
+GCP/Compute/Cloud Run.svg
+GCP/Compute/Container-Optimized OS.svg  
+GCP/Compute/Compute Engine.svg
+GCP/Compute/GKE On-Prem.svg
+GCP/Compute/GPU.svg
+GCP/Compute/Kubetnetes Engine.svg       
+GCP/AI and ML/Advanced Solutions Lab.svg
+GCP/AI and ML/AI Hub.svg
+GCP/AI and ML/AI Platform.svg
+GCP/AI and ML/AI Platform Data Labeling Service.svg
+GCP/AI and ML/AutoML Natural Language.svg
+GCP/AI and ML/AutoML Tables.svg
+GCP/AI and ML/AutoML Translation.svg
+GCP/AI and ML/AutoML Video Intelligence.svg
+GCP/AI and ML/AutoML Vision.svg
+GCP/AI and ML/Cloud AutoML.svg
+GCP/AI and ML/Cloud Inference API.svg
+GCP/AI and ML/Cloud Jobs API.svg
+GCP/AI and ML/Cloud Natural Language API.svg
+GCP/AI and ML/Cloud Speech-to-Text.svg
+GCP/AI and ML/Cloud Text-to-Speech.svg
+GCP/AI and ML/Cloud TPU.svg
+GCP/AI and ML/Cloud Translation API.svg
+GCP/AI and ML/Cloud Video Intelligence API.svg
+GCP/AI and ML/Cloud Vision API.svg
+GCP/AI and ML/Dialog Flow Enterprise Edition.svg
+GCP/AI and ML/Recommendations AI.svg
+GCP/API Mgmt/API Analytics.svg
+GCP/API Mgmt/API Monetization.svg
+GCP/API Mgmt/Apigee API Platform.svg
+GCP/API Mgmt/Apigee Sense.svg
+GCP/API Mgmt/Cloud Endpoints.svg
+GCP/API Mgmt/Developer Portal.svg
+GCP/Data Analytics/BigQuery.svg
+GCP/Data Analytics/Cloud Composer.svg
+GCP/Data Analytics/Cloud Data Catalog.svg
+GCP/Data Analytics/Cloud Data Fusion.svg
+GCP/Data Analytics/Cloud Dataflow.svg
+GCP/Data Analytics/Cloud Datalab.svg
+GCP/Data Analytics/Cloud Dataprep.svg
+GCP/Data Analytics/Cloud Dataproc.svg
+GCP/Data Analytics/Cloud PubSub.svg
+GCP/Data Analytics/Genomics.svg
+GCP/Databases/Cloud Bigtable.svg
+GCP/Databases/Cloud Datastore.svg
+GCP/Databases/Cloud Firestore.svg
+GCP/Databases/Cloud Memorystore.svg
+GCP/Databases/Cloud Spanner.svg
+GCP/Databases/Cloud SQL.svg
+GCP/Developer Tools/Cloud Build.svg
+GCP/Developer Tools/Cloud Code for IntelliJ.svg
+GCP/Developer Tools/Cloud Code.svg
+GCP/Developer Tools/Cloud Scheduler.svg
+GCP/Developer Tools/Cloud SDK.svg
+GCP/Developer Tools/Cloud Source Repositories.svg
+GCP/Developer Tools/Cloud Tasks.svg
+GCP/Developer Tools/Cloud Test Lab.svg
+GCP/Developer Tools/Cloud Tools for Eclipse.svg
+GCP/Developer Tools/Cloud Tools for PowerShell.svg
+GCP/Developer Tools/Cloud Tools for Visual Studio.svg
+GCP/Developer Tools/Container Registry.svg
+GCP/Developer Tools/Gradle App Engine Plugin.svg
+GCP/Developer Tools/IDE Plugins.svg
+GCP/Developer Tools/Maven App Engine Plugin.svg
+GCP/Internet of Things/Cloud IoT Core.svg
+GCP/Mgmt Tools/Cloud APIs.svg
+GCP/Mgmt Tools/Cloud Billing API.svg
+GCP/Mgmt Tools/Cloud Console.svg
+GCP/Mgmt Tools/Cloud Deployment Manager.svg
+GCP/Mgmt Tools/Cloud Mobile App.svg
+GCP/Mgmt Tools/Cloud Service Mesh.svg
+GCP/Mgmt Tools/Cloud Shell.svg
+GCP/Mgmt Tools/Debugger.svg
+GCP/Mgmt Tools/Error Reporting.svg
+GCP/Mgmt Tools/Logging.svg
+GCP/Mgmt Tools/Monitoring.svg
+GCP/Mgmt Tools/Profiler.svg
+GCP/Mgmt Tools/Stackdriver.svg
+GCP/Mgmt Tools/Trace.svg
+GCP/Migration/Transfer Appliance.svg
+GCP/Multi Cloud/Stackdriver.svg
+GCP/Multi Cloud/Traffic Director.svg
+GCP/Networking/Cloud Armor.svg
+GCP/Networking/Cloud CDN.svg
+GCP/Networking/Cloud DNS.svg
+GCP/Networking/Cloud External IP Addresses.svg
+GCP/Networking/Cloud Firewall Rules.svg
+GCP/Networking/Cloud Load Balancing.svg
+GCP/Networking/Cloud NAT.svg
+GCP/Networking/Cloud Network.svg
+GCP/Networking/Cloud Router.svg
+GCP/Networking/Cloud Routes.svg
+GCP/Networking/Cloud VPN.svg
+GCP/Networking/Dedicated Interconnect.svg
+GCP/Networking/Partner Interconnect.svg
+GCP/Networking/Premium Network Tier.svg
+GCP/Networking/Standard Network Tier.svg
+GCP/Networking/Traffic Director.svg
+GCP/Networking/Virtual Private Cloud.svg
+GCP/Security/Cloud IAM.svg
+GCP/Security/Cloud Resource Manager.svg
+GCP/Security/Cloud Security Command Center.svg
+GCP/Security/Cloud Security Scanner.svg
+GCP/Security/Key Management Service.svg
+GCP/Storage/Cloud Filestore.svg
+GCP/Storage/Cloud Storage.svg
+GCP/Storage/Persistent Disk.svg
+Networking/antenna-tower.svg
+Networking/browser-search.svg
+Networking/cloud-hosting.svg
+Networking/cloud-network-storage.svg
+Networking/cloud-server.svg
+Networking/computer-link.svg
+Networking/computer-network.svg
+Networking/data-structure.svg
+Networking/data-synchronization.svg
+Networking/database-files.svg
+Networking/database-secure.svg
+Networking/database.svg
+Networking/datacenter.svg
+Networking/desktop.svg
+Networking/encryption.svg
+Networking/error.svg
+Networking/firewall.svg
+Networking/folder-security.svg
+Networking/hacker.svg
+Networking/hard-drive.svg
+Networking/internet.svg
+Networking/laptop.svg
+Networking/mobile-network.svg
+Networking/mouse.svg
+Networking/network-hub.svg
+Networking/network-performance.svg
+Networking/network-switch.svg
+Networking/network-web.svg
+Networking/router.svg
+Networking/server-settings.svg
+Networking/server.svg
+Networking/speed-test.svg
+Networking/trash.svg
+Networking/user.svg
+Networking/vpn.svg
+Networking/web-server.svg
+Networking/workstation.svg
