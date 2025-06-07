@@ -1,0 +1,1922 @@
+imports: 
+- from: ilograph/aws
+  namespace: AWS
+
+resources:
+- name: Ilograph Web
+  subtitle: Web Application
+  description: Advanced diagramming web application for creating interactive, multi-perspective diagrams in the browser
+  icon: _demo/ilograph.png
+  
+- name: Ilograph Desktop
+  subtitle: Desktop Application
+  description: Advanced diagramming [desktop application](https://www.ilograph.com/desktop/) for creating interactive, multi-perspective diagrams
+  icon: _demo/ilograph.png
+  
+- name: Ilograph Export API Client
+  subtitle: NPM Package and CLI Tool
+  description: Package and CLI [tool](https://www.ilograph.com/export-api/index.html) for exporting Ilograph diagrams to standalone HTML files
+  icon: _demo/ilograph.png
+  
+- name: User
+  subtitle: Application User
+  description: End user of Ilograph
+  icon: AWS/_General/User.svg
+
+- name: Ilograph AWS Instance
+  instanceOf: AWS::AWS Instance
+  children:
+  - name: CloudFront
+    instanceOf: AWS::CloudFront
+    description: A CDN which speeds up the distribution of content to end users
+    children:
+    - name: d3dxxxxx.cloudfront.net
+      instanceOf: AWS::CloudFront::Distribution
+      
+    - name: d2wxxxxx.cloudfront.net
+      instanceOf: AWS::CloudFront::Distribution
+      
+    - name: d3exxxxx.cloudfront.net
+      instanceOf: AWS::CloudFront::Distribution
+    
+  - name: API Gateway
+    instanceOf: AWS::ApiGateway
+    description: Service for creating REST APIs for lambdas and other services
+    children:
+    - name: ilographV0
+      instanceOf: AWS::ApiGateway::RestApi
+      description: The Ilograph REST API
+      children:
+      - id: diagram
+        name: /diagram
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Ilograph diagrams, their drafts, and their permissions
+             
+      - id: team
+        name: /team
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Ilograph team workspaces, their permissions, and their icons
+
+      - id: trial
+        name: /trial
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Ilograph Desktop trial subscriptions
+
+      - id: license
+        name: /license
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Ilograph Desktop license keys
+        
+      - id: stripe
+        name: /stripe
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Stripe sessions and webooks
+        children: 
+        - id: checkout
+          name: /checkout
+          instanceOf: AWS::ApiGateway::Resource
+          description: Resource for a Stripe checkout page
+        - id: webhook
+          name: /webhook
+          instanceOf: AWS::ApiGateway::Resource
+          description: Resource that receives webhooks from Stripe
+      
+      - id: subscription
+        name: /subscription
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource for Ilograph paid subscriptions
+
+    - name: Ilograph Export
+      instanceOf: AWS::ApiGateway::RestApi
+      description: The Ilograph Export API
+      children: 
+      - id: export
+        name: /export
+        instanceOf: AWS::ApiGateway::Resource
+        description: Resource to export an Ilograph diagram
+        
+    - name: api.ilograph.com
+      instanceOf: AWS::ApiGatewayV2::DomainName
+      description: A [custom domain name](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html) for the Ilograph API
+      
+  - name: Lambda
+    instanceOf: AWS::Lambda
+    description: Allows running of code without provisioning dedicated servers
+    children:
+    - name: handleDiagram
+      instanceOf: AWS::Lambda::Function
+      description: Handles creating, reading, modifying, and deleting Ilograph diagrams, their drafts, and their permissions
+      
+    - name: handleTeam
+      instanceOf: AWS::Lambda::Function
+      description: Handles creating teams, getting team metadata, managing team icons, and checking team name availablity
+      
+    - name: handleTrial
+      instanceOf: AWS::Lambda::Function
+      description: Handles creating and Ilograph Desktop trial license
+      
+    - name: handleLicense
+      instanceOf: AWS::Lambda::Function
+      description: Handles creating and Ilograph Desktop paid license
+      
+    - name: handleStripe
+      instanceOf: AWS::Lambda::Function
+      description: Handles Stripe sessions and webooks
+      
+    - name: handleSubscription
+      instanceOf: AWS::Lambda::Function
+      description: Handles Stripe subscriptions
+      
+    - name: handleExport
+      instanceOf: AWS::Lambda::Function
+      description: Handles exporting an HTML diagram
+      
+    - name: confirmUser
+      instanceOf: AWS::Lambda::Function
+      description: Performs various tasks after a user confirms their account
+                
+    - name: generateToken
+      instanceOf: AWS::Lambda::Function
+      description: Generates permissions token for a user
+    
+  - name: SES
+    instanceOf: AWS::SES
+    description: Allows sending and receiving emails programmatically
+    children: 
+    - name: ilograph.com
+      subtitle: Verified domain
+      icon: AWS/Customer Engagement/Simple-Email-Service-SES_Email.svg
+      
+    - name: notifications@ilograph.com
+      subtitle: Email Address
+      icon: AWS/Business Apps/WorkMail.svg
+      description: Email address for sending app notifications
+
+  - name: Cognito
+    instanceOf: AWS::Cognito
+    description: Service for managing and authenticating users
+    children:
+    - name: iloUsers
+      instanceOf: AWS::Cognito::UserPool
+      description: The user pool for the Ilograph app
+      children: 
+      - name: Post Confirmation
+        subtitle: Trigger
+        icon: AWS/Compute/Lambda.svg
+
+      - name: Pre Token Generation
+        subtitle: Trigger
+        icon: AWS/Compute/Lambda.svg
+    
+  - name: DynamoDB
+    instanceOf: AWS::DynamoDB
+    description: A managed, proprietary NoSQL database service that supports key-value and document data structures
+    children:
+    - name: Permissions
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing diagram permissions, where each row is one permission
+      
+    - name: Diagrams
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing metadata for Ilograph diagrams, where each row is one Ilograph
+      
+    - name: History
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing historical metadata for Ilograph diagrams
+        
+    - name: Domains
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing information about users and team workspaces
+      
+    - name: Trials
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing Ilograph Desktop trial information
+      
+    - name: Sessions
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing Stripe session information
+      
+    - name: Subscriptions
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing Stripe session information
+      
+    - name: LicenseKeys
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing license keys
+      
+    - name: Usage
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing Export API usage
+      
+    - name: Icons
+      instanceOf: AWS::DynamoDB::Table
+      description: Table storing icon metadata
+    
+  - name: S3
+    instanceOf: AWS::S3
+    description: A file storage service that stores files in "buckets"
+    children:
+    - name: App Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Stores static assets of the Ilograph app
+      
+    - name: WWW Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Stores static assets of the Ilograph homepage
+      
+    - name: Icons Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Stores icons used in Team Workspaces
+      
+    - name: Diagrams Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Stores diagram files
+        
+    - name: Drafts Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Store draft diagram files
+        
+    - name: Back-end Bucket
+      instanceOf: AWS::S3::Bucket
+      description: Store back-end files needed to export diagrams
+  
+  - name: Route 53
+    instanceOf: AWS::Route53
+    description: A scalable DNS service
+    children:
+    - name: ilograph.com
+      instanceOf: AWS::Route53::HostedZone
+      description: Zone for all ilograph.com subdomains
+      children:
+      - name: api.ilograph.com
+        instanceOf: AWS::Route53::RecordSetGroup
+        description: A and AAAA records
+        style: plural
+        
+      - name: app.ilograph.com
+        instanceOf: AWS::Route53::RecordSetGroup
+        description: A and AAAA records
+        style: plural
+        
+      - name: www.ilograph.com
+        instanceOf: AWS::Route53::RecordSetGroup
+        description: A and AAAA records
+        style: plural
+        
+      - name: icons.ilograph.com
+        instanceOf: AWS::Route53::RecordSetGroup
+        description: A and AAAA records
+        style: plural
+        
+      - name: Mail records
+        instanceOf: AWS::Route53::RecordSetGroup
+        description: TXT and MX records
+        style: plural
+        
+        
+  - name: Certificate Manager
+    instanceOf: AWS::CertificateManager
+    children:
+    - id: ilographCertificate
+      name: "*.ilograph.com"
+      instanceOf: AWS::CertificateManager::Certificate
+      
+  - name: Workmail
+    instanceOf: AWS::WorkSpaces::Workspace
+    description: Provies email and calendar services
+    children: 
+    - name: ilograph.com
+      subtitle: Email Domain
+      description: The domain for the Ilograph workmail organization
+      icon: AWS/Customer Engagement/Simple-Email-Service-SES_Email.svg
+      
+  - name: Key Management Service
+    instanceOf: AWS::KMS
+    children: 
+    - name: iloSignatureKey
+      instanceOf: AWS::KMS::Key
+      description: Key used to sign Ilograph Desktop licenses
+      
+- name: Ilograph Back-End
+  subtitle: Git Repository
+  description: Codebase for the Ilograph back-end
+  color: #f05033
+  icon: _demo/git.png
+  children:
+  - name: Function
+    subtitle: Function
+    abstract: true
+    color: dimgrey
+    icon: _demo/function.png
+    
+  - name: HandlerFunction
+    instanceOf: Function
+    abstract: true
+    description: The main entrypoint for a lambda that routes requests based on the exact resource and HTTP verb
+    
+  - name: Module
+    subtitle: Module
+    color: #3178c6
+    style: dashed
+    abstract: true
+    icon: _demo/typescript.png
+        
+  - name: handleDiagram.ts
+    instanceOf: Module
+    children: 
+    - name: handleDiagram()
+      instanceOf: HandlerFunction
+        
+  - name: handleTeam.ts
+    instanceOf: Module
+    children: 
+    - name: handleTeam()
+      instanceOf: HandlerFunction
+    - name: createTeam()
+      instanceOf: Function
+    - name: getTeam()
+      instanceOf: Function
+      
+  - name: handleSubscription.ts
+    instanceOf: Module
+    children: 
+    - name: handleSubscription()
+      instanceOf: HandlerFunction
+    - name: getSubscription()
+      instanceOf: Function
+    - name: createLicenseKeys()
+      instanceOf: Function
+      
+  - name: handleStripe.ts
+    instanceOf: Module
+    children: 
+    - name: handleStripe()
+      instanceOf: HandlerFunction
+    - name: createCheckoutSession()
+      instanceOf: Function
+    - name: createStripeSession()
+      instanceOf: Function
+      
+  - name: handleLicense.ts
+    instanceOf: Module
+    children: 
+    - name: handleLicense()
+      instanceOf: HandlerFunction
+    - name: createLicense()
+      instanceOf: Function
+      
+  - name: handleTrial.ts
+    instanceOf: Module
+    children: 
+    - name: handleTrial()
+      instanceOf: HandlerFunction
+    - name: createTrial()
+      instanceOf: Function
+      
+  - name: license.ts
+    instanceOf: Module
+    children: 
+    - name: signLicense()
+      instanceOf: Function
+      
+  - name: export.ts
+    instanceOf: Module
+    children: 
+    - name: handleExport()
+      instanceOf: Function
+        
+  - name: getDiagram.ts
+    instanceOf: Module
+    children:
+    - name: getDiagram()
+      instanceOf: Function
+      
+    - name: getData()
+      instanceOf: Function
+      description: |-
+        Retrieves diagram metadata from the *Ilographs* DynamoDB table
+      
+    - name: hydrateEntry()
+      instanceOf: Function
+      description: |-
+        Retrieves a diagram file from S3 and prepares it to be returned to the user
+        
+  - name: getUsername.ts
+    instanceOf: Module
+    children:
+    - name: getUsername()
+      instanceOf: Function
+    - name: getUserInfo()
+      instanceOf: Function
+        
+  - name: parsePermission.ts
+    instanceOf: Module
+    children:
+    - name: parsePermission()
+      instanceOf: Function
+      description: Parses the calling user's permissions from the past-in Cognito token
+        
+  - name: updateDiagram.ts
+    instanceOf: Module
+    children:
+    - name: updateDiagram()
+      instanceOf: Function
+    - name: saveToS3()
+      instanceOf: Function
+      description: Saves a `Buffer` to an S3 bucket
+      
+  - name: handleIcon.ts
+    instanceOf: Module
+    children:
+    - name: handleIcon()
+      instanceOf: Function
+    - name: uploadIcon()
+      instanceOf: Function
+    - name: generateIconId()
+      instanceOf: Function
+    - name: getIconMimeType()
+      instanceOf: Function
+        
+  - name: setPermission.ts
+    instanceOf: Module
+    children:
+    - name: setPermission()
+      instanceOf: Function
+      
+    - name: sendInvitation()
+      instanceOf: Function
+  
+- name: Mailchimp
+  color: DarkGoldenrod
+  icon: _demo/mailchimp.png
+  subtitle: Email marketing service
+  description: Mailchimp is an American marketing automation platform and email marketing service
+  children: 
+  - name: Ilograph Users
+    icon: _demo/mailchimp.png
+    subtitle: Mailchimp email list
+    description: List of Ilograph Users who signed up to receive marketing emails
+
+- name: Ilograph Namecheap Account
+  subtitle: Domain name registrar
+  color: OrangeRed
+  icon: _demo/namecheap.png
+  description: Namecheap is an ICANN-accredited domain name registrar providing domain name registration and web hosting based in Phoenix, Arizona, US
+  children: 
+  - name: ilograph.com
+    subtitle: Domain
+    description: The web domain for Ilograph LLC, which is used for all Ilograph web services
+    icon: _demo/namecheap.png
+      
+- name: Ilograph Stripe Account
+  subtitle: Stripe account
+  color: "#625CFF"
+  icon: _demo/stripe.png
+  description: Stripe, Inc. is a financial services and software as a service company that offers payment processing software and application programming interfaces for e-commerce websites and mobile applications.
+  
+- name: NPM
+  subtitle: Node Package Manager
+  description: A package manager for [Node.js](https://nodejs.org/en/) packages
+  icon: _demo/npm.png
+  color: "#C80000"
+  layout: 
+    sizes: proportional
+  children: 
+  - name: NPM Package
+    abstract: true
+    icon: AWS/_General/SDK.svg
+  - name: js-yaml
+    instanceOf: NPM Package
+    description: Parses YAML objects into JSON
+  - name: yauzl
+    instanceOf: NPM Package
+    description: File unzip utility
+  - name: aws-sdk
+    instanceOf: NPM Package
+    description: SDK for programatically interacting with Amazon Web Services
+  - name: stripe
+    instanceOf: NPM Package
+    description: SDK for programatically interacting with Stripe
+    
+  
+perspectives:
+  - name: Request
+    color: Firebrick
+    overrides: 
+    - resourceId: Ilograph Stripe Account
+      scale: 0.5
+    - resourceId: Ilograph Web, Ilograph Desktop, Ilograph Export API Client
+      scale: 0.5
+    relations:
+    - from: Ilograph Web
+      to: diagram
+      label: Requests
+      description: The Ilograph web app  uses the */diagram* resource of the *ilographV0* Rest API to create, retrieve, update, and delete individual diagrams.
+      
+    - from: Ilograph Web
+      to: team
+      label: Requests
+      description: The Ilograph web app  uses the */team* resource of the *ilographV0* Rest API to create, retrieve, update, and delete [team workspace](https://www.ilograph.com/team.html) data.
+      
+    - from: Ilograph Web
+      to: subscription, stripe
+      label: Requests
+      description: The Ilograph web app  uses the */subscription* and */stripe* resources of the *ilographV0* Rest API when creating and handling [team workspace](https://www.ilograph.com/team.html) subscriptions.
+      
+    - from: Ilograph Desktop
+      to: subscription, stripe, license, trial
+      label: Requests
+      description: |-
+        [Ilograph Desktop](https://www.ilograph.com/desktop/index.html) interacts with the *ilographV0* API when purchasing licenses, create trial licenses, and activating paid licenses
+      
+    - from: ilographV0
+      to: iloUsers
+      label: Authorizer
+      description: |-
+        Most requests from the *Ilograph Web* application must be authenticated. This is handled by the built-in integration between [API Gateway](https://aws.amazon.com/api-gateway/) and [Cognito](https://aws.amazon.com/cognito/).
+        
+        [Learn more about lambda authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html) using API Gateway, or learn more about using [AWS Cognito User Pools as Authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-integrate-with-cognito.html).
+      
+    - from: diagram
+      to: handleDiagram
+      label: ALL
+      description: |-
+        Requests for each resource are handled by a dedicated Lambda function. [Learn more](https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway.html) about Lambda integrations with API Gateway.
+
+    - from: Ilograph Export API Client
+      to: export
+      label: Requests
+      description: |-
+        Requests from the [Ilograph Export API](https://www.ilograph.com/export-api/index.html) client are handled by the separate *Ilograph Export* API.
+      
+    - from: team
+      to: handleTeam
+      label: ALL
+      
+    - from: subscription
+      to: handleSubscription
+      label: GET, POST
+      
+    - from: stripe
+      to: handleStripe
+      label: GET, POST
+      
+    - from: license
+      to: handleLicense
+      label: POST
+  
+    - from: trial
+      to: handleTrial
+      label: POST
+      
+    - from: export
+      to: handleExport
+      label: POST
+      
+      
+    - from: handleDiagram
+      to: iloUsers
+      label: Get user info
+      description: |-
+        *handleDiagram* retrieves user information from the *iloUsers* user pool in Cognito.
+      
+    - from: handleDiagram, handleTeam
+      to: notifications@ilograph.com
+      label: Email using
+      description: |-
+        Users are notified by email when a diagram has been shared with them or they have been invited to a team. Learn more about invites in the [Invite teammate] perspective.
+      
+    - from: handleDiagram
+      to: Diagrams Bucket, Drafts Bucket
+      label: Read / Write
+      description: |-
+        The contents of diagrams (and drafts of diagrams) are stored as files in buckets.
+      
+    - from: handleTeam
+      to: Icons Bucket
+      label: Write
+      description: |-
+        Icon files are stored in the *Icons* S3 bucket. See the [Upload icon] perspective for more information.
+      
+    - from: handleDiagram
+      to: Diagrams, Permissions, History 
+      label: Read / Write
+      description: |-
+        Diagram metadata is stored in various DynamoDB tables.
+      
+    - from: handleTeam
+      to: Permissions, Domains, Icons
+      label: Read / Write
+      description: |-
+        Team metadata is stored in various DynamoDB tables.
+      
+    - from: handleSubscription
+      to: Subscriptions, Sessions, LicenseKeys, Domains
+      label: Read / Write
+      description: |-
+        Subscription metadata is stored in various DynamoDB tables. See the [Purchase subscription], [Claim subscription], and [Activate license] perspectives for more information.
+      
+    - from: handleSubscription
+      to: Permissions
+      label: Read
+      description: |-
+        Team workspace permissions are verified when activating a team workspace subscription.
+      
+    - from: handleStripe
+      to: Sessions
+      label: Read / Write
+      
+    - from: handleStripe
+      to: Subscriptions
+      label: Write
+      description: |-
+        New subscriptions are written to the *Subscriptions* DynamoDB table. See the [Purchase subscription] perspective for more information.
+      
+    - from: handleLicense
+      to: Subscriptions
+      label: Read
+      description: Before creating Ilograph Desktop license keys, *handleLicense* verifies* subscriptions in the *Subscriptions* table. See the [Claim subscription] perspective for more information.
+      
+    - from: handleLicense
+      to: LicenseKeys
+      label: Read / Write
+      description: |-
+        *handleLicense* stores keys and verifies keysin the *LicenseKeys* table. See the [Claim subscription] perspective for more information.
+      
+    - from: handleTrial
+      to: Trials
+      label: Read / Write
+      description: |-
+        *handleTrial*, stores trial keys in the *Trials* table.
+      
+    - from: handleExport
+      to: Usage
+      label: Write
+      description: As a metered service, *handleExport* keeps track of how many invocations are made per API key.
+      
+    - from: handleExport
+      to: Back-end Bucket
+      label: Read
+      description: Static files required for exporting are read from the *Back-end* S3 Bucket.
+      
+    - from: handleLicense, handleTrial
+      to: iloSignatureKey
+      label: Sign licenses using
+      description: Ilograph Desktop licenses (both trial and paid) are signed with a AWS-managed key stored in [Key Management Service](https://aws.amazon.com/kms/).
+      
+    - from: handleSubscription
+      to: Ilograph Stripe Account
+      label: Get subscription, create billing portal
+      description: |-
+        *handleSubscription* interfaces with Stripe using Stripe's API.
+      
+    - from: handleStripe
+      to: Ilograph Stripe Account
+      label: Create checkout session
+      description: New checkout sessions are created using Stripe's API.
+        
+    notes: |-
+      This perspective shows the run-time dependencies between resources when fulfilling requests to the Ilograph back-end.
+
+      The back-end uses a classic AWS Serverless architecture, with an *API Gateway* API calling *Lambda* functions backed by *DynamoDB* tables and *S3* buckets.
+      
+      Requests related to purchasing and licenses also have an external dependency on Stripe.
+      
+    walkthrough:
+    - detail: 0.1
+      text: |- 
+        Ilograph is an application for creating interactive diagrams. Its back-end is a classic serverless architecture running on Amazon Web Services (AWS).
+        
+        The architecture consists of several AWS services used in concert. In this walkthrough, we'll explore the role each service plays.
+        
+        *Click "Next" above to continue.*
+    
+    - highlight: Ilograph Web, Ilograph Desktop, Ilograph Export API Client, API Gateway
+      text: |- 
+        Requests can come from three clients: *Ilograph Web* (what you are using now), *Ilograph Desktop*, and the *Ilograph Export API Client*.
+
+        Requests from all three are handled by **API Gateway** in the *Ilograph AWS Instance*.
+        
+    - highlight: diagram, handleDiagram
+      detail: 1
+      text:  |-
+        We'll first examine how diagram requests from the *Ilograph Web* application are processed.
+      
+    - expand: Ilograph AWS Instance
+      highlight: diagram
+      text: |-
+        Requests to create, get, modify, and delete diagrams go through the */diagram* resource of the *IlographV0* API (api.ilograph.com).
+        
+        This endpoint is also used to change diagram permissions and invite users to view diagrams.
+        
+    - select: handleDiagram
+      text: |-
+        The *handleDiagram* Lambda function handles requests to the */diagram* resource. This function performs different actions depending on the request's exact resource and HTTP verb.
+        
+    - highlight: Diagrams, Diagrams Bucket, iloUsers
+      text: |-
+        Request to create, get, modify, and delete diagrams read and write to both the *Diagrams Bucket* S3 bucket, which stores diagram source files, and the *Diagrams* DynamoDB table, which stores metadata about diagrams.
+        
+        Diagram metadata includes information about the requesting user retrieved from *the iloUsers* user pool in Cognito.
+        
+    - highlight: History, Diagrams Bucket
+      text: |-
+        Historical metadata about diagrams is recorded in a separate table whenever a diagram is created or changed.
+        
+        This data is used to look up older versions of diagrams when requested by a user.
+        
+    - highlight: Drafts Bucket
+      text: Draft versions of diagrams are periodically saved to their own bucket to prevent data loss.
+      
+    - highlight: Permissions, notifications@ilograph.com
+      text: |-
+        Users can invite other users to view individual diagrams; those permissions are stored in the *Permissions* table. Diagram owners can also remove permissions for their diagrams.
+        
+        When a user is invited to view a diagram, SES sends an invitation email to that user using the email address *notifications@ilograph.com*.
+        
+    - select: "^"
+      highlight: team, handleTeam
+      text:  |-
+        Next, we'll examine how team-specific data requests from the *Ilograph Web* application are processed.
+        
+    - highlight: team
+      text: |-
+        Requests to create Ilograph [Team Workspaces](https://www.ilograph.com/team.html) and manage  their membership go through the */team* resource of the *IlographV0* API (api.ilograph.com).
+        
+        This endpoint also handles requests get, create, and delete team workspace icons.
+        
+    - select: handleTeam
+      highlight: notifications@ilograph.com, Permissions, Domains
+      text: |-
+        Team metadata is recorded in the *Domains* table, while permissions for each team is stored in the *Permissions* table. The *handleTeam* Lambda function handles all requests to create, read, and update this data.
+        
+        Whenever a user is invited to join a team workspace, an invitation email is sent to them via SES.
+        
+    - highlight: Icons Bucket, Icons
+      text: |-
+        Team members can also upload custom icons for use in diagrams in the team workspace. The icons themselves are stored in the *Icons Bucket* S3 bucket, while metadata about them is stored in the *Icons* table.
+        
+    - expand: "^"
+      select: "^"
+      highlight: subscription, stripe, handleSubscription, handleStripe
+      text: |-
+        While Ilograph Web is free for individuals, there are premium versions of Ilograph that require subscriptions.
+        
+        [Ilograph Team Workspace](https://www.ilograph.com/team.html), [Ilograph Desktop](https://www.ilograph.com/desktop/), and [Ilograph Export API](https://www.ilograph.com/export-api/index.html) subscriptions are created and managed through a combination of the */subscription* and */stripe* resources in the *ilographV0* API.
+        
+    - highlight: subscription, handleSubscription
+      text: |-
+        The *handleSubscription* Lambda function is responsible for reading, and updating subscription information and generating license keys. It reads and writes this data from and to multiple DynamoDB tables and also reads additional information from Stripe via API.
+        
+        See the [Claim subscription] perspective for an example workflow showing how an [Ilograph Desktop](https://www.ilograph.com/desktop/) subscription is claimed and its license keys are generated.
+        
+    - highlight: stripe, handleStripe
+      text: |-
+        Before a subscription can be created, a user must purchase one through Stripe. The *handleStripe* Lambda manages setting up Stripe Checkout sessions (stored in the *Sessions* table) and creating subscriptions (stored in the *Subscriptions* table).
+        
+        See the [Purchase subscription] perspective for an example purchase workflow.
+        
+    - highlight: license, handleLicense
+      text: |-
+        After purchase, Ilograph Desktop licenses can be activated from within the app. The */license* endpoint and the *handleLicense* Lambda function handle activation requests.
+        
+        This function verifies that the supplied license key is valid and the corresponding subscription is current. The returned license information is signed by *iloSignatureKey* KMS key.
+        
+        See the [Activate license] perspective for more information on this process.
+        
+    - highlight: trial, handleTrial
+      text: |-
+        Before purchasing a license, Ilograph Desktop users can test out the program with a 14-day trial.
+        
+        The app requests a trial license using the */trial* resource in the API. Its handler, *handleTrial*, creates a new license and signs it using the *iloSignatureKey* KMS key. Information about the trial license is saved to the Trials table.
+        
+    - highlight: export, handleExport, Back-end Bucket, Usage
+      text: |-
+        Lastly, the [Ilograph Export API](https://www.ilograph.com/export-api) is served through a dedicated API Gateway API called *Ilograph Export*. It has a single resource, */export*.
+        
+        Post requests to this resource are handled by *handleExport*. This function first reads required files from the *Back-end Bucket* bucket.
+        
+        After creating the exported diagram, usage information about the request is saved to the *Usage* table.
+        
+    - text: |-
+        This ends the walkthrough for the *Request* perspective. To explore the Ilograh back-end from other perspectives, click on the tabs at the bottom of the app.
+  
+  
+  - name: Code
+    color: Orange
+    defaultArrowLabel: Calls
+    relations: 
+    - from: handleDiagram
+      to: handleDiagram()
+      label: Handler
+      description: All Lambda functions have a handler function that serves as the code entry point 
+      
+    - from: handleDiagram()
+      to: getDiagram(), updateDiagram(), setPermission()
+      
+    - from: getDiagram()
+      to: getData(), hydrateEntry()
+      
+    - from: getData(), updateDiagram()
+      to: parsePermission()
+      
+    - from: updateDiagram()
+      to: getUserInfo(), saveToS3()
+      
+    - from: setPermission()
+      to: parsePermission(), getUserInfo(), sendInvitation()
+      
+    - from: handleIcon()
+      to: parsePermission(), uploadIcon()
+      
+    - from: uploadIcon()
+      to: generateIconId(), getIconMimeType()
+      
+    - from: handleTeam
+      to: handleTeam()
+      label: Handler
+      
+    - from: handleTeam()
+      to: handleIcon(), createTeam(), getTeam(), setPermission()
+      
+    - from: createTeam()
+      to: setPermission()
+      
+    - from: getTeam()
+      to: parsePermission()
+      
+    - from: handleSubscription
+      to: handleSubscription()
+      label: Handler
+      
+    - from: handleSubscription()
+      to: getSubscription(), createLicenseKeys()
+      
+    - from: handleStripe
+      to: handleStripe()
+      label: Handler
+      
+    - from: handleStripe()
+      to: createCheckoutSession(), createStripeSession()
+      
+    - from: handleLicense
+      to: handleLicense()
+      label: Handler
+      
+    - from: handleLicense()
+      to: createLicense()
+      
+    - from: handleTrial
+      to: handleTrial()
+      label: Handler
+      
+    - from: handleTrial()
+      to: createTrial()
+      
+    - from: createLicense(), createTrial()
+      to: signLicense()
+      
+    - from: handleExport
+      to: handleExport()
+      label: Handler
+      
+    - from: getUserInfo(), hydrateEntry(), saveToS3(), sendInvitation(), createLicenseKeys(), getSubscription(), signLicense(), handleExport(), createStripeSession(), uploadIcon(), getTeam()
+      to: aws-sdk
+      
+    - from: getSubscription(), createCheckoutSession(), createStripeSession()
+      to: NPM/stripe
+      
+    - from: handleExport()
+      to: js-yaml, yauzl
+    notes: |-
+      This perspective shows build-time dependencies in the Ilograph back-end codebase.
+      
+      Every Lambda function has a Typescript handler function. These functions call other functions, some of which interface with AWS and Stripe via SDKs in the form of NPM packages.
+      
+      *handleExport()* also uses two other NPM packages, [js-yaml](https://www.npmjs.com/package/js-yaml) and [yauzl](https://www.npmjs.com/package/yauzl).
+      
+    walkthrough: 
+    - highlight: handleDiagram, handleDiagram(), 
+      text: |-
+        Every Lambda function is deployed with code to execute. Each function has a **handler** function, serving serves as the Lambda's entry point.
+        
+        For example, the *handleDiagram* Lambda function has *handleDiagram()* as a handler. *handleDiagram()* is defined in the *handleDiagram.ts* module (file) in the *Ilograph Back-End* repo.
+        
+    - highlight: getDiagram(), updateDiagram(), setPermission()
+      text: |-
+        *handleDiagram()* delegates to the *getDiagram()*, *updateDiagram()*, or *setPermission()* function depending on the inputs passed to it by the *handleDiagram* Lambda.
+        
+    - highlight: createTeam(), getTeam(), setPermission(), handleIcon()
+      text: |-
+        Similarly, *handleTeam()* delegates to the *getTeam()*, *createTeam()*, *setPermission()* or *handleIcon()* function depending on the inputs passed to it by the *handleTeam* Lambda.
+        
+    - highlight: parsePermission(), getUserInfo()
+      text: |-
+        These functions further call shared utility functions to parse the caller's permissions and get the caller's information.
+        
+    - highlight: handleSubscription, handleStripe, handleLicense, handleTrial, handleExport
+      text: |-
+        The other Lambda functions follow a similar pattern of handler and delegate functions.
+    - highlight: aws-sdk
+      text: |-
+        Many functions must interact with AWS resources like DynamoDB tables and S3 buckets. They use the official *aws-sdk* NPM package to do so.
+        
+    - highlight: NPM/stripe
+      text: |-
+        Similarly, functions responsible for subscriptions and payments use the *stripe* NPM package to interact with Stripe.
+        
+    - highlight: js-yaml, yauzl
+      text: |-
+        The *handleExport* Lambda function must preform specialized processing to export diagrams, so it uses the [js-yaml](https://www.npmjs.com/package/js-yaml) and [yauzl](https://www.npmjs.com/package/yauzl) NPM packages.
+    
+  - name: DNS + Origins
+    color: RoyalBlue
+    relations: 
+    - from: Ilograph Namecheap Account/ilograph.com
+      to: Route 53/ilograph.com
+      label: Nameservers
+      description: ilograph.com records in Namecheap are configured to point to resources in the Ilograph AWS account
+      
+    - from: Route 53//app.ilograph.com
+      to: d3dxxxxx.cloudfront.net
+      label: Alias target
+      description: A and AAAA records point to cloudfront distributions
+      
+    - from: Route 53//www.ilograph.com
+      to: d2wxxxxx.cloudfront.net
+      label: Alias target
+      
+    - from: Route 53//icons.ilograph.com
+      to: d3exxxxx.cloudfront.net
+      label: Alias target
+      
+    - from: Route 53//api.ilograph.com
+      to: API Gateway/api.ilograph.com
+      label: Alias target
+      description: |-
+        *api.ilograph.com* records point to API Gateway
+      
+    - from: Mail records
+      to: SES/ilograph.com
+      label: Value
+      description: Mail records (MX and TXT) point to the ilograph.com domain in SES
+      
+    - from: d3dxxxxx.cloudfront.net
+      to: S3/App Bucket
+      label: Origin
+      description: |-
+        All CloudFront distributions have an "origin" from which assets are retrieved. Origins are often, but not always, S3 buckets
+      
+    - from: d2wxxxxx.cloudfront.net
+      to: S3/WWW Bucket
+      label: Origin
+      
+    - from: d3exxxxx.cloudfront.net
+      to: S3/Icons Bucket
+      label: Origin
+      
+    - from: API Gateway/api.ilograph.com
+      to: ilographV0
+      label: "/v0"
+      description: Route "/v0" is mapped to the ilographV0 api
+      
+    - from: API Gateway/api.ilograph.com
+      to: Ilograph Export
+      label: "/export"
+      description: Route "/export" is mapped to the Ilograph Export api
+      
+    - from: SES/ilograph.com
+      to: notifications@ilograph.com
+      label: Sends email on behalf of
+      
+    - from: [*.cloudfront.net]
+      to: ilographCertificate
+      label: SSL Certificate
+      description: Cloudfront distributions use an Amazon Issued certificate stored in Certificate Manager
+      
+    - from: API Gateway/api.ilograph.com
+      to: ilographCertificate
+      label: SSL Certificate
+      description: The custom domain name in API Gateway uses an Amazon Issued certificate stored in Certificate Manager
+      
+    notes: |-
+      This perspective shows how Ilograph is configured for DNS.
+      
+      The domain *ilograph.com* is registered with Namecheap. Its nameservers are part of the *ilograph.com* hosted zone in *Route53*.
+      
+      The records in the *ilograph.com* hosted zone point to *Cloudfront* distributions, an *API Gateway* custom domain, and an *SES* domain. These resources are configured to send or retrieve data from downstream resources.
+      
+      The *Cloudfront* distributions and *API Gateway* custom domain use an Amazon-issued certificate stored in *Certificate Manager*.
+      
+    walkthrough: 
+    - highlight: Ilograph Namecheap Account/ilograph.com, Route 53/ilograph.com
+      text: |-
+        The ilograph.com domain is regestered with Namecheap and configured to use nameservers of the *ilograph.com* hosted zone in *Route53*.
+        
+    - highlight: app.ilograph.com, www.ilograph.com, icons.ilograph.com, Route 53//api.ilograph.com, Mail records
+      text: |-
+        Individual records in the *ilograph.com* hosted zone point to resources in the *Ilograph AWS Instance*. When ilograph.com domain names are resolved to IP addresses, those addresses will correspond to these resources.
+        
+    - highlight: app.ilograph.com, www.ilograph.com, icons.ilograph.com
+      text: |-
+        The *www*, *app*, and *icon* subdomains serve static files, such as HTML, javascript and images.
+        
+        These subdomain records each target a corresponding CloudFront distribution.
+        
+    - select: d3dxxxxx.cloudfront.net, d3exxxxx.cloudfront.net, d2wxxxxx.cloudfront.net
+      text: |-
+        Cloudfront distributions deliver content through a network of data centers called edge locations.
+        
+        Serving assets via CloudFront improves performance and reduces costs.
+        
+    - highlight: S3/App Bucket, S3/WWW Bucket, S3/Icons Bucket
+      text: |-
+        Each distribution is configured to use an S3 bucket as an **origin**.
+        
+        If a distribution does not have a cached version of a requested file or the cache has expired, it requests the file from its origin.
+        
+        Files are cached in CloudFront distributions for 24 hours unless manually invalidated.
+        
+    - highlight: ilographCertificate
+      text: |-
+        All three distributions use the Amazon-issued *\*.ilograph.com* certificate for SSL.
+        
+    - select: "^"
+      highlight: Route 53/ilograph.com/api.ilograph.com
+      text: |-
+          Dynamic requests are made to the *api* subdomain.
+          
+          Such requests read, create, modify, and delete individual ilograph diagrams.
+          
+    - select: API Gateway/api.ilograph.com
+      highlight: ilographV0, Ilograph Export
+      text: |-
+        These requests to the *api.ilograph.com* custom domain name in API gateway. The request is routed to the *ilographV0* or *Ilograph Export* API depending on the route.
+        
+        See the [Request] perspective for more information on these APIs.
+        
+    - highlight: ilographCertificate
+      text: |-
+        For SSL, the *api.ilograph.com* custom domain name uses the same Amazon-issued *\*.ilograph.com* certificate as the Cloudfront distributions.
+        
+    - select: "^"
+      highlight: Mail records, SES/ilograph.com
+      text: |-
+        Lastly, several TXT and MX records in the hosted zone allow the *ilograph.com* domain in SES to send automated emails from the *ilograph.com* domain. These emails
+  
+  - name: DiagramRequest
+    color: White
+    hidden: true
+    overrides: 
+    - resourceId: handleDiagram.ts, getDiagram.ts, updateDiagram.ts, setPermission.ts, getUsername.ts, parsePermission.ts, handleIcon.ts, handleTeam.ts
+      parentId: handleDiagram
+  
+  - name: TeamRequest
+    color: White
+    hidden: true
+    overrides: 
+    - resourceId: handleDiagram.ts, getDiagram.ts, updateDiagram.ts, setPermission.ts, getUsername.ts, parsePermission.ts, handleIcon.ts, handleTeam.ts
+      parentId: handleTeam
+  
+  - name: Get diagram
+    color: Green
+    defaultArrowColor: DarkGreen
+    extends: DiagramRequest
+    sequence: 
+      start: User
+      steps: 
+      - to: diagram
+        label: Get diagram
+        description: Users call this REST endpoint via HTTPS
+      - to: iloUsers
+        label: Authenticate user
+        description: The calling user's token is passed to the user pool for validation
+      - to: diagram
+        label: Use sub
+        description: When validated, the user's 'sub' (unique identifier) is returned
+        
+      - to: handleDiagram()
+        label: Invoke
+        description: The get method of this resource invokes the handleDiagram lambda 
+        
+      - to: getDiagram()
+        label: Call
+        description: Functions within a lambda can invoke other functions
+
+      - to: getData()
+        label: Call
+
+      - toAndBack: parsePermission()
+        label: Call
+        description: Parses user's permission for the requested diagram
+      - toAndBack: Diagrams
+        label: Get metadata
+        description: Retrieves metadata about the requested diagram
+
+      - to: getDiagram()
+      
+      - to: hydrateEntry()
+        label: Call
+      - toAndBack: Diagrams Bucket
+        label: Get diagram file
+        description: Retrieves the actual diagram file, which is stored in S3
+  
+      - to: getDiagram()
+      - to: handleDiagram()
+        
+      - to: diagram
+        label: Return diagram
+        description: The diagram and associated metadata are returned to the user
+      - to: User
+        label: Return diagram
+    
+    notes: |-
+      This perspective shows how user requests to retrieve diagrams are handled by the Ilograph back-end.
+    
+    walkthrough: 
+    - detail: 0.1
+      text: |- 
+        Requests for diagrams are handled entirely within the Ilograph AWS infrastructure.
+        
+        *Click 'Next' to continue*.
+      
+    - highlight: diagram
+      detail: 1
+      text: |-
+        The request is first handled by the */diagram* resource in API Gateway.
+      
+    - highlight: iloUsers
+      text: |-
+        The *iloUsers* user pool in Cognito authenticates the calling user's token.
+        
+        Once authenticated, the user's *sub* (unique identifier) is returned and used in subsequent steps.
+        
+        If *iloUsers* cannot authenticate the request, the request is rejected.
+        
+    - select: handleDiagram
+      expand: Ilograph AWS Instance
+      highlight: handleDiagram()
+      text: |-
+        The *handleDiagram* Lambda involves several functions spread over three code modules. The Lambda retrieves data from DynamoDB and S3.
+        
+        The main function, or "handler", in this Lambda is *handleDiagram()*.
+        
+    - highlight: getDiagram(), getData(), Diagrams
+      expand: Ilograph AWS Instance
+      
+      text: |-
+        *handleDiagram()* delegates this request to the *getDiagram()* function, which in turn invokes *getData()* to get the diagram metadata from the *Ilographs* table in DynamoDB.
+        
+        Before retrieving the data from DynamoDB, *getData()* calls the *getParams()* utility function to craft the request.
+        
+    - highlight: parsePermission()
+      text: |-
+        The permissions of the calling user are parsed from their auth token. If the user does not have permission to view the requested diagram, the request is rejected.
+    - highlight: getDiagram(), hydrateEntry(), Diagrams Bucket
+      text: |-
+        With the diagram's metadata in hand, *getDiagram()* invokes *hydrateEntry()* to retrieve the actual diagram file from S3.
+        
+    - expand: ^
+      select: ^
+      highlight: diagram, handleDiagram(), getDiagram()
+      text: |-
+        Once complete, the *handleDiagram* Lambda returns the diagram and its metadata to the user via API Gateway.
+        
+        For more information on this architecture, see the [Request] perspective.
+    
+  - name: Update diagram
+    color: Purple
+    defaultArrowColor: DarkGreen
+    extends: DiagramRequest
+    sequence: 
+      start: User
+      steps: 
+      - to: diagram
+        label: Update diagram
+        description: Users call this REST endpoint via HTTPS
+      - to: iloUsers
+        label: Authenticate user
+        description: The calling user's token is passed to the user pool for validation
+      - to: diagram
+        label: Use sub
+        description: When validated, the user's 'sub' (unique identifier) is returned
+        
+      - to: handleDiagram()
+        label: Invoke
+        description: The put method of this resource invokes the handleDiagram lambda
+        
+      - to: updateDiagram()
+        label: Call
+      - to: parsePermission()
+        label: Call
+        description: Parses this user's permission
+      - to: updateDiagram()
+        label: User permission
+      - to: getUserInfo()
+        label: Call
+      - to: iloUsers
+        label: Request user info
+      - to: getUserInfo()
+        label: Username + email
+        
+      - to: updateDiagram()
+
+      - to: saveToS3()
+        label: Call
+      - toAsync: Diagrams Bucket
+        label: Write diagram file
+
+      - to: updateDiagram()
+      - toAsync: Diagrams
+        label: Update metadata
+      - toAsync: History
+        label: Update history
+        
+      - to: handleDiagram()
+
+      - to: diagram
+        label: Return success
+      - to: User
+        label: Return 200
+    
+    notes: |-
+      This perspective shows how user requests to update diagrams are handled by the Ilograph back-end.
+    
+    walkthrough:
+    - detail: 0.1
+      text: |- 
+        Requests to update diagrams are handled entirely within the Ilograph AWS infrastructure.
+        
+        *Click 'Next' to continue*.
+      
+    - highlight: diagram
+      detail: 1
+      text: |-
+        The update request is first handled by the */diagram* resource in API Gateway.
+      
+    - highlight: iloUsers
+      expand: Ilograph AWS Instance
+      text: |-
+        The *iloUsers* user pool in Cognito authenticates the calling user's token.
+        
+        Once authenticated, the user's *sub* (unique identifier) is returned and used in subsequent steps.
+        
+        If *iloUsers* cannot authenticate the request, the request is rejected.
+        
+    - highlight: handleDiagram(), updateDiagram()
+      text: |-
+        After authenticating the user, API Gateway invokes the *handleDiagram()* function in the *handleDiagram* lambda. This handler function delegates this request to the *updateDiagram()* function, which orchestrates the remaining steps.
+      
+    - highlight: parsePermission()
+      text: |-
+        The lambda must check to ensure the requesting user has write access to the given diagram. It does so by parsing the user's auth token. If the requesting user does not have write access, the request is rejected.
+        
+    - highlight: getUserInfo(), iloUsers
+      text: |-
+        After verifying the user has write permissions, the lambda requests more information about the user (username and email address) from Cognito. This information is stored as metadata for the update.
+        
+    - highlight: saveToS3(), Diagrams Bucket
+      text: |-
+        Next, the lambda writes the diagram source to a new file to S3.
+        
+    - highlight: updateDiagram(), Diagrams, History
+      text: |-
+        Diagram metadata (update time and last person to update) is written to the *Diagrams* table.
+        
+        Simultaneously, a new history entry about this update is written to the *History* table.
+        
+    - highlight: User, ilographV0
+      expand: ^
+      text: |-
+        Finally, after successfully writing the file and updating all relevant metadata, a success code is returned to the user through API Gateway.
+        
+  - name: Invite teammate
+    color: DarkGoldenrod
+    defaultArrowColor: DarkGreen
+    extends: TeamRequest
+    sequence: 
+      start: User
+      steps: 
+      - to: team
+        label: Invite user
+        description: Users call this REST endpoint via HTTPS
+      - to: iloUsers
+        label: Authenticate user
+        description: The calling user's token is passed to the user pool for validation
+      - to: team
+        label: Use sub
+        description: When validated, the user's 'sub' (unique identifier) is returned
+      - to: handleTeam()
+        label: Invoke
+        description: The put method of this resource invokes the handleTeam lambda function
+        
+      - to: setPermission()
+        label: Call
+        description: Functions within a lambda can invoke other functions
+    
+      - to: parsePermission()
+        label: Call
+        
+      - to: setPermission()
+        label: Caller's permission
+        
+      - to: getUserInfo()
+        label: Call
+        
+      - to: iloUsers
+        label: Get invitee
+        
+      - to: getUserInfo()
+        label: Invitee's sub
+        
+      - to: setPermission()
+        label: Invitee's sub
+        
+      - toAsync: Permissions
+        label: Save permission
+        
+      - to: sendInvitation()
+        label: Call
+        
+      - toAsync: notifications@ilograph.com
+        label: Send invitation
+        
+      - to: setPermission()
+      - to: handleTeam()
+      - to: team
+      - to: User
+        label: "200"
+        
+    notes: |-
+      This perspective shows how user requests to invite new members to a [Team Workspace](https://www.ilograph.com/team.html) are handled by the Ilograph back-end.
+      
+    walkthrough:
+    - detail: 0.1
+      text: |- 
+        Requests to invite users to a team workspace are handled entirely within the Ilograph AWS infrastructure.
+        
+        *Click 'Next' to continue*.
+      
+    - highlight: team
+      detail: 1
+      text: |-
+        The update request is first handled by the */team* resource in the *ilographV0* API in API Gateway.
+      
+    - highlight: iloUsers
+      expand: Ilograph AWS Instance
+      text: |-
+        The calling user's token is authenticated by the *iloUsers* user pool in Cognito.
+        
+        Once authenticated, the user's *sub* (unique identifier) is returned and used in subsequence steps.
+        
+        If *iloUsers* cannot authenticate the request, the request is rejected.
+        
+    - highlight: handleTeam(), setPermission()
+      text: |-
+        The handler function for this Lambda, *handleTeam()*, delegates this request to invite a user to the *setPermission()* function.
+        
+    - highlight: parsePermission()
+      text: |-
+        The lambda must check to ensure that the requesting user has admin access for the given team workspace. It does so by parsing the user's auth token. If the requesting user does not have admin access, the request is rejected.
+        
+    - highlight: getUserInfo(), iloUsers
+      text: |-
+        After verifying the requesting user has admin permissions, the lambda checks to see if the invitee already has an account in the *iloUsers* User Pool in Cognito.
+        
+        Subsequent logic varies slightly depending on if the invitee already has an account or not.
+        
+    - highlight: setPermission(), Permissions
+      text: |-
+        In any case, a new permission entry is recorded in the *Permissions* table in DynamoDB. This entry gives the invited user access to the team workspace.
+        
+    - highlight: sendInvitation(), notifications@ilograph.com
+      text: |-
+        Before finishing, an invitation email is sent to the invited user. This is done in SES on behalf oof the *notifications@ilograph.com* email address.
+        
+    - expand: "^"
+      highlight: team, User
+      text: |-
+        Upon completion, the requesting user is notified the invitation request was a success.
+        
+  - name: Upload icon
+    color: Red
+    defaultArrowColor: DarkGreen
+    extends: TeamRequest
+    sequence: 
+      start: User
+      steps: 
+      - to: team
+        label: Add team icon
+        description: Users call this REST endpoint via HTTPS
+      - to: iloUsers
+        label: Authenticate user
+        description: The calling user's token is passed to the user pool for validation
+      - to: team
+        label: Use sub
+        description: When validated, the user's 'sub' (unique identifier) is returned
+      - to: handleTeam()
+        label: Invoke
+        description: The post method of this resource invokes the handleTeam lambda function
+        
+      - to: handleIcon()
+        label: Call
+        
+      - to: parsePermission()
+        label: Call
+        
+      - to: handleIcon()
+        label: User permission
+        
+      - to: uploadIcon()
+        
+      - toAndBack: generateIconId()
+        label: Call
+      - toAndBack: getIconMimeType()
+        label: Call
+        
+      - toAsync: Icons Bucket
+        label: Upload icon file
+        
+      - toAsync: Icons
+        label: Save icon metadata
+        
+      - to: handleIcon()
+      - to: handleTeam()
+      - to: team
+        label: 200 OK
+      - to: User
+        label: 200 OK
+        
+    notes: |-
+      This perspective shows how user requests to add new icons to a [Team Workspace](https://www.ilograph.com/team.html) are handled by the Ilograph back-end.
+      
+    walkthrough:
+    - detail: 0.1
+      text: |- 
+        Requests to upload an icon to a team workspace are handled entirely within the Ilograph AWS infrastructure.
+        
+        *Click 'Next' to continue*.
+      
+    - highlight: team
+      detail: 1
+      text: |-
+        The upload request is first handled by the */team* resource in the *ilographV0* API in API Gateway.
+      
+    - highlight: iloUsers
+      expand: Ilograph AWS Instance
+      text: |-
+        The calling user's token is authenticated by the *iloUsers* user pool in Cognito.
+        
+        Once authenticated, the user's *sub* (unique identifier) is returned and used in subsequence steps.
+        
+        If *iloUsers* cannot authenticate the request, the request is rejected.
+        
+    - highlight: handleTeam(), handleIcon()
+      text: |-
+        The handler function for this Lambda, *handleTeam()*, delegates this request to invite a user to the *handleIco()* function.
+        
+    - highlight: parsePermission()
+      text: |-
+        The lambda must check to ensure that the requesting user has write access for the given team workspace. It does so by parsing the user's auth token. If the requesting user does not have write access, the request is rejected.
+        
+    - highlight: uploadIcon()
+      text: |-
+        If the request is valid, the *uploadIcon()* function is called to handle processing and uploading the icon.
+        
+    - highlight: generateIconId()
+      text: |-
+        A unique icon ID is generated for each uploaded icon. This ID is used as the icon's key in S3.
+        
+    - highlight: getIconMimeType()
+      text: |-
+        The [MIME](https://en.wikipedia.org/wiki/Media_type) type of the image is computed; this value is stored as the content type of the image in S3.
+        
+    - highlight: Icons Bucket, Icons
+      text: |-
+        The icon image file is then written to the *Icons Bucket* bucket in S3, while metadata about the icon is written to the *Icons* table in DynamoDB.
+        
+    - expand: "^"
+      highlight: team, User
+      text: |-
+         Upon completion, the requesting user is notified the icon upload request was a success.
+    
+    
+  - name: Purchase subscription
+    color: DarkCyan
+    defaultArrowColor: DarkGreen
+    sequence:
+      start: User
+      steps: 
+      - to: stripe/checkout
+        label: Request
+      - to: handleStripe()
+        label: Invoke
+        
+      - to: createCheckoutSession()
+        label: Calls
+      - to: Ilograph Stripe Account
+        label: Create Checkout session
+      - to: createCheckoutSession()
+        label: Checkout session id
+        
+      - to: handleStripe()
+        label: Checkout session id
+      - to: stripe/checkout
+        label: Checkout session id
+      - to: User
+        label: Checkout session id
+        
+      - toAsync: Ilograph Stripe Account
+        label: Visit Checkout
+        
+      - to: Ilograph Stripe Account
+        label: Purchase subscription
+        
+      - to: stripe/webhook
+        label: Create session with id (Webhook call)
+        
+      - to: handleStripe()
+        label: Invokes
+        
+      - to: createStripeSession()
+        label: Calls
+        
+      - toAsync: Sessions
+        label: Save session id
+        
+      - toAsync: notifications@ilograph.com
+        label: Send session id
+        
+      - to: handleStripe()
+      - to: stripe/webhook
+        
+      - to: Ilograph Stripe Account
+        label: 200 OK
+        
+      - to: User
+        label: Session id
+        
+    overrides: 
+    - parentId: handleStripe
+      resourceId: handleStripe.ts
+      
+    notes: |-
+      This perspective shows the sequence of events in the Ilograph back-end when a user purchases an [Ilograph Desktop](https://www.ilograph.com/desktop/) subscription.
+      
+      The back-end works in concert with [Stripe Checkout](https://stripe.com/payments/checkout) for payment processing. Click **Start Walkthrough** above for step-by-step details.
+      
+      Once this process is complete, the user is sent the *Session ID* which they can use to claim their subscription. See the [Claim subscription] perspective for details.
+      
+    walkthrough:
+    - detail: 0.01
+      text: |-
+        While Ilograph Web is free to use for individuals, there are premium versions of Ilograph that require paid subscriptions. These are [Ilograph Team Workspace](https://www.ilograph.com/team.html), [Ilograph Desktop](https://www.ilograph.com/desktop/), and the [Ilograph Export API](https://www.ilograph.com/export-api/index.html).
+        
+        Purchasing subscriptions is a complex workflow between the user, the *Ilograph AWS Instance*, and [Stripe](https://stripe.com/).
+    - highlight: checkout
+      text: |-
+        To initiate a purchase, users first request a [Stripe Checkout](https://stripe.com/payments/checkout) session from the Ilograph back-end using the *ilographV0* API.
+        
+        An example of a page allowing users to create Checkout sessions can be found [on the Ilograph Desktop download page](https://www.ilograph.com/desktop/).
+        
+    - highlight: checkout, createCheckoutSession()
+      detail: 1
+      text: |-
+        This request is handled by the *createCheckoutSession()* function running in the *handleStripe* Lambda. It requests a new Checkout session for the product and quantity specified by the user.
+        
+        Stripe returns a unique **Checkout Session ID** to the Ilograph back-end, which in turn returns it to the user.
+        
+    - highlight: User, Ilograph Stripe Account
+      text: |-
+        With the **Checkout Session ID** returned to them in the previous step, the user visits a purchasing page hosted on Stripe. There, they can enter their credit card information and complete the sale.
+        
+    - highlight: Ilograph Stripe Account, webhook
+      text: |-
+        With the purchase complete, Stripe notifies the Ilograph back-end via a webhook call. This call contains the email address the user provided at purchase time and a unique **Session ID**.
+        
+        
+    - highlight: webhook, createStripeSession()
+      text: |-
+        This webhook is handled by the *createStripeSession()* function inside the *handleStripe* Lambda.
+      
+    - highlight: createStripeSession(), Sessions
+      text: |-
+        The *createStripeSession()* function stores information about the purchase, including with the unique **Session ID**, in the *Sessions* table. Users will later claim this session using the **Session ID**. See the [Claim subscription] perspective for more information on this process.
+        
+    - highlight: createStripeSession(), notifications@ilograph.com
+      text: |-
+        Before the webhook finishes, the user is sent an email thanking them for their purchase. The email contains a link they can use to claim their subscription.
+        
+    - highlight: webhook, Ilograph Stripe Account
+      text: |-
+        The webhook returns a 200 status code to Stripe indicating that the purchase information was successfully received.
+        
+    - highlight: Ilograph Stripe Account, User
+      text: |-
+        Finally, the Stripe page the user purchased their subscription on re-directs the user to a page where they can claim the subscription. See the [Claim subscription] perspective for more info.
+        
+        
+  - name: Claim subscription
+    color: HotPink
+    defaultArrowColor: DarkGreen
+    sequence:
+      start: User
+      steps:
+      - to: subscription
+        label: Session id
+        
+      - to: iloUsers
+        label: Authenticate user
+        description: The calling user's token is passed to the user pool for validation
+      - to: subscription
+        label: Use sub
+        description: When validated, the user's 'sub' (unique identifier) is returned
+        
+      - to: handleSubscription()
+        label: Invoke
+        
+      - toAndBack: Sessions
+        label: Get session by id
+        
+      - toAsync: Sessions
+        label: Mark session as claimed
+        
+      - to: getSubscription()
+        label: Calls
+        
+      - toAndBack: Ilograph Stripe Account
+        label: Get subscription info
+        
+      - to: handleSubscription()
+        
+      - toAsync: Subscriptions
+        label: Save subscription
+        
+      - to: createLicenseKeys()
+        label: Call
+        
+      - toAsync: LicenseKeys
+        label: Save key(s)
+        
+      - to: handleSubscription()
+      - to: subscription
+        label: Keys
+      - to: User
+        label: Keys
+    
+    overrides: 
+    - parentId: handleSubscription
+      resourceId: handleSubscription.ts
+      
+    notes: |-
+      This perspective shows the sequence of events in the Ilograph back-end when a user claims an [Ilograph Desktop](https://www.ilograph.com/desktop/) subscription.
+      
+      Users claim subscriptions using a *Session ID* opbtained after purchase. See the [Purchase subscription] perspective for details.
+      
+      Once claimed, the user can manage their subscription and view their license keys. For details on how license keys are activated, see the [Activate license] perspective.
+      
+    walkthrough: 
+    - highlight: subscription,
+      text: |-
+        To claim a subscription, users pass the **Session ID** they received after purchase to the */subscriptions* endpoint in the *ilographV0* API.
+        
+    - highlight: subscription, iloUsers
+      text: |-
+        The request is authenticated with the *iloUsers* User Pool in Cognito. Users must be signed in in order to claim a subscription. This is done so that license keys and subscription information can be shared securely.
+        
+    - highlight: handleSubscription()
+      text: |-
+        *handleSubscription()* serves as the handler function for this request. It orchastrates the remainder of the workflow.
+        
+    - highlight: handleSubscription(), Sessions
+      text: |-
+        First, *handleSubscription()* queries the *Sessions* table using the **Session ID** passed in by the user.
+        
+        If no **session** with the given **Session ID** exists, or it has already been marked as claimed, the request is rejected as invalid.
+        
+        If the **session** does exist and it is unclaimed, *handleSubscription()* marks it as claimed.
+        
+    - highlight: handleSubscription(), getSubscription(), Ilograph Stripe Account
+      text: |-
+        Next, *handleSubscription()* calls *getSubscription()* to get additional information about the subscription, such as the product ID, quantity, and term, if applicable.
+        
+        *getSubscription()* obtains this information by requesting it from Stripe.
+        
+    - highlight: handleSubscription(), Subscriptions
+      text: |-
+        *handleSubscription()* records this information, along with information about the user claiming the subscription, into the *Subscriptions* table.
+        
+    - highlight: handleSubscription(), createLicenseKeys(), LicenseKeys
+      text: |-
+        Lastly, *handleSubscription()* calls *createLicenseKeys()* to generate license keys for this subscription. These keys are saved to the *LicenseKeys* table.
+        
+    - highlight: handleSubscription(), subscription, User
+      text: |-
+        These license keys are returned to the user, along with information about the subscription. These keys are used to active Ilograph Desktop licenses. See the [Active license] perspective for more info.
+      
+  - name: Activate license
+    color: OrangeRed
+    defaultArrowColor: DarkGreen
+    sequence: 
+      start: User
+      steps: 
+      - to: Ilograph Desktop
+        label: License key
+      - to: license
+        label: License key
+        
+      - to: handleLicense()
+        label: Invokes
+        
+      - to: createLicense()
+        label: Calls
+        
+      - to: LicenseKeys
+        label: Get key
+        
+      - to: createLicense()
+        label: License key data
+        
+      - to: Subscriptions
+        label: Get subscription
+        
+      - to: createLicense()
+        label: Subscription
+        
+      - toAsync: LicenseKeys
+        label: Update key with node id
+        
+        
+      - to: signLicense()
+        label: License
+        
+      - toAndBack: iloSignatureKey
+        label: Sign license
+        
+      - to: createLicense()
+        label: Signed license
+        
+      - to: handleLicense()
+        label: Signed license
+        
+      - to: license
+        label: Signed license
+        
+      - to: Ilograph Desktop
+        label: Signed license
+        
+      - to: User
+        
+    overrides: 
+    - parentId: handleLicense
+      resourceId: handleLicense.ts, license.ts
+    
+    notes: |-
+      This perspective shows the sequence of events in the Ilograph back-end when a user activates an [Ilograph Desktop](https://www.ilograph.com/desktop/) licesnse key. See the [Purchase subscription] perspective to see how license keys are purchased.
+      
+    walkthrough: 
+    - highlight: User, Ilograph Desktop
+      detail: 0.01
+      text: |-
+        Users activate Ilograph Desktop licenses by pasting a license key into the app's user interface.
+        
+        The app will send this key to the Ilograph back-end to receive a signed license and activate itself.
+        
+        License keys are received after claiming a subscription. See the [Claim subscription] perspective on how license keys are obtained.
+    - highlight: Ilograph Desktop, license
+      detail: 1
+      text: |-
+        The app posts the license key to the */license* resource in the *ilographV0* API.
+        
+    - expand: Ilograph AWS Instance
+      highlight: license, handleLicense(), createLicense()
+      text: |-
+        */license* invokes the *handleLicense* Lambda. Its handler, *handleLicense()* delegates this request to the *createLicense()* function.
+        
+        *createLicense()* will orchestrate the remaining steps in the license activation workflow.
+        
+    - highlight: createLicense(), LicenseKeys
+      text: |-
+        First, *createLicense()* attempts to retrieve the license key from the *LicenseKeys* table.
+        
+        If no license key is found in the table, or the key is found but it has already been activated, the request is rejected as invalid.
+        
+        The data retrieved from the *LicenseKeys* table includes the **Subscription ID** of the subscription associated with the license.
+        
+    - highlight: createLicense(), Subscriptions
+      text: |-
+        Using the **Subscription ID** obtained from the *LicenseKeys* table information about the key's **Subscription** is retrieved from the *Subscriptions* table.
+        
+        If the subscription is expired, suspended, or otherwise not in good standing, the request is rejected.
+        
+    - highlight: createLicense(), LicenseKeys
+      text: |-
+        With the key and subscription verified, *createLicense()* writes to *LicenseKeys* marking the key as activated for a given machine.
+        
+    - highlight: createLicense(), signLicense()
+      text: |-
+        Next, *createLicense()* creates a license object to be signed and returned to the user. It calls *signLicense()* to have it signed.
+        
+    - highlight: signLicense(), iloSignatureKey
+      text: |-
+        *signLicense()* passes the license object to the *iloSignatureKey* key in Key Management Service. This service returns a signature of the license object without exposing the private key.
+        
+    - highlight: createLicense(), handleLicense(), license, Ilograph Desktop
+      expand: "^"
+      text: |-
+        Lastly, the signed license is returned all the way to the Ilograph Desktop app. The app verifies the signature of the license and activates it locally so the app can be used.
+    
+  - name: Auth
+    color: Navy
+    relations: 
+    - from: User
+      to: Post Confirmation
+      label: Confirm new account
+      
+    - from: Post Confirmation
+      to: confirmUser
+      label: Invoke
+      description: Lambda actions can be triggered by events in Cognito. [Learn more](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-lambda-triggers.html) about this integration.
+      
+    - from: User
+      to: Pre Token Generation
+      label: Log in
+      
+    - from: Pre Token Generation
+      to: generateToken
+      label: Invoke
+      
+    - from: confirmUser
+      to: notifications@ilograph.com
+      label: Email using
+      description: Sends a welcome email to the user
+      
+    - from: confirmUser
+      to: Permissions
+      label: Read/Write
+      description: If user was invited to view a diagram or team workspace, this function sets those permission(s) up
+      
+    - from: confirmUser
+      to: Ilograph Users
+      label: Add email to
+      description: Adds user email to contact list if the user opted-in to receiving quarterly Ilograph updates
+      
+    - from: generateToken
+      to: Permissions, Domains
+      label: Read
+      description: User permissions are generated on log-in by reading the Permissions table
+      
+    notes: |-
+      This perspective shows the resources and depedencies needed for user confirmation and authorization when users sign-up and log in, respectively.
+      
+    walkthrough: 
+    - select: iloUsers
+      text: |-
+        The *iloUsers* Cognito **User Pool** has two triggers specified: *Post Confirmation* and *Pre Token Generation*.
+        
+        *Post Confirmation* triggers after a user confirms their email address for the first time.
+        
+        *Pre Token Generation* triggers whenever a user logs in.
+        
+    - highlight: Post Confirmation
+      text: |-
+        We'll look first at new-user confirmation trigger.
+        
+    - select: confirmUser
+      text: |-
+        *Post Confirmation* calls the *confirmUser* Lambda function. This function is passed the confirmed user's email address and username.
+        
+        This function performs three bookkeeping tasks for new users.
+        
+    - highlight: Permissions
+      text: |-
+        First, *confirmUser* checks if there are any pending permissions that need to be created for the new user. This occurs if the new user has been invited to view existing diagram(s) and/or join an existing team.
+        
+        If any are found, the appropriate permission(s) are written to the *Permissions* table.
+      
+    - highlight: notifications@ilograph.com
+      text: |-
+        Next, a welcome email is sent to the new user. This email contains links to Ilograph documentation and sample diagrams.
+        
+    - highlight: Ilograph Users
+      text: |-
+        Lastly, if the user has signed up for Ilograph updates, their email address will be added to the *Ilograph Users* contact list on MailChimp.
+        
+    - select: iloUsers
+      highlight: Pre Token Generation
+      text: |-
+        Next, we'll look at the log-in trigger.
+        
+    - select: generateToken
+      text: |-
+        *Pre Token Generation* calls the *generateToken* Lambda function. This function is passed the logging-in user's username.
+        
+        This function generates the user's permissions by querying the *Permissions* and *Domains* tables.
+        
+        Those permissions are converted to claims, signed by Cognito, and returned to the user for.
+
+description: |-
+  
+  This Ilograph diagram documents the Ilograph Serverless back-end from eleven perspectives. Select a perspective below to get started.
+  
+  *©2022 Ilograph LLC. Stripe, Namecheap, Mailchimp, AWS, and their icons are trademarks of their respective trademark holders.*

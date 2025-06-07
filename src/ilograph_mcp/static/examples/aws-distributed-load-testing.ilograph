@@ -1,0 +1,887 @@
+imports: 
+- from: ilograph/aws
+  namespace: AWS
+
+resources:
+  - name: Function
+    subtitle: Function
+    abstract: true
+    color: DimGray
+    icon: AWS/Compute/Lambda.svg
+      
+  - name: Module
+    subtitle: Module
+    abstract: true
+    color: DimGray
+      
+  - name: Screen
+    subtitle: Screen
+    abstract: true
+    icon: AWS/_General/Client.svg
+      
+  - name: Lambda Source File
+    subtitle: Lambda Source File
+    abstract: true
+    icon: AWS/Storage/S3_Object.svg
+      
+  - name: The Internet
+    subtitle: Public network
+    color: Green
+    icon: AWS/_General/Internet-alt2.svg
+      
+  - name: AWS Instance
+    instanceOf: AWS::AWS Instance
+    description: Cloud platform managed by Amazon, Inc.
+    children:
+    - name: IAM
+      instanceOf: AWS::IAM
+      description: Manages access to AWS services and resources
+      children:
+        - name: Cloud Watch Logs Policy
+          instanceOf: AWS::IAM::Policy
+        - name: S3Policy
+          instanceOf: AWS::IAM::Policy
+        - name: Dynamo Db Policy
+          instanceOf: AWS::IAM::Policy
+        - name: Lambda Api Role
+          instanceOf: AWS::IAM::Role
+        - name: Lambda Task Role
+          instanceOf: AWS::IAM::Role
+        - name: Lambda Results Role
+          instanceOf: AWS::IAM::Role
+        - name: Lambda Custom Role
+          instanceOf: AWS::IAM::Role
+        - name: Ecs Task Execution Role
+          instanceOf: AWS::IAM::Role
+        - name: Container Code Build Role
+          instanceOf: AWS::IAM::Role
+        - name: Container Code Pipeline Role
+          instanceOf: AWS::IAM::Role
+        - name: Api Lambda Exec Role
+          instanceOf: AWS::IAM::Role
+        - name: Cognito Authorized Role
+          instanceOf: AWS::IAM::Role
+        - name: Cognito Un Authorized Role
+          instanceOf: AWS::IAM::Role
+    - name: Lambda
+      instanceOf: AWS::Lambda
+      description: Allows running of code without provisioning dedicated servers
+      children:
+        - name: S3Lambda Invoke
+          instanceOf: AWS::Lambda::Permission
+        - name: Api Lambda Invoke
+          instanceOf: AWS::Lambda::Permission
+        - name: Ecs Task Event Source Mapping
+          instanceOf: AWS::Lambda::EventSourceMapping
+        - name: Custom Resource
+          instanceOf: AWS::Lambda::Function
+          description: CFN Lambda backed custom resource to deploy assets to s3
+        - name: Api Services
+          instanceOf: AWS::Lambda::Function
+          description: Api microservices for creating, updating, listing and deleting test scenarios
+          children: 
+          - name: handler
+            instanceOf: Function
+            description: Main handler function
+          - name: scenarios
+            color: DimGray
+            instanceOf: Module
+            children: 
+            - name: createTest
+              instanceOf: Function
+              description: Creates a new test
+            - name: listTests
+              instanceOf: Function
+              description: Lists all tests
+            - name: cancelTest
+              instanceOf: Function
+              description: Cancels a given test
+        - name: Results Parser
+          instanceOf: AWS::Lambda::Function
+          description: Tesult parser for indexing xml test results to DynamoDB
+          children: 
+          - name: handler
+            instanceOf: Function
+          - name: parser
+            color: DimGray
+            instanceOf: Module
+            children: 
+            - name: results
+              instanceOf: AWS::Lambda::Function
+            - name: finalResults
+              instanceOf: AWS::Lambda::Function
+          
+        - name: Task Runner
+          instanceOf: AWS::Lambda::Function
+          description: Task runner for ECS task definitions
+          children: 
+          - name: handler
+            instanceOf: Function
+          
+    - name: EC2
+      instanceOf: AWS::EC2
+      children:
+        - name: Vpc
+          instanceOf: AWS::EC2::VPC
+          description: Logical collection of Subnets and related computing resources
+          children:
+          - name: Public Subnet A
+            instanceOf: AWS::EC2::Subnet
+            description: Subnet for running ECS Clusters
+          - name: Public Subnet B
+            instanceOf: AWS::EC2::Subnet
+            description: Subnet for running ECS Clusters
+          - name: Internet Gateway
+            instanceOf: AWS::EC2::InternetGateway
+            description: Resource allowing outbound requests to the internet from the VPC
+          - name: Main Route Table
+            instanceOf: AWS::EC2::RouteTable
+            children:
+            - name: Route To Internet
+              instanceOf: AWS::EC2::Route
+              description: Allows outbound requests via the Internet Gateway
+          - name: Gateway Attachment
+            instanceOf: AWS::EC2::VPCGatewayAttachment
+          - name: Route Table Association A
+            instanceOf: AWS::EC2::SubnetRouteTableAssociation
+          - name: Route Table Association B
+            instanceOf: AWS::EC2::SubnetRouteTableAssociation
+        - name: Ecs Security Group
+          instanceOf: AWS::EC2::SecurityGroup
+    - name: ECR
+      instanceOf: AWS::ECR
+      children:
+        - name: Ecr Repository
+          instanceOf: AWS::ECR::Repository
+          description: Repository storing the docker image used by the Ecs Cluster in this solution
+    - name: ECS
+      instanceOf: AWS::ECS
+      children:
+        - name: Ecs Cluster
+          instanceOf: AWS::ECS::Cluster
+          description: A cluster for running Docker containers
+        - name: Ecs Task Definition
+          instanceOf: AWS::ECS::TaskDefinition
+    - name: CloudWatch
+      instanceOf: AWS::CloudWatch
+      children:
+        - name: Ecs Load Testing
+          instanceOf: AWS::CloudWatch::Dashboard
+        - name: Ecs Cloud Watch Log Group
+          instanceOf: AWS::Logs::LogGroup
+        - name: Ecs Avg Response Time
+          instanceOf: AWS::Logs::MetricFilter
+          
+    - name: SQS
+      instanceOf: AWS::SQS
+      description: A cloud-native message queue service
+      children:
+        - name: Ecs Task Sqs Queue
+          instanceOf: AWS::SQS::Queue
+          description: Queue for test creating requests
+    - name: S3
+      instanceOf: AWS::S3
+      description: A file storage service that stores files in "buckets"
+      children:
+        - name: Scenarios Bucket
+          instanceOf: AWS::S3::Bucket
+          description: Stores raw testing data
+        - name: Scenarios Bucket Policy
+          instanceOf: AWS::S3::BucketPolicy
+        - name: Container Bucket
+          instanceOf: AWS::S3::Bucket
+        - name: Logs Bucket
+          instanceOf: AWS::S3::Bucket
+        - name: Source Bucket
+          instanceOf: AWS::S3::Bucket
+          description: Created manually
+          children: 
+          - name: custom-resource.zip
+            instanceOf: Lambda Source File
+          - name: task-runner.zip
+            instanceOf: Lambda Source File
+          - name: api-services.zip
+            instanceOf: Lambda Source File
+          - name: results-parser.zip
+            instanceOf: Lambda Source File
+            
+        - name: Console Bucket
+          instanceOf: AWS::S3::Bucket
+          description: Bucket for static Testing Console files
+        - name: Console Bucket Policy
+          instanceOf: AWS::S3::BucketPolicy
+          
+    - name: DynamoDB
+      instanceOf: AWS::DynamoDB
+      description:  A managed, proprietary NoSQL database service that supports key-value and document data structures
+      children:
+        - name: Scenarios Table
+          instanceOf: AWS::DynamoDB::Table
+          description: Stores active tests, also called "scenarios"
+        - name: Results Table
+          instanceOf: AWS::DynamoDB::Table
+          description: Stores testing results
+    - name: CloudFront
+      instanceOf: AWS::CloudFront
+      children:
+        - name: Console Origin Access Identity
+          instanceOf: AWS::CloudFront::CloudFrontOriginAccessIdentity
+        - name: Console Cloud Front
+          instanceOf: AWS::CloudFront::Distribution
+          description: Distribution for static Testing Console files
+    - name: CodeBuild
+      instanceOf: AWS::CodeBuild
+      children:
+        - name: Container Code Build
+          instanceOf: AWS::CodeBuild::Project
+          description: Builds distributed load testing suite
+        
+    - name: CodePipeline
+      instanceOf: AWS::CodePipeline
+      children:
+        - name: Container Code Pipeline
+          instanceOf: AWS::CodePipeline::Pipeline
+          
+    - name: ApiGateway
+      instanceOf: AWS::ApiGateway
+      children:
+      - name: Api Deployment
+        instanceOf: AWS::ApiGateway::Deployment
+      - name: Api
+        description: API for the test runner
+        instanceOf: AWS::ApiGateway::RestApi
+        children: 
+        - name: scenarios
+          instanceOf: AWS::ApiGateway::Resource
+          children: 
+          - name: "{testId}"
+            id: testId
+            instanceOf: AWS::ApiGateway::Resource
+        - name: tasks
+          instanceOf: AWS::ApiGateway::Resource
+            
+    - name: Cognito
+      instanceOf: AWS::Cognito
+      children:
+        - name: Cognito User Pool
+          instanceOf: AWS::Cognito::UserPool
+          description: A user pool for the testing console
+  
+  - name: Testing Console
+    subtitle: Web Appication
+    description: Used to create and monitor tests
+    icon: AWS/_General/Client.svg
+    children: 
+    - name: Dashboard
+      instanceOf: Screen
+      description: Screen to view a list of tests
+    - name: Test details
+      instanceOf: Screen
+      description: Screen to view test details
+    - name: Create test
+      instanceOf: Screen
+      description: Screen for creating new tests
+      
+  - name: Solution Repository
+    children: 
+    - name: Dockerfile
+      subtitle: Docker file
+      description: Docker file describing the docker image used by this solution
+      
+    - name: load-test
+      subtitle: Shell script
+      description: Docker container shell script that runs distributed load tests using Taurus
+        
+  - name: Docker Hub
+    subtitle: Container Image Library
+    color: DodgerBlue
+    children: 
+    - name: blazemeter/taurus
+      id: blazemeteeTaurus
+      subtitle: Docker image
+      description:  Docker image containing Taurus tool inside, see [http://gettaurus.org](http://gettaurus.org)
+      icon: AWS/_General/SDK.svg
+      children: 
+      - name: Taurus
+        subtitle: Library instance
+        description: Distributed load testing instance
+      
+  - name: PyPi
+    subtitle: Python Package Repository
+    color: Goldenrod
+    children: 
+    - name: AWS CLI
+      color: OrangeRed
+      subtitle: Library
+      description: CLI Library for interacting with AWS
+      icon: AWS/_General/SDK.svg
+
+perspectives:
+- name: Runtime Dependency
+  color: royalblue
+  relations:
+  - from: Testing Console
+    to: Console Cloud Front
+    label: Downloaded from
+    description: Static files for the testing console are distributed by a Cloudfront distribution
+    
+  - from: Dashboard
+    to: Api/scenarios
+    label: GET
+    
+  - from: Create test
+    to: Api/scenarios
+    label: Post
+    
+  - from: Create test
+    to: tasks
+    label: get
+    
+  - from: Test details
+    to: testId
+    label: GET, POST, DELETE
+    
+  - from: Console Cloud Front
+    to: Console Bucket
+    label: Origin
+    description: Requested files are retrieved from S3 if not cached in the distribution
+    
+  - from: Api/scenarios, testId, tasks
+    to: Api Services
+    label: Integration
+    description: This resource uses this lambda as an integration for all methods
+    
+  - from: Api Services
+    to: Scenarios Bucket
+    label: Writes
+    
+    
+  - from: Task Runner
+    to: Ecs Task Definition
+    label: Use definition
+  - from: Api Services
+    to: Ecs Cluster
+    label: Get/Stop Tasks
+    
+  - from: Api Services
+    to: Ecs Task Sqs Queue
+    label: Enqueues to
+    
+  - from: Api Services
+    to: Results Table
+    label: Reads/Deletes
+    
+  - from: Api Services
+    to: Scenarios Table
+    label: Reads/Writes
+    
+  - from: Task Runner
+    to: Scenarios Table
+    label: Writes errors to
+    
+  - from: Task Runner
+    to: Ecs Cluster
+    label: Runs tasks
+    
+  - from: Results Parser
+    to: Results Table, Scenarios Table
+    label: Writes
+    
+  - from: Results Parser
+    to: Scenarios Bucket
+    label: Triggers
+    arrowDirection: backward
+    
+  - from: Task Runner
+    to: Ecs Task Sqs Queue
+    label: Dequeues from
+    
+  - from: Ecs Cluster
+    to: Public Subnet A, Public Subnet B
+    label: Runs containers in
+    description: Runs tasks in batches of 10 using the 'Fargate' launch type
+    
+  - from: Ecs Cluster
+    to: Scenarios Bucket
+    label: Reads/Writes
+      
+  - from: Testing Console
+    to: Cognito User Pool
+    label: Authenticates with
+    description: Console users authenticate with this user pool
+    
+  - from: Api
+    to: Cognito User Pool
+    label: Authorizer
+    description: Requests to this API are validated using this user pool
+    
+  - from: Ecs Cluster
+    to: Ecr Repository
+    label: Gets image from
+    description: The docker image used by this cluster is stored in this repository
+    
+  - from: Api Services, Results Parser, Task Runner, Ecs Cluster
+    to: Ecs Cloud Watch Log Group
+    label: Logs to
+    
+  notes: |-
+    This perspective (*Runtime Dependency*) shows dependencies between resources at **run-time**. Independent resources appear to the right of their dependent resource(s). The arrow labels describe the dependency.
+    
+    The related [Deployment Dependency] perspective shows dependencies between resources at **deploy time**. [Create Test] and other sequence perspectives show the execution flows of this solution.
+
+  walkthrough: 
+  - detail: 0.2
+    text: |-
+      This distributed load testing solution utilizes a variety of AWS-managed services.
+      
+      **Click next to continue.**
+      
+  - text: Users use the **Testing Console** to monitor and create tests. The Testing Console is served by the **Console Cloud Front** *distribution*, which uses the **Console Bucket** *bucket* as an origin.
+    highlight: Console Cloud Front, Console Bucket
+    detail: 1
+    
+  - text: |-
+      Dynamic requests from the Testing Console are handled by **Api**, an API Gateway *REST API*.
+      
+      This API comprises of just two resources (**scenarios** and **tasks**) which are used to create, view, and cancel tests.
+    select: Api
+    
+  - highlight: Cognito User Pool
+    text: |-
+      **Api** uses **Cognito User Pool** as an *authorizer*. Users of the testing console must authenticate with this user pool before making requests to **Api**.
+      
+  - highlight: Api Services
+    select: ^
+    expand: AWS Instance
+    text: All valid resuests sent to **API** are handled by the **Api Services** *lambda*. This lambda performs different actions (creating, viewing and deleting tests) depending on the request.
+    
+  - highlight: Results Table, Scenarios Table
+    text: Dynamo DB tables **Results Table** and **Scenarios Table** are used to track tests and their results.
+    
+  - highlight: Scenarios Bucket
+    text: Test information is also stored as JSON files in the **Scenarios Bucket** on S3.  **Api Services** writes this data as part of creating a test.
+    
+  - highlight: Ecs Cluster, Public Subnet A, Public Subnet B, Ecr Repository
+    text: |-
+      The **Ecs Cluster** reads test information from S3. This cluster, which runs the actual tests, runs in **Public Subet A** and **Public Subnet B**, and its image is stored in the **Ecr Repository**.
+      
+      See the [Deployment Dependency] perspective for more info on how this image is created.
+      
+  - highlight: Ecs Task Sqs Queue
+    text: The **Ecs Task Sqs Queue** is used to queue created test requests generated by the **Api Services** lambda and run by **Task Runner** lambda.
+      
+  - highlight: Ecs Cloud Watch Log Group
+    text: All logs are written to the **Ecs Cloud Watch Log Group**.
+    
+  - expand: ^
+    text: This ends the walkthough. Feel free to browse the resources in this perspective or view other perspectives in this diagram using the **perspective tray** at the bottom of the app.
+    
+- name: Deployment Dependency
+  color: Firebrick
+  relations: 
+  - from: Container Code Build
+    to: Ecr Repository
+    label: Pushes image to
+    
+  - from: Dockerfile
+    to: blazemeteeTaurus
+    label: Parent image
+    
+  - from: Dockerfile
+    to: AWS CLI
+    label: Installs
+    
+  - from: Dockerfile
+    to: load-test
+    label: Entrypoint
+    
+  - from: Container Code Build
+    to: Dockerfile
+    label: Builds
+    
+  - from: Container Code Pipeline
+    to: Container Code Build
+    label: Runs
+    
+  - from: Api Services
+    to: api-services.zip
+    label: Source
+    
+  - from: Task Runner
+    to: task-runner.zip
+    label: Source
+
+  - from: Results Parser
+    to: results-parser.zip
+    label: Source
+  - from: Custom Resource
+    to: Source Bucket/custom-resource.zip
+    label: Source
+    
+  overrides: 
+  - resourceId: Docker Hub, PyPi
+    parentId: The Internet
+    
+  - resourceId: Dockerfile, load-test
+    parentId: Container Bucket
+    
+  notes: |-
+    This perspective shows the **deployment-time** dependencies between resources in this solution.
+    
+    The **Container Code Pipeline** and **Container Code Build** resources build a docker image that is stored in the **Ecr Repository**. This image is used for containers by ECS at run-time.
+    
+    Once this solution is successfully deployed, the dependencies described in this perspective are no longer relevant. See the [Runtime Dependency] perspective to view this solution's run-time dependencies.
+    
+- name: Access Management
+  color: Green
+  relations:
+  - from: Api Services
+    to: Lambda Api Role
+    label: Has role
+  - from: Results Parser
+    to: Lambda Results Role
+    label: Has role
+    
+  - from: Task Runner
+    to: Lambda Task Role
+    label: Has role
+    
+  - from: Ecs Task Definition
+    to: Ecs Task Execution Role
+    label: Task/Execution role
+    
+  - from: Lambda Api Role, Lambda Results Role, Lambda Task Role
+    to: Dynamo Db Policy
+    label: Has
+    
+  - from: Lambda Api Role, Lambda Results Role, Ecs Task Execution Role, Container Code Build Role, Container Code Pipeline Role
+    to: Cloud Watch Logs Policy
+    label: Has
+    
+  - from: Lambda Api Role, Lambda Results Role, Ecs Task Execution Role
+    to: S3Policy
+    label: Has
+    
+  - from: Dynamo Db Policy
+    to: Scenarios Table, Results Table
+    label: Allows full access
+  - from: Cloud Watch Logs Policy
+    to: Ecs Cloud Watch Log Group
+    label: Allows writes
+    
+  - from: Lambda Api Role
+    to: Ecs Task Sqs Queue
+    label: Can send message
+    
+  - from: Lambda Api Role
+    to: ECS*2/Ecs Task Definition
+    label: Can run/stop/describe
+    
+  - from: Lambda Api Role
+    to: Ecs Cloud Watch Log Group
+    label: Can write
+    
+  - from: Lambda Task Role
+    to: ECS*2/Ecs Task Definition
+    label: Can run
+    
+  - from: Lambda Task Role
+    to: Ecs Task Sqs Queue
+    label: Can receive/delete messages
+    
+  - from: Lambda Task Role
+    to: Ecs Cloud Watch Log Group
+    label: Can write
+    
+  - from: Container Code Build
+    to: Container Code Build Role
+    label: Service role
+    
+  - from: Container Code Pipeline
+    to: Container Code Pipeline Role
+    label: Has role
+    
+    # S3 Permissions
+    
+  - from: Console Cloud Front
+    to: Console Origin Access Identity
+    label: Origin Access Identity
+    
+  - from: Api
+    to: Cognito User Pool
+    label: Authorizer
+    
+      
+  - from: S3Policy
+    to: S3 *2/Scenarios Bucket
+    label: Allows put/get
+    
+  - from: Console Origin Access Identity
+    to: S3 *2/Console Bucket Policy
+    label: Policy
+    
+  - from: S3 *2/Console Bucket Policy
+    to: S3 *2/Console Bucket
+    label: Allows Get
+    
+    # LAMBDA PERMISSIONS
+    
+  - from: Api
+    to: Lambda *2/Api Lambda Invoke
+    label: Has permission
+    
+  - from: Lambda *2/Api Lambda Invoke
+    to: Lambda *2/Api Services
+    label: Allows invoke
+    
+  - from: S3/Scenarios Bucket
+    to: Lambda *2/S3Lambda Invoke
+    label: Has permission
+    
+  - from: Lambda *2/S3Lambda Invoke
+    to: Lambda *2/Results Parser
+    label: Allows invoke
+
+  notes: |-
+    This perspective shows what resources can access what other resources, and what roles, policies, and permissions grant that access.
+    
+    Click on a resource to see what resources it can access and be accessed by.
+
+- name: VPC Egress
+  color: DimGray
+  arrowDirection: backward
+  relations:
+  - from: The Internet
+    to: Internet Gateway
+    label: Allows access to
+    
+  - from: Internet Gateway
+    to: Route To Internet
+    label: Gateway
+    
+  - from: Main Route Table
+    to: Public Subnet A, Public Subnet B
+    label: Route table
+    
+  - from: Public Subnet A, Public Subnet B
+    to: Ecs Cluster
+    label: Runs on
+    
+  notes: |-
+    This small perspective shows how the public subnets in the VPC are configured to access the internet. 
+    
+    Internet access is needed by the testing engine (running in  **Ecs Cluster**) to load test external URLs.
+
+- name: Create Test
+  color: OrangeRed
+  sequence: 
+    start: Create test
+    steps: 
+    - to: Api/scenarios
+      label: POST
+      description: Uses specify parameters about the test, including number of containers to use, and the URL and method to perform the test on
+    - to: Api Services/handler
+      label: Invokes
+    - to: createTest
+      label: Invokes
+      
+    - to: Results Table
+      label: Scan for existing test
+      description: If the user specifies a testId, delete any existing tests with this id
+
+    - to: createTest
+      label: Existing test
+    - toAndBack: Results Table
+      label: Delete exsting test
+    - toAndBack: Scenarios Bucket
+      label: Upload test information
+      description: Subsequent processing retrieves test parameters from this bucket
+    - toAndBack: SQS/Ecs Task Sqs Queue
+      label: Enqueue test id
+      description: Queued test requests are later dequeued and processed by the Task Runner lambda
+    - toAndBack: Scenarios Table
+      label: Write test information
+
+    - to: Api Services/handler
+      label: Test information
+    - to: Api/scenarios
+      label: Test information
+    - to: Create test
+      label: Test information
+  notes: |-
+    This perspective shows the steps taken to create a new load test. 
+    
+    When creating a test, the user of the **Create Test** screen in the Testing Console provides load test parameters such as URL to hit, requests per second, number of containers to use, and so on.
+    
+    These parameters are written to both S3 and DynamoDB. A job is also enqueued to SQS, to be dequeued by another lambda to actually run the load test. See the [Execute Test] perspective for details.
+
+- name: Execute Test
+  color: purple
+  sequence: 
+    start: Create test
+    steps: 
+    - to: Api/scenarios
+      label: POST
+    - to: Api Services
+      label: Invokes
+    - to: SQS/Ecs Task Sqs Queue
+      label: Enqueue test id
+    - to: Task Runner
+      label: Triggers
+      
+    - to: load-test
+      label: Runs test id
+      
+      
+    - to: Scenarios Bucket
+      label: Download test information
+    - to: load-test
+      label: Test information
+      
+    - to: Taurus
+      label: Execute test
+    - to: load-test
+      label: Get results
+    - toAndBack: Scenarios Bucket
+      label: Write results
+
+    - to: Task Runner
+      
+  overrides: 
+  - resourceId: Ecs Task Definition
+    parentId: Ecs Cluster
+    
+  - resourceId: Ecs Cluster
+    parentId: Vpc
+    
+  - resourceId: load-test, AWS CLI, Taurus
+    parentId: Ecs Cluster
+    
+  notes: |-
+    The **Task Runner** lambda is triggered by tests that have been queued in the **Ecs Task Sqs Queue** by the **Api Services** lambda. See the [Create Test] perspective to see how this is done.
+    
+    Test parameters are retrieved from S3 and passed to the **Ecs Cluster** where the load testing is actually performed (using [Taurus](https://gettaurus.org/)). Results are written back to the **Scenarios Bucket**.
+    
+    Writing test results to the bucket triggers the **Results Parser** lambda (not shown). See more about this process in the [Write Test Results] perspective.
+  
+
+- name: Write Test Results
+  color: DarkCyan
+  sequence: 
+    start: Create test
+    steps: 
+    - to: Api/scenarios
+      label: POST
+    - to: Api Services
+      label: Invokes
+    - to: SQS/Ecs Task Sqs Queue
+      label: Enqueue test id
+    - to: Task Runner
+      label: Triggers
+      
+    - to: Ecs Task Definition
+      label: Runs test id
+      
+    - to: Scenarios Bucket
+      label: Write results
+    - to: Results Parser/handler
+      label: Triggers
+    - to: Results Parser//results
+      label: calls
+    - to: Scenarios Bucket
+      label: Download test results
+
+    - to: Results Parser//results
+      label: Test results
+    - toAndBack: Results Table
+      label: Writes results
+    - toAndBack: Scenarios Table
+      label: Updates test status
+
+    - to: Results Parser//handler
+
+    - to: Results Parser//finalResults
+      label: Calls
+    - toAndBack: Results Table
+      label: Retrieve results
+    - toAndBack: Results Table
+      label: Write final Results
+
+    - to: Results Parser/handler
+      
+  overrides: 
+  - resourceId: Ecs Task Definition
+    parentId: Ecs Cluster
+    
+  - resourceId: Ecs Cluster
+    parentId: Vpc
+    
+  notes: |-
+    The **Results Parser** lambda is triggered when load test results are written to the **Scenarios Bucket** by the **Task Runner** lambda. See the [Execute Test] perspective to see how this is done.
+    
+    Results Parser simply reads the tests results from S3 and parses and writes them to the **Results Table** in DynamoDB. It also marks the test as complete in the **Scenarios Tables**.
+
+- name: List tests
+  color: HotPink
+  sequence: 
+    start: Dashboard
+    steps: 
+    - to: Api/scenarios
+      label: GET
+    - to: Api Services/handler
+      label: Invokes
+    - to: scenarios/listTests
+      label: Calls
+    - to: Scenarios Table
+      label: Scan
+      description: Scans the entire scenarios table for in-progress tests
+    - to: scenarios/listTests
+      label: Tests
+    - to: Api Services/handler
+      label: Tests
+    - to: Api/scenarios
+      label: Tests
+    - to: Dashboard
+      label: Tests
+      
+  notes: |-
+    Listing all running tests is a simple API call that involves the **Api Services** lambda scanning the **Scenarios Table** DynamoDB table.
+
+- name: Cancel test
+  color: DarkGoldenrod
+  sequence: 
+    start: Test details
+    steps: 
+    - to: testId
+      label: POST
+    - to: Api Services/handler
+      label: Invokes with testId
+    - to: scenarios/cancelTest
+      label: Calls
+    - to: Ecs Cluster
+      label: Get running tasks
+    - to: scenarios/cancelTest
+      label: Running tasks
+    - to: Ecs Cluster
+      label: Describe tasks
+      
+    - to: scenarios/cancelTest
+      label: Descriptions
+    - toAndBack: Ecs Cluster
+      label: Stop task with testId
+    - toAndBack: Scenarios Table
+      label: Update test status
+
+    - to: Api Services/handler
+    - to: testId
+    - to: Test details
+      
+  notes: |-
+    Cancelled tests must by stopped in the **Ecs Cluster**. The test status must also be updated in DynamoDB (to "Cancelled").
+    
+    When the task is cancelled in ECS, it does not write results to S3, so the [Write Test Results] workflow is not triggered.
+
+description: |-
+  *©2021 Ilograph LLC*
+
+  This multiperspective Ilograph diagram is based on the [Distributed Load Testing on AWS](https://github.com/awslabs/distributed-load-testing-on-aws) guide and source code.

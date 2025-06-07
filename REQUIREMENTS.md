@@ -23,11 +23,53 @@ From https://www.ilograph.com/ research:
 - **Comprehensive Specification**: Complete YAML format at https://www.ilograph.com/docs/spec/
 - **Real Examples**: Reference implementations at https://app.ilograph.com/lib/
 
-### Architectural Decision: Dynamic vs Static
-**Selected Approach**: Dynamic content sourcing with intelligent caching
-- **Pros**: Always current, automatically updated, smaller server footprint
-- **Cons**: Network dependency, caching complexity
-- **Mitigation**: Aggressive caching, graceful degradation, fallback content
+## Architecture
+
+The project follows a modular architecture with clear separation of concerns:
+
+```
+ilograph-mcp-server/
+├── .cursor/
+├── src/
+│   └── ilograph_mcp/
+│       ├── __init__.py
+│       ├── server.py              # Main FastMCP server instance
+│       ├── core/
+│       │   ├── __init__.py
+│       │   ├── fetcher.py         # Dynamic content fetching
+│       │   ├── cache.py           # In-memory caching with TTL
+│       │   └── parser.py          # HTML to Markdown conversion
+│       ├── tools/
+│       │   ├── __init__.py
+│       │   ├── syntax_validator.py    # @mcp.tool() for validation
+│       │   ├── icon_recommender.py   # @mcp.tool() for icon suggestions
+│       │   ├── icon_search.py        # @mcp.tool() for icon search
+│       │   └── spec_query.py         # @mcp.tool() for spec queries
+│       ├── resources/
+│       │   ├── __init__.py
+│       │   ├── specification.py      # @mcp.resource() for live spec
+│       │   ├── icons.py             # @mcp.resource() for icon catalog
+│       │   ├── documentation.py     # @mcp.resource() for docs
+│       │   └── examples.py          # @mcp.resource() for static examples
+│       ├── static/
+│       │   └── examples/
+│       │       ├── aws-distributed-load-testing.ilograph
+│       │       ├── demo.ilograph
+│       │       └── stack-overflow-architecture.ilograph
+│       └── utils/
+│           ├── __init__.py
+│           ├── http_client.py       # HTTP client with retry/cache
+│           ├── markdown_converter.py
+│           └── icon_classifier.py
+├── tests/
+│   ├── __init__.py
+├── .gitignore
+├── .python-version                 # Python version for uv
+├── LICENSE
+├── README.md
+├── pyproject.toml                  # Modern Python packaging
+└── uv.l
+```
 
 ## Core Requirements
 

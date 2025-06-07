@@ -15,20 +15,47 @@ A FastMCP server that provides AI agents (like Cursor) with comprehensive contex
 The project follows a modular architecture with clear separation of concerns:
 
 ```
-src/ilograph_mcp/
-├── __init__.py              # Package initialization
-├── server.py                # Main FastMCP server setup
-├── tools/                   # Interactive capabilities (MCP tools)
+ilograph-mcp-server/
+├── .cursor/
+├── src/
+│   └── ilograph_mcp/
+│       ├── __init__.py
+│       ├── server.py              # Main FastMCP server instance
+│       ├── core/
+│       │   ├── __init__.py
+│       │   ├── fetcher.py         # Dynamic content fetching
+│       │   ├── cache.py           # In-memory caching with TTL
+│       │   └── parser.py          # HTML to Markdown conversion
+│       ├── tools/
+│       │   ├── __init__.py
+│       │   ├── syntax_validator.py    # @mcp.tool() for validation
+│       │   ├── icon_recommender.py   # @mcp.tool() for icon suggestions
+│       │   ├── icon_search.py        # @mcp.tool() for icon search
+│       │   └── spec_query.py         # @mcp.tool() for spec queries
+│       ├── resources/
+│       │   ├── __init__.py
+│       │   ├── specification.py      # @mcp.resource() for live spec
+│       │   ├── icons.py             # @mcp.resource() for icon catalog
+│       │   ├── documentation.py     # @mcp.resource() for docs
+│       │   └── examples.py          # @mcp.resource() for static examples
+│       ├── static/
+│       │   └── examples/
+│       │       ├── aws-distributed-load-testing.ilograph
+│       │       ├── demo.ilograph
+│       │       └── stack-overflow-architecture.ilograph
+│       └── utils/
+│           ├── __init__.py
+│           ├── http_client.py       # HTTP client with retry/cache
+│           ├── markdown_converter.py
+│           └── icon_classifier.py
+├── tests/
 │   ├── __init__.py
-│   └── validation.py        # Syntax validation tool
-├── resources/               # Static context provision (MCP resources)
-│   └── __init__.py
-├── data/                    # Data management and validation logic
-│   ├── __init__.py
-│   ├── validator.py         # Core validation engine
-│   └── loader.py            # Content loading utilities
-└── utils/                   # Utility functions
-    └── __init__.py
+├── .gitignore
+├── .python-version                 # Python version for uv
+├── LICENSE
+├── README.md
+├── pyproject.toml                  # Modern Python packaging
+└── uv.lock                        # Lock file for dependencies
 ```
 
 ## Installation

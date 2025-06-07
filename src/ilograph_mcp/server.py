@@ -5,8 +5,6 @@ This module sets up the FastMCP server and registers all tools, resources, and p
 """
 
 from fastmcp import FastMCP
-from .tools import register_all_tools
-from .resources import register_all_resources
 
 
 def create_server() -> FastMCP:
@@ -16,13 +14,21 @@ def create_server() -> FastMCP:
     Returns:
         FastMCP: Configured server instance
     """
-    mcp = FastMCP("Ilograph Context Server")
+    # Create server with metadata
+    mcp = FastMCP(
+        name="Ilograph Context Server",
+        instructions="""
+        This server provides comprehensive Ilograph diagram creation and validation tools.
+        Use the tools to validate syntax, search for icons, and get recommendations.
+        Use the resources to access documentation, examples, and specifications.
+        """
+    )
     
-    # Register all tools
-    register_all_tools(mcp)
+    # TODO: Register all tools when implemented
+    # register_all_tools(mcp)
     
-    # Register all resources  
-    register_all_resources(mcp)
+    # TODO: Register all resources when implemented
+    # register_all_resources(mcp)
     
     # TODO: Register prompts when implemented
     # register_diagram_prompts(mcp)

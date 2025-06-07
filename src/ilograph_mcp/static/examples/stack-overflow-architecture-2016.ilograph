@@ -1,0 +1,958 @@
+description: |-
+  This is a four-perspective Ilograph diagram of Stack Overflow's system architecture circa 2016-2019. It is adapted with permission from Nick Craver's [series of posts](https://nickcraver.com/blog/2016/02/03/stack-overflow-a-technical-deconstruction/) on the same topic, particularly [part 1](https://nickcraver.com/blog/2016/02/17/stack-overflow-the-architecture-2016-edition/) and [part 2](https://nickcraver.com/blog/2016/03/29/stack-overflow-the-hardware-2016-edition/).
+      
+    *Stack Overflow and other intellectual properties discussed here are owned by [Stack Exchange, Inc](https://stackexchange.com/).*
+
+resources:
+- name: Internet Service Provider
+  abstract: true
+  icon: Networking/internet.svg
+  description: Provides internet access to the datacenter
+  
+- name: Level 3
+  instanceOf: Internet Service Provider
+  
+- name: Zayo
+  instanceOf: Internet Service Provider
+  
+- name: Cogent
+  instanceOf: Internet Service Provider
+  
+- name: Lightower
+  instanceOf: Internet Service Provider
+
+- name: Admins
+  subtitle: Stack Overflow Admins
+  style: plural
+  icon: Networking/user.svg
+  description: Manage the datacenter
+  
+- name: Fastly
+  subtitle: Content Delivery Network
+  icon: Networking/internet.svg
+  url: https://www.fastly.com/
+  description: A geographically distributed group of servers which work together to provide fast delivery of Internet content. [Learn more about Fastly](https://www.fastly.com/).
+  
+# Software
+  
+- name: HAProxy Instance
+  abstract: true
+  backgroundColor: #FFFFF2
+  icon: Networking/computer-network.svg
+  subtitle: Load Balancer Instance
+  description: Free and open source software that provides a high availability load balancer and reverse proxy for TCP- and HTTP-based applications that spreads requests across multiple servers.
+
+- name: CentOS 7 Instance
+  style: dashed
+  abstract: true
+  subtitle: Operating System Instance
+  url: https://www.centos.org/
+  description: A Linux distribution that provides a free and open-source community-supported computing platform, functionally compatible with its upstream source, Red Hat Enterprise Linux.
+  
+- name: Windows Server 2012R2 Instance
+  style: dashed
+  abstract: true
+  subtitle: Operating System Instance
+  description: A Windows operating system for hosting internet services.
+  
+- name: IIS 8.5 Instance
+  abstract: true
+  url: https://en.wikipedia.org/wiki/Internet_Information_Services
+  subtitle: Web Server Software Instance
+  description: An extensible web server software created by Microsoft for use with the Windows NT family. IIS supports HTTP, HTTP/2, HTTPS, FTP, FTPS, SMTP and NNTP.
+  
+- name: http.sys Instance
+  abstract: true
+  subtitle: Web Server Software Instance
+  description: A web server for ASP.NET Core.
+  
+- name: Redis Instance
+  url: https://github.com/StackExchange/StackExchange.Redis
+  icon: Networking/data-structure.svg
+  abstract: true
+  backgroundColor: #F2FFFF
+  description: An in-memory data structure store, used as a distributed, in-memory key–value database, cache and message broker.
+  
+- name: SQL Instance
+  abstract: true
+  description: A relational database management server developed by Microsoft.
+  
+- name: ElasticSearch Server Instance
+  url: https://www.elastic.co/elasticsearch/
+  abstract: true
+  description: A search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
+  
+- name: Redis Stack Server Instance
+  abstract: true
+  url: https://redis.io/
+  description: An open-source, in-memory data store used as a database, cache, streaming engine, and message broker.
+  
+- name: ElasticSearch Index
+  abstract: true
+  backgroundColor: #FFF2FF
+  icon: Networking/browser-search.svg
+  
+- name: SQL Database
+  abstract: true
+  backgroundColor: #F2FFF2
+  icon: Networking/database.svg
+  
+- name: .NET Application
+  abstract: true
+  icon: Networking/laptop.svg
+  style: plural
+  
+# Hardware - Network
+  
+- name: 2232TM Fabric Extender
+  abstract: true
+  icon: Networking/network-switch.svg
+  description: A compact, 1-rack unit (RU) [fabric extender](https://routing-bits.com/2012/05/16/what-is-a-fabric-extender/)
+  
+- name: Nexus 5596UP Core Switch
+  abstract: true
+  icon: Networking/network-hub.svg
+  description: A 2RU 10 Gigabit Ethernet, Fibre Channel, and FCoE switch offering up to 1920 Gbps of throughput and up to 96 ports
+  
+- name: Fortigate 800C Firewall
+  abstract: true
+  icon: Networking/firewall.svg
+  description: A network security device that monitors and controls incoming and outgoing network traffic
+  
+- name: Cisco ASR-1001 Router
+  abstract: true
+  icon: Networking/router.svg
+  description: A 1RU platform targeted towards the low to medium Enterprise and Managed Service Provider use cases
+  
+- name: Cisco ASR-1001-x Router
+  abstract: true
+  icon: Networking/router.svg
+  description: A 1RU platform targeted towards the low to medium Enterprise and Managed Service Provider use cases
+  
+- name: Cisco 2960S-48TS-L Mgmt Switch
+  abstract: true
+  icon: Networking/network-switch.svg
+  description: Provides Level 2 switching for server iDRAC management
+  
+- name: Dell DAV2216 KVM Aggregator
+  abstract: true
+  icon: Networking/network-switch.svg
+  description: Allows users to operate multiple systems from a remote multi-display station with a single keyboard and mouse
+  
+- name: Rack
+  abstract: true
+  style: outline
+  
+- name: ServerRack
+  abstract: true
+  instanceOf: Rack
+  children: 
+  - name: KVM Aggregator
+    instanceOf: Dell DAV2216 KVM Aggregator
+  - name: Management Switch
+    instanceOf: Cisco 2960S-48TS-L Mgmt Switch
+  
+# Hardware - Main servers
+
+- name: SQL Server (SO Cluster)
+  abstract: true
+  icon: Networking/database.svg
+  description: 
+    Summary: Dell R720xd Server
+    Processors: 2x E5-2697v2 (12 cores @2.7–3.5GHz each)
+    Ram: 384GB (24x 16 GB DIMMs)
+    PCIe HDD: Intel P3608 4 TB NVMe (RAID 0)
+    SATA SSD: 24x Intel 710 200 GB (RAID 10)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: Windows Server 2012R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: SQL Server
+      instanceOf: SQL Instance
+      children: 
+      - name: Stack Overflow Database
+        instanceOf: SQL Database
+        description: Database exclusively for Stack Overflow
+  
+- name: SQL Server (SE Cluster)
+  abstract: true
+  icon: Networking/database.svg
+  description:
+    Summary: Dell R730xd Server
+    Processors: 2x E5-2667v3 (8 cores @3.2–3.6GHz each)
+    Ram: 768GB (24x 32 GB DIMMs)
+    PCIe HDD: 3x Intel P3700 2 TB NVMe (RAID 0)
+    SATA SSD: 24x 10K Spinny 1.2 TB (RAID 10)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: Windows Server 2012R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: SQL Server
+      instanceOf: SQL Instance
+      children: 
+      - name: Site Databases
+        instanceOf: SQL Database
+        subtitle: SQL Databases
+        description: Individual databases for all apps excluding Stack Overflow
+        style: plural
+        
+- name: SQL Server (Development)
+  abstract: true  
+  icon: Networking/database.svg
+  description:
+    Summary: Dell R620 Server
+    Processors: 2x E5-2660v3  (10 cores @2.6–3.3GHz each)
+    Ram: 256GB (16x 16 GB DIMMs)
+    PCIe HDD: 2x Intel P3600 2 TB NVMe (RAID 0)
+    SATA SSD: 16x 7.2K Spinny 6 TB (RAID 10)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: Windows Server 2012R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: SQL Server
+      instanceOf: SQL Instance
+      children: 
+      - name: Meta Databases
+        instanceOf: SQL Database
+        subtitle: SQL Databases
+        description: Databases for meta.stackoverflow.com and meta.stackexchange.com
+        style: plural
+        
+- name: Web Server
+  abstract: true
+  icon: Networking/server.svg
+  description:
+    Summary: Dell R630 Server
+    Processors: 2x E5-2690v3 Processors (12 cores @2.6–3.5GHz each)
+    Ram: 64GB (8x 8 GB DIMMs)
+    SATA SSD: 2x Intel 320 300GB SATA SSDs (RAID 1)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  
+- name: Web Server (Prod)
+  instanceOf: Web Server
+  abstract: true
+  children: 
+  - name: Windows Server 20212R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: IIS
+      instanceOf: IIS 8.5 Instance
+      children: 
+      - name: Q&A Application
+        instanceOf: .NET Application
+        description: A multi-tenant .NET 4.6.1 application serving requests for all Stack Exchange Q&A sites, including Stack Overflow.
+        backgroundColor: #FFF2F2
+      - name: Other Applications
+        instanceOf: .NET Application
+        description: A .NET 4.6.1 application serving requests for other sites
+        backgroundColor: #FFF2F2
+        
+- name: Web Server (Meta)
+  instanceOf: Web Server
+  abstract: true
+  children: 
+  - name: Windows Server 20212R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: IIS
+      instanceOf: IIS 8.5 Instance
+      children: 
+      - name: Meta Application
+        instanceOf: .NET Application
+        description: A .NET 4.6.1 application serving requests for the meta.stackoverflow.com and meta.stackexchange.com
+        backgroundColor: #FFF2F2
+        
+- name: Service Server
+  abstract: true
+  icon: Networking/server.svg
+  description:
+    Summary: Dell R620/R630 Server
+    Processors: 2x E5-2643 v3 Processors (6 cores @3.4–3.7GHz each)
+    Ram: 64GB (8x 8 GB DIMMs)
+    SATA SSD: 2x Intel 320 300GB SATA SSDs (RAID 1)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: Windows Server 20212R2
+    instanceOf: Windows Server 2012R2 Instance
+    children: 
+    - name: http.sys
+      instanceOf: http.sys Instance
+      children: 
+      - name: Stack Server
+        backgroundColor: #F2F2FF
+        instanceOf: .NET Application
+        description: Runs the "tag engine" service.
+    - name: IIS
+      instanceOf: IIS 8.5 Instance
+      children: 
+      - name: Providence API
+        backgroundColor: #F2F2FF
+        instanceOf: .NET Application
+        description: A .NET application that serves as the API for [Providence](https://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/). Providence is used for recommending questions on the home page, better matching to jobs, and so on.
+    
+- name: Redis Server
+  abstract: true
+  icon: Networking/data-structure.svg
+  description:
+    Summary: Dell R630 Server
+    Processors: 2x E5-2680 Processors (8 cores @2.7–3.5GHz each)
+    Ram: 192GB (12x 16 GB DIMMs)
+    SATA SSD: 2x Intel S3500 800GB (RAID 1)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: CentOS 7
+    instanceOf: CentOS 7 Instance
+    children: 
+    - name: Redis Stack Server
+      instanceOf: Redis Stack Server Instance
+      children: 
+      - name: Site Instances
+        instanceOf: Redis Instance
+        style: plural
+        description: "[Redis](https://redis.io/) instances, one for each site"
+      
+- name: ML Redis Server
+  abstract: true
+  icon: Networking/data-structure.svg
+  description:
+    Summary: Dell R720xd Server
+    Processors: 2x E5-2650 v2(8 cores @2.6–3.4GHz each)
+    Ram: 384 GB (24x 16 GB DIMMs)
+    SATA SSD: 4x Samsung 840 Pro 480 GB (RAID 10)
+    Network: 2x 10 Gbps (Intel X540/I350 NDC)
+  children: 
+  - name: CentOS 7
+    instanceOf: CentOS 7 Instance
+    children: 
+    - name: Redis Stack Server
+      instanceOf: Redis Stack Server Instance
+      children: 
+      - name: Providence Redis Instances
+        instanceOf: Redis Instance
+        style: plural
+        description: The Redis data store for Providence
+    
+- name: Search Server
+  abstract: true
+  icon: Networking/browser-search.svg
+  description:
+    Summary: Dell R620 Server
+    Processors: 2x E5-2680 Processors (8 cores @2.7–3.5GHz each)
+    Ram: 192GB (12x 16 GB DIMMs)
+    SATA SSD: 2x Intel S3500 800GB (RAID 1)
+    Network: 2x 10 Gbps Intel X540/I350 NDC
+  children: 
+  - name: CentOS 7
+    instanceOf: CentOS 7 Instance
+    children: 
+    - name: ElasticSearch Server
+      instanceOf: ElasticSearch Server Instance
+      children: 
+      - name: Site Indexes
+        instanceOf: ElasticSearch Index
+        style: plural
+        description: ElasticSearch [indexes](https://www.elastic.co/blog/what-is-an-elasticsearch-index), one for each Q&A site
+    
+- name: HA Proxy Server
+  abstract: true
+  icon: Networking/computer-network.svg
+  children: 
+  - name: CentOS 7
+    instanceOf: CentOS 7 Instance
+    children: 
+    - name: HA Proxy
+      instanceOf: HAProxy Instance
+    
+- name: HAProxy Server (CloudFlare Traffic)
+  instanceOf: HA Proxy Server
+  abstract: true
+  description:
+    Summary: Dell R620 Server
+    Processors: 2x E5-2637 v2 Processors (4 cores @3.5–3.8GHz each)
+    Ram: 192GB (12x 16 GB DIMMs)
+    SATA SSD: 6x Seagate Constellation 7200RPM 1TB (RAID 10)
+    Network (Internal): 2x 10 Gbps Intel X540/I350 NDC
+    Network (External): 2x 10 Gbps Intel X540
+    
+- name: HAProxy Server (Direct Traffic)
+  instanceOf: HA Proxy Server
+  abstract: true
+  description:
+    Summary: Dell R620 Server
+    Processors: 2x E5-2650 Processors (8 cores @2.0–2.8GHz each)
+    Ram: 64GB (4x 16 GB DIMMs)
+    SATA SSD: 2x Seagate Constellation 7200RPM 1TB (RAID 10)
+    Network (Internal): 2x 10 Gbps Intel X540/I350 NDC
+    Network (External): 2x 10 Gbps Intel X540
+    
+# Hardware instances
+
+- name: Stack Overflow NY
+  subtitle: Data Center
+  description: The primary data center of Stack Overflow, located in (technically) New Jersey.
+  style: dashed
+  backgroundColor: #FAFAFA
+  icon: Networking/datacenter.svg
+  children: 
+  
+  # Racks
+  - name: Rack N
+    instanceOf: Rack
+    description: Rack for front-line network gear
+    
+  - name: Rack A
+    instanceOf: ServerRack
+    description: Rack for web servers
+    
+  - name: Rack B
+    instanceOf: ServerRack
+    description: Rack for web servers
+     
+  - name: Rack C
+    instanceOf: ServerRack
+    description: Rack for auxillary servers
+    
+  - name: Rack D
+    instanceOf: ServerRack
+    description: Rack for auxillary servers
+    
+  # Network
+    
+  - name: NY-SW01
+    instanceOf: Nexus 5596UP Core Switch
+  - name: NY-SW02
+    instanceOf: Nexus 5596UP Core Switch
+    
+  - name: NY-FW01
+    instanceOf: Fortigate 800C Firewall
+  - name: NY-FW02
+    instanceOf: Fortigate 800C Firewall
+  - name: NY-CFEDGE01
+    instanceOf: Cisco ASR-1001-x Router
+  - name: NY-CFEDGE02
+    instanceOf: Cisco ASR-1001-x Router
+  - name: NY-CFEDGE03
+    instanceOf: Cisco ASR-1001 Router
+  - name: NY-CFEDGE04
+    instanceOf: Cisco ASR-1001 Router
+
+  - name: NY-FEX01
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX02
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX03
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX04
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX05
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX06
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX07
+    instanceOf: 2232TM Fabric Extender
+  - name: NY-FEX08
+    instanceOf: 2232TM Fabric Extender
+    
+  # Servers
+  
+  - name: NY-WEB01
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB02
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB03
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB04
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB05
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB06
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB07
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB08
+    instanceOf: Web Server (Prod)
+  - name: NY-WEB09
+    instanceOf: Web Server (Prod)
+    
+  - name: NY-WEB10
+    instanceOf: Web Server (Meta)
+  - name: NY-WEB11
+    instanceOf: Web Server (Meta)
+    
+  - name: NS-SERVICE03
+    instanceOf: Service Server
+  - name: NS-SERVICE04
+    instanceOf: Service Server
+  - name: NS-SERVICE05
+    instanceOf: Service Server
+  
+  - name: NY-LB03
+    instanceOf: HAProxy Server (CloudFlare Traffic)
+  - name: NY-LB04
+    instanceOf: HAProxy Server (CloudFlare Traffic)
+  - name: NY-LB05
+    instanceOf: HAProxy Server (Direct Traffic)
+  - name: NY-LB06
+    instanceOf: HAProxy Server (Direct Traffic)
+    
+  - name: NY-REDIS01
+    instanceOf: Redis Server
+  - name: NY-REDIS02
+    instanceOf: Redis Server
+    
+  - name: NY-REDIS03
+    instanceOf: ML Redis Server
+  - name: NY-REDIS04
+    instanceOf: ML Redis Server
+    
+  - name: NY-SEARCH01
+    instanceOf: Search Server
+  - name: NY-SEARCH02
+    instanceOf: Search Server
+  - name: NY-SEARCH03
+    instanceOf: Search Server
+    
+  - name: NY-SQL01
+    instanceOf: SQL Server (SO Cluster)
+  - name: NY-SQL02
+    instanceOf: SQL Server (SO Cluster)
+    
+  - name: NY-SQL03
+    instanceOf: SQL Server (SE Cluster)
+  - name: NY-SQL04
+    instanceOf: SQL Server (SE Cluster)
+    
+  - name: SQL Server (Dev)
+    instanceOf: SQL Server (Development)
+    
+  # KVM
+  - name: Dell DMPU4032 KVM
+    subtitle: KVM Switch
+    icon: Networking/network-switch.svg
+    description: Provides out-of-band access to devices in the rack even when the network is down or when the device OS crashes
+    
+  # Admin terminal
+  - name: Admin terminal
+    subtitle: Workstation
+    icon: Networking/workstation.svg
+    description: Terminal used by Administrators to maintain servers in the datacenter.
+    
+  # Power
+  
+  - name: UPS
+    abstract: true
+    subtitle: Uninterruptible power supply device
+    description: Allows a computer to keep running for at least a short time when incoming power is interrupted
+    
+  - name: PDU
+    abstract: true
+    subtitle: Power Distribution Unit
+    description: A device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment 
+    
+  - name: UPS-A
+    instanceOf: UPS
+    
+  - name: UPS-B
+    instanceOf: UPS
+    
+  - name: PDU-A
+    instanceOf: PDU
+  - name: PDU-B
+    instanceOf: PDU
+    
+- name: NY Power Source A
+  subtitle: External power source
+- name: NY Power Source B
+  subtitle: External power source
+    
+
+perspectives:
+- name: Physical
+  hidden: true
+  color: Pink
+  overrides: 
+  - parentId: Rack N
+    resourceId: NY-FW01, NY-FW02, [NY-CFEDGE*], NY-SW01, NY-SW02, Dell DMPU4032 KVM
+    
+  - parentId: Rack A
+    resourceId: NY-FEX01, NY-FEX02, RACK_A_SERVERS
+    
+  - parentId: Rack B
+    resourceId: NY-FEX03, NY-FEX04, RACK_B_SERVERS
+    
+  - parentId: Rack C
+    resourceId: NY-FEX05, NY-FEX06, RACK_C_SERVERS
+    
+  - parentId: Rack D
+    resourceId: NY-FEX07, NY-FEX08, RACK_D_SERVERS
+    
+  aliases: 
+  - alias: RACK_A_SERVERS
+    for: NY-WEB01, NY-WEB03, NY-WEB05, NY-WEB07, NY-WEB09, NY-WEB11
+    
+  - alias: RACK_B_SERVERS
+    for: NY-WEB02, NY-WEB04, NY-WEB06, NY-WEB08, NY-WEB10
+    
+  - alias: RACK_C_SERVERS
+    for: NY-REDIS01, NY-REDIS03, NS-SERVICE03, NS-SERVICE05, NY-LB03, NY-LB05, NY-SEARCH01, NY-SEARCH03, NY-SQL01, NY-SQL03
+    
+  - alias: RACK_D_SERVERS
+    for: NY-REDIS02, NY-REDIS04, NS-SERVICE04, NY-LB04, NY-LB06, NY-SEARCH02, NY-SQL02, NY-SQL04, SQL Server (Dev)
+  
+- name: Traffic
+  color: RoyalBlue
+  defaultArrowColor: RoyalBlue
+  defaultArrowLabel: Requests
+  relations: 
+  - from: Fastly
+    to: [HA Proxy]
+    
+  - from: [HA Proxy]
+    to: [Q&A Application, Other Applications, Meta Application]
+    
+  - from: [Q&A Application]
+    to: [Stack Server]
+    label: Tag requests
+    
+  - from: [Q&A Application]
+    to: [Providence API]
+    label: User classification requests
+    
+  - from: [Q&A Application, Stack Server]
+    to: [Stack Overflow Database, Site Databases]
+    label: Data requests
+    
+  - from: [Other Applications]
+    to: [Site Databases]
+    label: Data Requests
+    
+  - from: [Q&A Application, Other Applications, Meta Application]
+    to: [Site Indexes]
+    label: Search requests
+    
+  - from: [Q&A Application, Other Applications, Meta Application]
+    to: [Site Instances]
+    label: Cache requests
+  
+  - from: [Providence API]
+    to: [Providence Redis Instances]
+    
+  - from: [Meta Application]
+    to: SQL Server (Dev)//Meta Databases
+    
+  notes: |-
+    This perspective shows how traffic is served for [Stack Overflow](https://stackoverflow.com/) and [other sites](https://stackexchange.com/sites#traffic) on the Stack Exchange network circa 2016.
+    
+    Networking hardware is omitted from this view. For more information on how these servers are physically connected, see the [Connections] perspective.
+    
+    **Click "Start Walkthrough" above to begin**.
+    
+    *This Ilograph diagram is adapted with permission from Nick Craver's [series of posts](https://nickcraver.com/blog/2016/02/03/stack-overflow-a-technical-deconstruction/) on the same topic, particularly [part 1](https://nickcraver.com/blog/2016/02/17/stack-overflow-the-architecture-2016-edition/) and [part 2](https://nickcraver.com/blog/2016/03/29/stack-overflow-the-hardware-2016-edition/).*
+      
+    *Stack Overflow and other intellectual properties discussed here are owned by [Stack Exchange, Inc](https://stackexchange.com/).*
+    
+  walkthrough: 
+  - detail: 0
+    text: |-
+      This walkthrough explains how traffic to [Stack Overflow](https://stackoverflow.com/) and other sites on the Stack Exchange network is served. This walkthrough focuses on servers in the *Stack Overflow NY* datacenter.
+      
+      How all of the servers are physically connected to the network is explored more fully in the [Connections] perspective.
+      
+      **Click *Next* above to continue**
+      
+  - detail: 0
+    select: Fastly
+    text: |-
+      User traffic for all Stack Exchange sites is served through the [Fastly](https://www.fastly.com/) content delivery network (CDN). The CDN is a geographically distributed network of proxy servers for the datacenter.
+      
+  - select: Stack Overflow NY
+    text: |-
+      Traffic flows from Fastly into the *Stack Overflow NY* datacenter.
+      
+      Once in the datacenter, traffic is served by load balancers, web servers, database servers, and search servers. Each server has at least one peer for redundancy.
+      
+      Feel free to click on different servers (and applications) for more information about them. You can always resume the walkthrough at this point.
+      
+  - highlight: [HA Proxy]
+    select: "^"
+    detail: 1
+    text: |-
+      Traffic is first routed to one of four **load balancers** (*NY-LB03* - *NYLB06*). The load balancers are running HAProxy 1.5.15 on CentOS 7 (Linux). TLS (SSL) traffic is also terminated in HAProxy.
+
+      
+  - expand: Stack Overflow NY
+    highlight: [HA Proxy], Q&A Application, Other Applications, Meta Application
+    text: |-
+      The load balancers listen to different sites on various IPs (mostly for certificate concerns and DNS management) and route to various backends based mostly on the host header of the requests.
+      
+      
+  - highlight: Q&A Application
+    text: |-
+      "Q&A Sites" in the Stack Exchange network refers to [Stack Overflow](https://stackoverflow.com/) and other question-and-answer sites such as [Ask Ubuntu](https://askubuntu.com/) and [Superuser](https://superuser.com/).
+      
+      Traffic for these sites is served by instances of *Q&A Application*, a web backend written in C# .NET. These instances are running in [IIS](https://en.wikipedia.org/wiki/Internet_Information_Services) 8.5 on Windows Server 2012R2 on one of nine **web servers** (*NY-WEB01* - *NY-WEB09*).
+      
+      The *Q&A Application* instances handle traffic for all Q&A sites in a multi-tenant fashion.
+      
+  - select: Q&A Application
+    highlight: Stack Server, Providence API
+    text: |-
+      Behind those web servers is the very similar “service tier” comprised of three servers (*NS-SERVICE03* - *NS-SERVICE05*) also running Windows 2012R2. This tier runs internal services to support the web tier.
+      
+  - highlight: Stack Server
+    text: |-
+      *Stack Server* is one such service. It does the heavy-lifting of the **tag engine**. When you visit, for example, `/questions/tagged/java`, you’re hitting the tag engine to see which questions match.
+      
+      All posts and their tags that change are loaded every n (currently 2) minutes from the database. It is cheaper to do this 3 times (on the service layer) than 9 times (on the web layer).
+      
+  - highlight: Stack Overflow Database, Site Databases
+    text: |-
+      Both the *Q&A* and *Stack Server* applications use two SQL server clusters as their [single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth).
+      
+  - highlight: Stack Overflow Database
+    text: |-
+      The first cluster is a pair of Dell R720xd servers (one primary and one replica). It hosts all [Stack Overflow](https://stackoverflow.com/) data. This cluster also hosts some additional non-Q&A databases (Sites, PRIZM, and Mobile databases - not pictured).
+      
+  - highlight: Site Databases
+    text: |-
+      The second cluster hosts databases for **all other** production sites (such as [Ask Ubuntu](https://askubuntu.com/) and [Superuser](https://superuser.com/)) on the Stack Exchange network.
+      
+      Each site has a dedicated database. Like the "Stack Overflow" custer, this cluster is comprised of a primary and replica.
+      
+  - highlight: Providence API
+    text: |-
+      *Providence API* is another app running in the service tier alongside *Stack Server*. It is a .NET application that serves as the API for [Providence](https://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/). Providence is used for recommending questions on the home page, better matching to jobs, and so on.
+      
+  - highlight: Providence Redis Instances
+    text: |-
+      Instead of an SQL database, Providence uses Redis as a data store. It is refreshed nightly by two machine learning servers (not pictured).
+      
+  - highlight: Site Instances
+    text: |-
+      To save requests to the databases, Q&A site data is cached using an L1/L2 cache system with [Redis](https://redis.io/). “L1” is HTTP Cache on each individual web server. “L2” is falling back to Redis and fetching the value.
+      
+      When a web server gets a cache miss in both L1 and L2, it fetches the value from source (a database query, API call, etc.) and puts the result in both local cache and Redis. The next server wanting the value may miss L1, but would find the value in Redis, saving a database query or API call.
+      
+      Each site has a dedicated Redis instance.
+      
+  - highlight: Site Indexes
+    text: |-
+      The web tier is doing relatively vanilla searches against Elasticsearch 1.4. It is used for the `/search` endpoint (i.e. user searches), calculating related questions, and suggestions when asking a question.
+      
+      The Elastic cluster has 3 nodes, and each site has its own index.
+      
+  - select: "^"
+    highlight: Other Applications
+    text: |-
+      All other production sites (with two exceptions) run in their own dedicated applications run on the production web servers (*NY-WEB01* - *NY-WEB09*).
+      
+  - select: Other Applications
+    text: |-
+      These site applications all have dedicated SQL databases, ElasticSearch indexes, and Redis instances running on the same hardware as the corresponding Q&A application resources.
+      
+  - select: "^"
+    highlight: Meta Application, Meta Databases
+    text: |-
+      One final application, called "Meta", runs on the development web servers (*NY-WEB10* and *NY-WEB11*). It hosts the blogs [meta.stackoverflow.com](http://meta.stackoverflow.com) and [meta.stackexchange.com](http://meta.stackexchange.com).
+      
+      It also, unquely, uses SQL databases running on the development SQL servers.
+    
+  - expand: "^"
+    text: |-
+      The was the architecture of the Stack Exchange site traffic at a high level.
+      
+      For a walkthrough of how these servers are connected phyiscally, click "Next walkthrough", above.
+
+- name: Connections
+  extends: Physical
+  color: Firebrick
+  defaultArrowColor: Firebrick
+  defaultArrowLabel: 2x 10GB LACP
+  arrowDirection: bidirectional
+  relations: 
+  - from: Level 3
+    to: NY-CFEDGE01, NY-CFEDGE02
+    label: Internet connection
+  - from: Lightower
+    to: NY-CFEDGE04, NY-CFEDGE01
+    label: Internet connection
+  - from: Zayo
+    to: NY-CFEDGE02, NY-CFEDGE03
+    label: Internet connection
+  - from: Cogent
+    to: NY-CFEDGE03, NY-CFEDGE04
+    label: Internet connection
+    
+  - from: [NY-CFEDGE*]
+    to: NY-FW01, NY-FW02
+    
+  - from: NY-FW01, NY-FW02
+    to: NY-SW01, NY-SW02
+    
+  - from: NY-SW01, NY-SW02
+    to: [NY-FEX*]
+    
+  - from: NY-FEX01, NY-FEX02
+    to: RACK_A_SERVERS
+    
+  - from: NY-FEX03, NY-FEX04
+    to: RACK_B_SERVERS
+    
+  - from: NY-FEX05, NY-FEX06
+    to: RACK_C_SERVERS
+    
+  - from: NY-FEX07, NY-FEX08
+    to: RACK_D_SERVERS
+
+  - from: NY-SW01
+    to: NY-SW02
+    secondary: true
+    
+  notes: |-
+    This perspective shows how hardware in the *Stack Overflow NY* datacenter is physically connected. Servers are connected to each other and the internet via fabric extenders, switches, firewalls, and routers.
+    
+    All hardware has at least one redundant partner (e.g. *NY-FW01* and *NY-FW02*) to protect against hardware failure.
+    
+    See the [Traffic] perspective for more information on how these servers are logically connected.
+    
+    **Click "Start Walkthrough" above to begin**.
+    
+  walkthrough: 
+  - detail: 0
+    text: |-
+      This is a walkthrough of the hardware in the *Stack Overlow NY* datacenter and how it is physically connected.
+      
+      See the [Traffic] perspective for more information on how these resources are logically connected.
+      
+  - select: Level 3, Lightower, Zayo, Cogent
+    text: |-
+      The *Stack Overflow NY* datacenter is connected to the internet via four ISPs: *Level 3*, *Lightower*, *Zayo*, and *Cogent*.
+      
+      These ISPs are peered using [BGP](https://en.wikipedia.org/wiki/Border_Gateway_Protocol) in order to control the flow of traffic and provide several avenues for traffic to efficiently reach the datacenter.
+      
+  - highlight: [NY-CFEDGE*]
+    select: "^"
+    detail: 1
+    text: |-
+      Each ISP is serviced by two of four **routers** (*NY-CFEDGE01-04*) in an active/active fashion for redundancy.
+      
+      Each router is either an [ASR-1001](https://www.cisco.com/c/en/us/products/routers/asr-1001-router/index.html) or  [ASR-1001-X](https://www.cisco.com/c/en/us/products/routers/asr-1001-x-router/index.html).
+      
+  - highlight: Lightower
+    text: |-
+      *Lightower*, for example, is connected to both *NY-CFEDGE01* and *NY-CFEDGE04*. Traffic from Lightower can reach the datacenter from either router.
+      
+  - expand: Stack Overflow NY
+    select: NY-FW01, NY-FW02
+    text: The four routers are connected to two **firewalls** (*NY-FW01* and *NY-FW02*). The firewalls monitor incomming and outgoing traffic and are the boundry between the untrusted (internet) network and trusted (internal) network.
+    
+  - select: NY-SW01, NY-SW02
+    text: The firewalls are in turn connected to two *switches* (*NY-SW01* and *NY-SW02*). These 96-port switches are the backbone of the network; almost all internal and external traffic is routed through them.
+    
+  - select: [NY-FEX*]
+    text: Each rack has two **fabric extenders** connected to the network switches. These extenders in turn connect to the production servers housed in their respective racks.
+    
+  - select: "^"
+    highlight: Rack A, Rack B
+    text: Racks A and B are dedicated to the 11 web servers (9 production + 2 development). *Rack A* hosts the odd-numbered servers; *Rack B* the even ones.
+    
+  - highlight: Rack C, Rack D
+    text: |-
+      Racks C and D house the other servers, including load balancers, and storage and search servers.
+      
+      Like Racks A and B, *Rack C* houses the odd-numbered servers, and *Rack D* houses the even-numbered servers.
+      
+  - expand: "^"
+    text: |-
+      This was a walkthrough of the physical network connections of the servers in the *Stack Overflow NY* datacenter. Feel free to click on individual resources to see their detailed specs.
+      
+      See the [Management] perspective for information on how these servers are connected for KVM and iDRAC.
+      
+      See the [Power] perspective for information on how these resources are connected to the power supply.
+
+- name: Management
+  extends: Physical
+  arrowDirection: bidirectional
+  defaultArrowColor: Green
+  defaultArrowLabel: KVM
+  color: Green
+  relations: 
+  - from: Admins
+    to: Admin terminal
+    label: Use
+    arrowDirection: forward
+    
+  - from: Admin terminal
+    to: Dell DMPU4032 KVM
+    
+  - from: Dell DMPU4032 KVM
+    to: [KVM Aggregator]
+    
+  - from: Rack A/KVM Aggregator
+    to: RACK_A_SERVERS
+    
+  - from: Rack B/KVM Aggregator
+    to: RACK_B_SERVERS
+    
+  - from: Rack C/KVM Aggregator
+    to: RACK_C_SERVERS
+    
+  - from: Rack D/KVM Aggregator
+    to: RACK_D_SERVERS
+    
+  - from: Dell DMPU4032 KVM
+    to: [Management Switch]
+    color: Purple
+    label: iDRAC
+    
+  - from: Rack A/Management Switch
+    to: RACK_A_SERVERS
+    color: Purple
+    label: iDRAC
+    
+  - from: Rack B/Management Switch
+    to: RACK_B_SERVERS
+    color: Purple
+    label: iDRAC
+    
+  - from: Rack C/Management Switch
+    to: RACK_C_SERVERS
+    color: Purple
+    label: iDRAC
+    
+  - from: Rack D/Management Switch
+    to: RACK_D_SERVERS
+    color: Purple
+    label: iDRAC
+    
+  notes: |-
+    The web servers, load balancers, and search and storage servers (on the right) are managed using iDRAC (purple) and KVM (green) connections. These are dedicated connections separate from the main network connections.
+    
+    Each rack has a dedicated *Management Switch* and *KVM Aggregator* that the servers plug in to.
+    
+    The KVM aggregators in turn link to a [Dell 32-port Digital KVM Switch](https://www.dell.com/en-us/shop/accessories/apd/A7546775?c=us&l=en&s=bsd&cs=04&sku=A7546775). A connected terminal gives admins [KVM](https://en.wikipedia.org/wiki/KVM_switch) capability for each server.
+    
+    The [iDRAC](https://www.dell.com/en-us/dt/solutions/openmanage/idrac.htm) connection is used to monitor, update, and deploy new software to these servers.
+    
+    See the [Power] perspective for information on how these devices are powered.
+  
+- name: Power
+  extends: Physical
+  color: DarkGoldenrod
+  defaultArrowColor: DarkGoldenrod
+  defaultArrowLabel: 208V
+  arrowDirection: backward
+  relations: 
+  - from: [KVM*, Management Switch*, NY-*, NS-*]
+    to: UPS-A, UPS-B
+    
+  - from: UPS-A, UPS-B
+    to: PDU-A, PDU-B
+    
+  - from: PDU-A, PDU-B
+    to: NY Power Source A, NY Power Source B
+    
+  notes: All servers run on 208V single phase power. Each is connected to two [UPS](https://en.wikipedia.org/wiki/Uninterruptible_power_supply)s which are in turn feed from two [PDU](https://en.wikipedia.org/wiki/Power_distribution_unit)s. The PDUs are backed by two external power sources.

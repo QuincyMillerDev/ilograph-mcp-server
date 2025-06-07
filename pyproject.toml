@@ -3,33 +3,61 @@ name = "ilograph-mcp-server"
 version = "0.1.0"
 description = "FastMCP server providing AI agents with Ilograph diagram creation and validation capabilities"
 readme = "README.md"
+license = {text = "MIT"}
 requires-python = ">=3.11"
+authors = [
+    {name = "Ilograph MCP Server", email = "dev@example.com"}
+]
+keywords = ["mcp", "ilograph", "diagrams", "ai", "fastmcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
 dependencies = [
     "fastmcp>=2.7.0",
-    "pytest>=8.4.0",
     "pyyaml>=6.0.0",
     "httpx>=0.25.0",
     "beautifulsoup4>=4.12.0",
     "lxml>=4.9.0",
+    "pydantic>=2.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0",
+    "pytest>=8.4.0",
     "pytest-asyncio>=0.21.0",
     "black>=23.0.0",
     "isort>=5.12.0",
     "mypy>=1.0.0",
+    "types-PyYAML>=6.0.0",
+    "types-beautifulsoup4>=4.12.0",
 ]
 
 [project.scripts]
-ilograph-mcp = "main:main"
+ilograph-mcp = "ilograph_mcp.main:main"
+
+[project.urls]
+Homepage = "https://github.com/your-org/ilograph-mcp-server"
+Repository = "https://github.com/your-org/ilograph-mcp-server.git"
+Documentation = "https://github.com/your-org/ilograph-mcp-server#readme"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"ilograph_mcp.static.examples" = ["*.ilograph"]
 
 [tool.black]
 line-length = 100
@@ -45,6 +73,9 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 
-[build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
