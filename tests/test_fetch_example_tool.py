@@ -6,12 +6,12 @@ patterns, ensuring that example listing and fetching work as expected.
 """
 
 import json
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+from fastmcp import Client, FastMCP
 
-from fastmcp import FastMCP, Client
-
-from ilograph_mcp.tools.register_example_tools import register_example_tools, ExampleMetadata
+from ilograph_mcp.tools.register_example_tools import ExampleMetadata, register_example_tools
 
 # Mock data for testing, mirroring the structure of the real database
 MOCK_EXAMPLES_DATABASE = {

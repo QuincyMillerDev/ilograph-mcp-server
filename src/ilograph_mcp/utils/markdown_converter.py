@@ -8,7 +8,7 @@ link resolution, and content sanitization.
 
 import logging
 import re
-from typing import Optional, List, Tuple
+from typing import List, Optional, Tuple
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, Tag

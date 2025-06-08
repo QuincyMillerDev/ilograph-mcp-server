@@ -8,9 +8,9 @@ complete with metadata about the patterns and concepts they demonstrate.
 
 import logging
 from pathlib import Path
-from typing import Optional, List, Dict, Any, Literal
+from typing import Any, Dict, List, Literal, Optional
 
-from fastmcp import FastMCP, Context
+from fastmcp import Context, FastMCP
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)

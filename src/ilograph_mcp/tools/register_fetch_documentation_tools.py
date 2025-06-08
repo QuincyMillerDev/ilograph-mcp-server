@@ -7,7 +7,8 @@ Includes caching, error handling, and detailed logging following FastMCP pattern
 """
 
 import logging
-from fastmcp import FastMCP, Context
+
+from fastmcp import Context, FastMCP
 
 from ..core.fetcher import get_fetcher
 

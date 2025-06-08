@@ -7,7 +7,7 @@ and error handling for reliable content delivery to AI agents.
 """
 
 import logging
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
 
 from ..utils.http_client import get_http_client
 from ..utils.markdown_converter import get_markdown_converter

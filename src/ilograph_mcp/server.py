@@ -5,10 +5,11 @@ This module sets up the FastMCP server and registers all tools, resources, and p
 """
 
 import logging
+
 from fastmcp import FastMCP
 
-from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
 from ilograph_mcp.tools.register_example_tools import register_example_tools
+from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
 
 # Configure logging
 logging.basicConfig(

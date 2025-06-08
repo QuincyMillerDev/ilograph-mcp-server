@@ -5,13 +5,13 @@ This module provides HTTP request capabilities with retry logic, caching integra
 and proper error handling for fetching content from Ilograph sources.
 """
 
-import logging
 import asyncio
+import logging
 from typing import Optional
 from urllib.parse import urljoin
 
 import httpx
-from httpx import Response, HTTPStatusError, RequestError
+from httpx import HTTPStatusError, RequestError, Response
 
 logger = logging.getLogger(__name__)
 

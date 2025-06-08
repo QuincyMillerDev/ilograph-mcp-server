@@ -5,9 +5,10 @@ This module tests the documentation fetching tools using FastMCP's in-memory tes
 patterns with proper mocking of HTTP requests and error handling scenarios.
 """
 
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
-from fastmcp import FastMCP, Client
+from fastmcp import Client, FastMCP
 
 
 @pytest.fixture
