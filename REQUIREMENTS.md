@@ -112,15 +112,24 @@ ilograph-mcp-server/
   - `walkthroughs` - Walkthrough creation
 - **Processing**: Convert HTML docs to structured markdown with section headers
 
-#### 1.4 Example Library (Static)
-- **Resource URI**: `ilograph://examples`
-- **Source**: Three official examples from the Ilograph cloud webapp:
-  - https://app.ilograph.com/demo.ilograph.Ilograph
-  - https://app.ilograph.com/demo.ilograph.AWS%2520Distributed-Load-Testing
-  - https://app.ilograph.com/demo.ilograph.Stack%2520Overflow%2520Architecture%2520(2016)
-- **Content**: These diagrams are stored as static `.ilograph` files in the server repository, as they do not update frequently and are difficult to extract programmatically from the webapp.
-- **Categories**: Serverless on AWS, Distributed Load Testing on AWS, Physical Datacenter Architecture
-- **Processing**: Parse .ilograph files
+#### 1.4 Example Library (Static) 
+**Core Principle**: Curated reference implementations demonstrating Ilograph syntax patterns and architectural best practices. These are static resources that do NOT change, providing reliable examples for learning and reference.
+
+**Resource Architecture**:
+- **Discovery Resource**: `ilograph://examples` - Complete catalog with metadata and filtering
+- **Individual Resources**: `ilograph://examples/{filename}` - Specific example content + metadata
+
+**Source Content**: Three official examples from Ilograph cloud webapp, stored as static `.ilograph` files:
+- `serverless-on-aws.ilograph` - Beginner-level serverless architecture patterns
+- `aws-distributed-load-testing.ilograph` - Intermediate AWS distributed systems
+- `stack-overflow-architecture-2016.ilograph` - Advanced datacenter infrastructure
+
+**Discoverability Features**:
+- **Rich Metadata**: Each example includes title, description, complexity, architecture patterns, services, learning objectives
+- **Categorization**: Organized by complexity (beginner/intermediate/advanced), cloud provider, architecture type
+- **Filtering Dimensions**: Categories, cloud providers, complexity levels, use cases
+- **Resource URIs**: Clear hierarchical structure following FastMCP best practices
+- **Error Handling**: Helpful error messages with available alternatives for invalid requests
 
 ### 2. **Intelligent Tools**
 
@@ -357,12 +366,117 @@ This dynamic approach ensures the MCP server always provides current, authoritat
 This plan covers the full scope of the Ilograph MCP Server project, including dynamic content sourcing, intelligent caching, static example library, and robust error handling.
 
 ### Phase 1: Core Infrastructure & Static Example Library
-- Set up FastMCP server with project structure and configuration.
-- Implement static example library:
-  - Extract and store the three official .ilograph examples in an `examples/` directory.
-  - Expose a resource at `ilograph://examples` to list and serve these files.
-  - Add filtering/categorization if needed.
-- Add basic server health check and logging.
+
+Following FastMCP best practices for resource discoverability and hierarchical organization:
+
+#### 1.1 FastMCP Server Foundation
+- Set up FastMCP server with proper metadata and instructions that clearly describe available resources
+- Configure descriptive server name: "Ilograph Context Server"
+- Include comprehensive instructions that list all available resource URIs for LLM client discovery
+
+#### 1.2 Static Example Library Implementation
+**Core Principle**: Static .ilograph files are curated reference implementations that demonstrate Ilograph syntax patterns, architectural approaches, and best practices. These do NOT change and serve as authoritative examples.
+
+**Resource Architecture** (following FastMCP hierarchical URI best practices):
+
+1. **Discovery Resource**: `ilograph://examples`
+   - **Purpose**: Primary discovery endpoint for MCP clients
+   - **Returns**: Structured JSON with complete example catalog including:
+     - List of all available examples with metadata
+     - Categorization (complexity, cloud provider, architecture type)
+     - Filtering dimensions (categories, cloud providers, complexity levels)
+     - Resource URIs for individual examples
+   - **LLM Benefits**: Client can discover all available examples and their characteristics
+
+2. **Individual Example Resources**: `ilograph://examples/{filename}`
+   - **Purpose**: Serve individual .ilograph file content
+   - **URI Template**: Dynamic resource pattern using `{filename}` parameter
+   - **Returns**: Structured response with file content + metadata
+   - **Error Handling**: Clear messages for invalid filenames with available alternatives
+
+**Example Metadata Structure** (enriched for discoverability):
+```python
+EXAMPLE_METADATA = {
+    "aws-distributed-load-testing.ilograph": {
+        "title": "AWS Distributed Load Testing",
+        "description": "Complete distributed load testing architecture on AWS using Lambda, ECS, and managed services",
+        "category": "distributed-testing",
+        "cloud_provider": "aws", 
+        "complexity": "intermediate",
+        "architecture_patterns": ["microservices", "event-driven", "managed-services"],
+        "services": ["lambda", "ecs", "s3", "cloudformation", "api-gateway"],
+        "use_cases": ["load-testing", "performance-testing", "aws-architecture"],
+        "learning_objectives": ["AWS service integration", "distributed architectures", "infrastructure as code"],
+        "estimated_components": 15,
+        "perspectives_count": 3
+    },
+    "stack-overflow-architecture-2016.ilograph": {
+        "title": "Stack Overflow Architecture (2016)", 
+        "description": "Physical datacenter architecture showing Stack Overflow's high-availability infrastructure",
+        "category": "datacenter",
+        "cloud_provider": "on-premises",
+        "complexity": "advanced",
+        "architecture_patterns": ["high-availability", "load-balancing", "database-clustering"],
+        "services": ["sql-server", "redis", "elasticsearch", "iis", "haproxy"],
+        "use_cases": ["web-application", "high-availability", "database-architecture", "datacenter-design"],
+        "learning_objectives": ["Physical infrastructure", "high availability patterns", "database scaling"],
+        "estimated_components": 25,
+        "perspectives_count": 4
+    },
+    "serverless-on-aws.ilograph": {
+        "title": "Serverless on AWS",
+        "description": "Modern serverless application demonstrating event-driven architecture with managed AWS services",
+        "category": "serverless", 
+        "cloud_provider": "aws",
+        "complexity": "beginner",
+        "architecture_patterns": ["serverless", "event-driven", "api-first"],
+        "services": ["lambda", "api-gateway", "dynamodb", "s3", "cognito"],
+        "use_cases": ["serverless", "microservices", "event-driven", "web-api"],
+        "learning_objectives": ["Serverless patterns", "AWS Lambda", "API design"],
+        "estimated_components": 8,
+        "perspectives_count": 2
+    }
+}
+```
+
+**FastMCP Resource Implementation**:
+```python
+@mcp.resource("ilograph://examples")
+async def get_examples_catalog() -> str:
+    """
+    Comprehensive catalog of all available Ilograph example diagrams.
+    
+    Provides complete discoverability for MCP clients including metadata,
+    categorization, and individual resource URIs for each example.
+    """
+    # Returns structured JSON with examples list + filter dimensions
+
+@mcp.resource("ilograph://examples/{filename}")  
+async def get_example_content(filename: str) -> str:
+    """
+    Get specific Ilograph example diagram content and metadata.
+    
+    Args:
+        filename: Example filename (e.g., 'serverless-on-aws.ilograph')
+    """
+    # Returns structured JSON with content + metadata
+```
+
+#### 1.3 Directory Structure
+```
+src/ilograph_mcp/static/examples/
+├── aws-distributed-load-testing.ilograph     # Intermediate AWS example
+├── stack-overflow-architecture-2016.ilograph # Advanced datacenter example  
+└── serverless-on-aws.ilograph               # Beginner serverless example
+```
+
+#### 1.4 LLM Client Discoverability Features
+- **Server Instructions**: Include clear description of available resources in FastMCP server initialization
+- **Resource Listing**: Primary `ilograph://examples` resource acts as a discovery endpoint
+- **Hierarchical URIs**: Individual examples accessible via intuitive `ilograph://examples/{filename}` pattern
+- **Rich Metadata**: Each example includes learning objectives, complexity, architecture patterns
+- **Error Guidance**: Invalid requests return helpful error messages with available alternatives
+- **Categorization**: Examples organized by complexity, cloud provider, and architecture type for easy filtering
 
 ### Phase 2: Dynamic Resource System
 - Implement dynamic fetching and caching for:

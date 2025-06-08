@@ -9,11 +9,11 @@ for exposing specifications, documentation, icons, and examples.
 # from .specification import get_specification
 # from .icons import get_icon_catalog
 # from .documentation import get_documentation
-# from .examples import get_examples
+from .examples import register_examples_resources
 
 __all__ = [
     # "get_specification",
     # "get_icon_catalog",
     # "get_documentation",
-    # "get_examples",
+    "register_examples_resources",
 ] 
