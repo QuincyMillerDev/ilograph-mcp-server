@@ -110,80 +110,49 @@ The following tools are available for comprehensive Ilograph workflow support:
 **"Explain Ilograph perspectives and how to use them"**
 → Provides comprehensive documentation with examples and best practices
 
-## Development Setup
+## Contributing
 
-Want to contribute or run locally?
-
-```bash
-# Clone and build
-git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
-cd ilograph-mcp-server
-docker build -t ilograph-mcp-local .
-
-# Use local build
-{
-  "mcpServers": {
-    "ilograph": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "ilograph-mcp-local"]
-    }
-  }
-}
-```
-
-
-
-## Development
-
-### Prerequisites
-- **Python 3.11+** (check [pyproject.toml](./pyproject.toml) for specific version)
-- **uv** (recommended) or **pip** for dependency management
-- **Docker** (optional, for container builds)
+Want to help improve this project? Great! 
 
 ### Development Setup
+
+**Prerequisites**: Python 3.11+ and [uv](https://docs.astral.sh/uv/)
+
 ```bash
-# Clone and setup
-git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
+# Fork and clone
+git clone https://github.com/your-username/ilograph-mcp-server.git
 cd ilograph-mcp-server
 
 # Install dependencies
 uv sync
 
-# Run the server locally
-uv run python -m ilograph_mcp.server
-```
-
-### Running Tests
-```bash
-# Run all tests
+# Run tests
 uv run pytest
 
-# Run with coverage
-uv run pytest --cov=ilograph_mcp
-
-# Run specific test categories
-uv run pytest -m unit
-uv run pytest -m integration
+# Test the server works
+uv run python -m ilograph_mcp.server --help
 ```
 
-### Available Scripts
+### Before Submitting
+
 ```bash
-# Development server
-uv run python -m ilograph_mcp.server
+# Format code
+uv run black src/ tests/
+uv run isort src/ tests/
 
-# Code formatting
-uv run black .
-uv run isort .
-
-# Type checking
-uv run mypy .
-
-# Security scanning
-uv run bandit -r src/
-
-# Build package
-uv build
+# Run tests and checks
+uv run pytest
+uv run mypy src/
 ```
+
+### What We're Looking For
+
+- 🐛 **Bug fixes** - Always appreciated!
+- 📚 **Documentation improvements** - Help make things clearer
+- ✨ **New tools** - Add more Ilograph functionality
+- 🔧 **Code quality** - Better error handling, etc.
+
+Keep changes focused and test locally! 🚀
 
 ## Features
 
@@ -197,40 +166,11 @@ uv build
 - **🔄 Health Monitoring**: Built-in service health checks and status reporting
 - **🏗️ Architecture Pattern Detection**: Identifies common patterns and provides optimization suggestions
 
-## Documentation
+## Need Help?
 
-- **[Tools Reference](docs/TOOLS.md)** - Detailed documentation for all available tools and their usage
-- **[Architecture](docs/ARCHITECTURE.md)** - Technical architecture, design decisions, and system overview
-- **[Contributing](docs/CONTRIBUTING.md)** - Development setup, guidelines, and contribution process
-
-## Contributing
-
-This is a **community-driven side project** - contributions are welcome! 
-
-### Quick Start for Contributors
-
-1. **Fork** the repository
-2. **Clone** your fork: `git clone https://github.com/your-username/ilograph-mcp-server.git`
-3. **Install**: `cd ilograph-mcp-server && uv sync`
-4. **Test**: `uv run python -m ilograph_mcp.server`
-5. **Make changes** and test locally
-6. **Submit a Pull Request**
-
-### What We're Looking For
-
-- 🐛 **Bug fixes** - Always appreciated!
-- 📚 **Documentation improvements** - Help make things clearer
-- ✨ **New Ilograph tools** - Add more functionality
-- 🔧 **Code quality** - Refactoring, type hints, etc.
-
-### Before Contributing
-
-- Check [existing issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues) first
-- For major changes, open an issue to discuss
-- Keep changes focused and atomic
-- Test your changes locally
-
-**Note**: This is a personal side project, so response times may vary. Thanks for understanding!
+- **Tool Usage**: See the available tools in the table above
+- **Issues**: [GitHub Issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
+- **Questions**: [GitHub Discussions](https://github.com/QuincyMillerDev/ilograph-mcp-server/discussions)
 
 ## License
 
@@ -244,13 +184,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - This tool accesses publicly available documentation under fair use principles
 - Users should refer to official Ilograph documentation for authoritative information
 - No commercial relationship exists between this project and Ilograph LLC
-
-## Support
-
-- **Bug Reports**: [GitHub Issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
-- **Feature Requests**: [GitHub Issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
-- **Questions & Discussions**: [GitHub Discussions](https://github.com/QuincyMillerDev/ilograph-mcp-server/discussions)
-- **Documentation**: [docs/](docs/) directory
 
 ## Links
 
