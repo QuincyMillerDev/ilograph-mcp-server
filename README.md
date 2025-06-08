@@ -13,6 +13,7 @@ A FastMCP server that provides AI agents with comprehensive access to Ilograph d
 
 - **📚 Live Documentation Access**: Fetches up-to-date documentation from official Ilograph sources
 - **🔍 Comprehensive Section Coverage**: Access to all major Ilograph concepts (resources, perspectives, contexts, etc.)
+- **✅ Diagram Validation**: Comprehensive YAML and Ilograph schema validation with detailed error messages
 - **⚡ Intelligent Caching**: TTL-based caching with fallback strategies for optimal performance
 - **🛠️ Tool-First Design**: Compatible with all current MCP clients (Cursor, GitHub Copilot, etc.)
 - **📋 Example Library**: Curated collection of real-world Ilograph diagrams
@@ -59,7 +60,7 @@ mcp.run()
 
 ## Available Tools
 
-The server provides 7 main tools for accessing Ilograph documentation, specifications, and examples:
+The server provides 9 main tools for accessing Ilograph documentation, specifications, examples, and validation:
 
 1. **`fetch_documentation_tool`** - Fetches comprehensive documentation from Ilograph's official website
 2. **`list_documentation_sections`** - Lists all available documentation sections with descriptions
@@ -68,38 +69,11 @@ The server provides 7 main tools for accessing Ilograph documentation, specifica
 5. **`fetch_example`** - Retrieves specific example diagrams with metadata and learning context
 6. **`fetch_spec_tool`** - Fetches the official Ilograph specification with complete property definitions
 7. **`check_spec_health`** - Performs health checks specifically on the specification service
+8. **`validate_diagram_tool`** - Validates Ilograph diagram syntax and provides detailed error messages
+9. **`get_validation_help`** - Provides comprehensive guidance on diagram validation and common issues
 
 For detailed tool documentation, see [docs/TOOLS.md](docs/TOOLS.md).
 
-## Example Usage
-
-```python
-from fastmcp import Client
-from ilograph_mcp import create_server
-
-async def example_usage():
-    mcp = create_server()
-    
-    async with Client(mcp) as client:
-        # List available sections
-        sections = await client.call_tool("list_documentation_sections", {})
-        
-        # Fetch specific documentation
-        docs = await client.call_tool("fetch_documentation_tool", {
-            "section": "resources"
-        })
-        
-        # List example diagrams
-        examples = await client.call_tool("list_examples", {
-            "category": "intermediate"
-        })
-        
-        # Fetch specification for property reference
-        spec = await client.call_tool("fetch_spec_tool", {})
-        
-        # Check specification service health
-        spec_health = await client.call_tool("check_spec_health", {})
-```
 
 ## Documentation
 

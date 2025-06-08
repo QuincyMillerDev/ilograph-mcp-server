@@ -11,6 +11,7 @@ from fastmcp import FastMCP
 from ilograph_mcp.tools.register_example_tools import register_example_tools
 from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
 from ilograph_mcp.tools.register_fetch_spec_tool import register_fetch_spec_tool
+from ilograph_mcp.tools.register_validate_diagram_tool import register_validate_diagram_tool
 
 # Configure logging
 logging.basicConfig(
@@ -42,6 +43,8 @@ def create_server() -> FastMCP:
         - check_spec_health: Checks specification service connectivity and cache status
         - list_examples: Lists available example diagrams
         - fetch_example: Fetches a specific example diagram by name
+        - validate_diagram_tool: Validates Ilograph diagram syntax and provides detailed error messages
+        - get_validation_help: Provides guidance on Ilograph diagram validation and common issues
         """,
     )
 
@@ -54,6 +57,9 @@ def create_server() -> FastMCP:
 
     register_example_tools(mcp)
     logger.info("Registered example_tools")
+
+    register_validate_diagram_tool(mcp)
+    logger.info("Registered validate_diagram_tool")
 
     return mcp
 

@@ -1,6 +1,6 @@
 # Tools Reference
 
-The Ilograph MCP Server provides comprehensive tools for accessing Ilograph documentation and examples. All tools are designed to be compatible with current MCP clients (Cursor, GitHub Copilot, etc.) that support the tools specification.
+The Ilograph MCP Server provides comprehensive tools for accessing Ilograph documentation, examples, and diagram validation. All tools are designed to be compatible with current MCP clients (Cursor, GitHub Copilot, etc.) that support the tools specification.
 
 ## Available Tools
 
@@ -161,6 +161,85 @@ Health status report focused on specification service including:
 spec_health = await client.call_tool("check_spec_health", {})
 ```
 
+### 8. `validate_diagram_tool`
+
+Validates Ilograph diagram syntax and provides detailed error messages with suggestions.
+
+**Parameters:**
+- `content` (str): The Ilograph diagram content as a string
+
+**Returns:**
+Dictionary containing comprehensive validation results:
+- `success` (bool): Overall validation success status
+- `yaml_valid` (bool): Whether YAML syntax is valid
+- `schema_valid` (bool): Whether Ilograph schema is valid
+- `summary`: Object with total counts of errors, warnings, and info messages
+- `errors`: Array of error objects with messages, locations, and suggestions
+- `warnings`: Array of warning objects for non-critical issues
+- `info`: Array of informational messages and suggestions
+- `assessment`: Human-readable overall assessment
+
+This tool performs comprehensive validation in two stages:
+1. **YAML Syntax Check**: Ensures the diagram is valid YAML
+2. **Ilograph Schema Validation**: Checks Ilograph-specific requirements like required properties, valid property names, and relationship structures
+
+**Example Usage:**
+```python
+diagram_content = '''
+resources:
+- name: Web Server
+  subtitle: Frontend
+  description: Serves the web application
+  children:
+  - name: Load Balancer
+    description: Distributes traffic
+
+perspectives:
+- name: System Overview
+  relations:
+  - from: User
+    to: Web Server
+    label: HTTPS requests
+'''
+
+result = await client.call_tool("validate_diagram_tool", {
+    "content": diagram_content
+})
+
+if result["success"]:
+    print("✅ Diagram is valid!")
+    if result["warnings"]:
+        print(f"⚠️  {len(result['warnings'])} suggestions for improvement")
+else:
+    print("❌ Diagram has errors:")
+    for error in result["errors"]:
+        print(f"  - {error['message']}")
+        if error.get("suggestion"):
+            print(f"    Suggestion: {error['suggestion']}")
+```
+
+### 9. `get_validation_help`
+
+Provides comprehensive guidance on Ilograph diagram validation and common issues.
+
+**Parameters:**
+None
+
+**Returns:**
+Detailed validation help in markdown format including:
+- Overview of the validation process
+- Common YAML syntax issues and solutions
+- Ilograph schema requirements
+- Valid property lists and examples
+- Tips for successful diagram creation
+- References to other helpful tools
+
+**Example Usage:**
+```python
+help_content = await client.call_tool("get_validation_help", {})
+print(help_content)  # Displays comprehensive validation guidance
+```
+
 ## Tool Design Principles
 
 ### Compatibility
@@ -186,13 +265,13 @@ All tools implement comprehensive error handling with:
 
 ## Future Tools (Planned)
 
-> **Note:** Additional tools for validation, icon search, and advanced features are planned for future releases.
+> **Note:** Additional tools for icon search and advanced features are planned for future releases.
 
 ### Planned Tools
-- **Diagram Syntax Validation**: Validate Ilograph YAML syntax and structure
 - **Icon Search and Recommendation**: Search the live icon catalog with semantic matching
 - **Best Practices Guidance**: AI-powered suggestions for diagram improvements
 - **Template Generation**: Generate diagram templates based on common patterns
+- **Advanced Validation**: Extended validation with cross-reference checking and best practice analysis
 
 ## Integration Examples
 
@@ -234,12 +313,28 @@ async def create_diagram_workflow():
         # 7. Check specification service health
         spec_health = await client.call_tool("check_spec_health", {})
         
+        # 8. Validate a diagram (example)
+        test_diagram = '''
+        resources:
+        - name: Test Resource
+          description: A simple test
+        '''
+        
+        validation_result = await client.call_tool("validate_diagram_tool", {
+            "content": test_diagram
+        })
+        
+        # 9. Get validation help if needed
+        if not validation_result["success"]:
+            help_content = await client.call_tool("get_validation_help", {})
+        
         # Now use the documentation, examples, and specification to create diagrams
         return {
             "documentation": resources_docs,
             "example": example,
             "specification": spec,
-            "spec_health": spec_health
+            "spec_health": spec_health,
+            "validation": validation_result
         }
 ```
 
