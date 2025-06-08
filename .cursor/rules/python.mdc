@@ -13,6 +13,7 @@ Key Principles
 - Use lowercase with underscores for directories and files (e.g., tools/data_tools.py).
 - Favor named exports for tools, resources, and utility functions.
 - Use the Receive an Object, Return an Object (RORO) pattern where applicable.
+- DO NOT MAKE ASSUMPTIONS
 
 Python/FastMCP
 - Use def for function definitions with proper type hints.

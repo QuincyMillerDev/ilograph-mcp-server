@@ -30,7 +30,7 @@ Research of successful MCP servers (WebMCP, Graphlit MCP, etc.) reveals:
 
 ### Ilograph Platform Analysis
 From https://www.ilograph.com/ research:
-- **Live Icon Catalog**: 2000+ icons at https://www.ilograph.com/docs/iconlist.txt
+- **Live Icon Catalog**: 200+ icons at https://www.ilograph.com/docs/iconlist.txt
 - **Dynamic Documentation**: Actively maintained docs at https://www.ilograph.com/docs/
 - **Comprehensive Specification**: Complete YAML format at https://www.ilograph.com/docs/spec/
 - **Multi-perspective Documentation**: Resources, Perspectives, Contexts, Walkthroughs, etc.

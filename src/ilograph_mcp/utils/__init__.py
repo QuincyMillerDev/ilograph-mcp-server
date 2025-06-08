@@ -1,18 +1,16 @@
 """
-Utilities for the Ilograph MCP Server.
+Utility modules for the Ilograph MCP Server.
 
-This package contains utility functions and classes for HTTP clients,
-markdown conversion, icon classification, and other helper functionality.
+This package provides various utility functions and classes for HTTP requests,
+HTML to markdown conversion, content processing, and other supporting functionality.
 """
 
-# Utilities will be imported here when implemented
-# from .http_client import HttpClient
-# from .markdown_converter import html_to_markdown
-# from .icon_classifier import classify_icon, recommend_icon_for_component
+from .http_client import IlographHTTPClient, get_http_client
+from .markdown_converter import IlographMarkdownConverter, get_markdown_converter
 
 __all__ = [
-    # "HttpClient",
-    # "html_to_markdown",
-    # "classify_icon",
-    # "recommend_icon_for_component",
+    "IlographHTTPClient",
+    "get_http_client", 
+    "IlographMarkdownConverter",
+    "get_markdown_converter"
 ] 

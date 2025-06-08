@@ -41,7 +41,7 @@ dev = [
 ]
 
 [project.scripts]
-ilograph-mcp = "ilograph_mcp.main:main"
+ilograph-mcp = "ilograph_mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/your-org/ilograph-mcp-server"

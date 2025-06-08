@@ -7,6 +7,8 @@ This module sets up the FastMCP server and registers all tools, resources, and p
 import logging
 from fastmcp import FastMCP
 
+from .tools.fetch_documentation_tool import register_fetch_documentation_tool
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -29,16 +31,26 @@ def create_server() -> FastMCP:
         This server provides comprehensive Ilograph diagram creation and validation tools.
         It acts as a dynamic domain expert for Ilograph syntax, best practices, and validation.
         It can also provide documentation about Ilograph concepts, such as perspectives, resources, and contexts.
+        
+        Available tools:
+        - fetch_documentation_tool: Fetches comprehensive documentation from Ilograph's official docs
+        - list_documentation_sections: Lists all available documentation sections
+        - check_documentation_health: Checks service connectivity and cache status
         """
     )
     
-    # TODO: Register all tools when implemented
-    # register_all_tools(mcp)
+    # Register all tools
+    register_fetch_documentation_tool(mcp)
+    logger.info("Registered fetch_documentation_tool")
 
     return mcp
 
 
-if __name__ == "__main__":
-    # Only create server when run directly
+def main():
+    """Main entry point for the Ilograph MCP server."""
     mcp = create_server()
-    mcp.run() 
+    mcp.run()
+
+
+if __name__ == "__main__":
+    main()

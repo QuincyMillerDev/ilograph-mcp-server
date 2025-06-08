@@ -1,229 +1,249 @@
 # Ilograph MCP Server
 
-A FastMCP server that provides AI agents (like Cursor) with comprehensive context and tools to create accurate, valid Ilograph diagrams. The server acts as a domain expert for Ilograph syntax, best practices, and validation.
+> **⚠️ Important Note (2025):** Most MCP clients (Cursor, GitHub Copilot, etc.) currently only support MCP **tools**, not resources or prompts. This server is designed with tool-first architecture to ensure compatibility with all current MCP clients.
+
+A FastMCP server that provides AI agents with comprehensive access to Ilograph documentation and guidance for creating accurate, valid Ilograph diagrams. The server acts as a dynamic domain expert, fetching live content from official Ilograph sources.
+
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![FastMCP](https://img.shields.io/badge/FastMCP-2.7.0+-green.svg)](https://github.com/jlowin/fastmcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
-- **Syntax Validation**: Validate Ilograph markup syntax against the official specification
-- **Comprehensive Error Reporting**: Detailed errors, warnings, and suggestions
-- **Icon Catalog**: Access to complete Ilograph icon library with search capabilities
-- **Best Practices**: Curated guidance for creating effective diagrams
-- **Template Library**: Pre-built templates for common architectures (coming soon)
+- **📚 Live Documentation Access**: Fetches up-to-date documentation from official Ilograph sources
+- **🔍 Comprehensive Section Coverage**: Access to all major Ilograph concepts (resources, perspectives, contexts, etc.)
+- **⚡ Intelligent Caching**: TTL-based caching with fallback strategies for optimal performance
+- **🛠️ Tool-First Design**: Compatible with all current MCP clients (Cursor, GitHub Copilot, etc.)
+- **📋 Example Library**: Curated collection of real-world Ilograph diagrams
+- **🔄 Health Monitoring**: Built-in service health checks and status reporting
 
-## Architecture
+## Quick Start
 
-The project follows a modular architecture with clear separation of concerns:
+### Installation
 
-```
-ilograph-mcp-server/
-├── .cursor/
-├── src/
-│   └── ilograph_mcp/
-│       ├── __init__.py
-│       ├── server.py              # Main FastMCP server instance
-│       ├── core/
-│       │   ├── __init__.py
-│       │   ├── fetcher.py         # Dynamic content fetching
-│       │   ├── cache.py           # In-memory caching with TTL
-│       │   └── parser.py          # HTML to Markdown conversion
-│       ├── tools/
-│       │   ├── __init__.py
-│       │   ├── syntax_validator.py    # @mcp.tool() for validation
-│       │   ├── icon_recommender.py   # @mcp.tool() for icon suggestions
-│       │   ├── icon_search.py        # @mcp.tool() for icon search
-│       │   └── spec_query.py         # @mcp.tool() for spec queries
-│       ├── resources/
-│       │   ├── __init__.py
-│       │   ├── specification.py      # @mcp.resource() for live spec
-│       │   ├── icons.py             # @mcp.resource() for icon catalog
-│       │   ├── documentation.py     # @mcp.resource() for docs
-│       │   └── examples.py          # @mcp.resource() for static examples
-│       ├── static/
-│       │   └── examples/
-│       │       ├── aws-distributed-load-testing.ilograph
-│       │       ├── demo.ilograph
-│       │       └── stack-overflow-architecture.ilograph
-│       └── utils/
-│           ├── __init__.py
-│           ├── http_client.py       # HTTP client with retry/cache
-│           ├── markdown_converter.py
-│           └── icon_classifier.py
-├── tests/
-│   ├── __init__.py
-├── .gitignore
-├── .python-version                 # Python version for uv
-├── LICENSE
-├── README.md
-├── pyproject.toml                  # Modern Python packaging
-└── uv.lock                        # Lock file for dependencies
-```
-
-## Installation
-
-### Development Setup
-
-1. Clone the repository:
 ```bash
-git clone <repository-url>
+# Clone the repository
+git clone https://github.com/your-org/ilograph-mcp-server.git
 cd ilograph-mcp-server
-```
 
-2. Install dependencies with uv:
-```bash
+# Install with uv (recommended)
 uv sync
+
+# Or with pip
+pip install -e .
 ```
 
-3. Install development dependencies:
-```bash
-uv sync --extra dev
-```
-
-### Usage
-
-#### Running the Server
+### Running the Server
 
 ```bash
 # Using uv
-uv run main.py
+uv run python -m ilograph_mcp.server
 
-# Or directly with Python
-python main.py
+# Or using the installed script
+ilograph-mcp
+
+# Or directly
+python src/ilograph_mcp/server.py
 ```
 
-#### Using as a Library
+### Using as a Library
 
 ```python
 from ilograph_mcp import create_server
 
+# Create and run the server
 mcp = create_server()
 mcp.run()
 ```
 
-## MCP Tools
+## Available Tools
 
-### validate_ilograph_syntax
+The server currently provides three documentation-focused tools:
 
-Validates Ilograph markup syntax and returns detailed feedback.
+### 1. `fetch_documentation_tool`
+Fetches comprehensive documentation from Ilograph's official website.
 
 **Parameters:**
-- `diagram_code` (str): The Ilograph YAML/markup code to validate
+- `section` (str): Documentation section to fetch
 
-**Returns:**
-```json
-{
-  "valid": true,
-  "errors": [],
-  "warnings": [],
-  "suggestions": []
-}
-```
+**Supported Sections:**
+- `resources` - Resource tree organization, hierarchies, instanceOf patterns
+- `relation-perspectives` - Arrow connections, from/to properties, routing
+- `sequence-perspectives` - Time-based diagrams with steps, bidirectional flows
+- `references` - Resource reference patterns and advanced referencing
+- `advanced-references` - Complex reference scenarios and usage patterns
+- `resource-sizes-and-positions` - Layout control, resource sizing, visual hierarchy
+- `parent-overrides` - Resource parent overrides in perspectives
+- `perspectives-other-properties` - Additional perspective properties and options
+- `icons` - Icon system with iconStyle, icon paths, and categorization
+- `walkthroughs` - Interactive step-by-step guides through diagrams
+- `contexts` - Multiple context views with roots, extends inheritance
+- `imports` - Namespace management with from/namespace properties
+- `markdown` - Rich text support in descriptions, notes, and diagram text
+- `tutorial` - Complete tutorial for learning Ilograph diagram creation
 
-**Example Usage:**
+### 2. `list_documentation_sections`
+Lists all available documentation sections with descriptions and usage examples.
+
+### 3. `check_documentation_health`
+Performs health checks on the documentation service and returns cache statistics.
+
+> **Note:** This is the current implementation. Additional tools for validation, icon search, and example access are planned but not yet implemented.
+
+## Example Usage
+
 ```python
 from fastmcp import Client
 from ilograph_mcp import create_server
 
-async def validate_diagram():
+async def example_usage():
     mcp = create_server()
-    client = Client(mcp)
     
-    async with client:
-        result = await client.call_tool("validate_ilograph_syntax", {
-            "diagram_code": """
-resources:
-  - name: Users
-    color: Blue
-perspectives:
-  - name: Overview
-    relations:
-      - from: Users
-        to: System
-"""
+    async with Client(mcp) as client:
+        # List available sections
+        sections = await client.call_tool("list_documentation_sections", {})
+        print("Available sections:", sections)
+        
+        # Fetch specific documentation
+        docs = await client.call_tool("fetch_documentation_tool", {
+            "section": "resources"
         })
-        print(result)
+        print("Documentation:", docs)
+        
+        # Check service health
+        health = await client.call_tool("check_documentation_health", {})
+        print("Health status:", health)
 ```
 
-## User Experience Flow
+## Architecture
 
-The server is designed to support the following primary use cases:
-
-### 1. Generate New Diagram
-1. User: "Create sequence diagram showing S3 → API → Frontend"
-2. Cursor: Analyzes user's code context
-3. Cursor: Uses MCP server to validate and enhance the generated diagram
-4. Cursor: Returns valid Ilograph markup to user
-
-### 2. Validate Existing Diagram
-1. User: Provides Ilograph code for review
-2. Cursor: Uses validation tool to check syntax
-3. Cursor: Suggests improvements using the validation feedback
-
-### 3. Enhance Diagram  
-1. User: "Add proper icons to this diagram"
-2. Cursor: Uses icon recommendation capabilities
-3. Cursor: Validates enhanced result
-
-## Testing
-
-Run tests with pytest:
-
-```bash
-# Using uv
-uv run pytest
-
-# Or directly
-pytest tests/
 ```
-
-Run tests manually:
-```bash
-uv run tests/test_validation.py
+src/ilograph_mcp/
+├── __init__.py              # Package exports
+├── server.py                # Main FastMCP server
+├── core/
+│   ├── fetcher.py          # HTTP content fetching
+│   └── cache.py            # TTL-based caching system
+├── tools/
+│   └── fetch_documentation_tool.py  # Documentation tools
+├── utils/
+│   ├── http_client.py      # HTTP client with retry logic
+│   └── markdown_converter.py       # HTML to Markdown conversion
+└── static/
+    └── examples/
+        ├── aws-distributed-load-testing.ilograph
+        ├── stack-overflow-architecture-2016.ilograph
+        └── serverless-on-aws.ilograph
 ```
 
 ## Development
 
-### Code Quality
-
-The project uses several tools for code quality:
+### Setup Development Environment
 
 ```bash
+# Install development dependencies
+uv sync --extra dev
+
+# Run tests
+uv run pytest
+
 # Format code
 uv run black src/ tests/
-
-# Sort imports  
 uv run isort src/ tests/
 
 # Type checking
 uv run mypy src/
 ```
 
+### Running Tests
+
+```bash
+# Run all tests
+uv run pytest
+
+# Run with coverage
+uv run pytest --cov=src/ilograph_mcp
+
+# Run specific test file
+uv run pytest tests/test_fetch_documentation_tool.py
+```
+
 ### Project Structure
 
-- **Tools**: Interactive capabilities that agents can call (like validation)
-- **Resources**: Static content that agents can access (like syntax reference)
-- **Data**: Core business logic and data management
-- **Utils**: Shared utility functions
+- **Tools**: MCP tools that agents can call for functionality
+- **Core**: Business logic for content fetching and caching
+- **Utils**: Shared utility functions for HTTP and markdown processing
+- **Static**: Example Ilograph diagrams for reference
+- **Tests**: Comprehensive test suite with mocking and integration tests
 
 ## Configuration
 
-The server can be configured for different MCP transport protocols:
+### Running Options
 
-- **stdio**: Standard for Cursor MCP integration
-- **HTTP**: For web-based integrations
+The server can be run with different transport protocols:
+
+```bash
+# Default: STDIO transport
+python src/ilograph_mcp/server.py
+
+# With specific transport (would require code modification)
+# mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
+```
+
+### MCP Transport Protocols
+
+The server supports FastMCP transport protocols:
+
+- **stdio**: Standard for Cursor and most MCP clients (default)
+- **Streamable HTTP**: For web-based integrations
+- **SSE**: Server-Sent Events (deprecated, use Streamable HTTP instead)
 
 ## Contributing
 
-1. Follow the existing code structure
-2. Add tests for new functionality
-3. Update documentation as needed
-4. Ensure all quality checks pass
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature-name`
+3. **Make your changes** following the project conventions
+4. **Add tests** for new functionality
+5. **Run the test suite**: `uv run pytest`
+6. **Submit a pull request**
+
+### Code Quality
+
+This project uses several tools for code quality:
+
+- **Black**: Code formatting
+- **isort**: Import sorting
+- **mypy**: Type checking
+- **pytest**: Testing framework
+
+All checks must pass before merging.
 
 ## License
 
-[Add license information]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Links
 
 - [Ilograph Documentation](https://www.ilograph.com/docs/)
-- [FastMCP Documentation](https://gofastmcp.com/)
-- [Model Context Protocol Specification](https://modelcontextprotocol.io/)
+- [FastMCP Framework](https://github.com/jlowin/fastmcp)
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+- [Issue Tracker](https://github.com/your-org/ilograph-mcp-server/issues)
+
+## Roadmap
+
+### Current Status (v0.1.0)
+- ✅ Documentation fetching tools
+- ✅ Caching system
+- ✅ Health monitoring
+- ✅ Example diagram library
+
+### Planned Features
+- 🔲 Diagram syntax validation
+- 🔲 Icon search and recommendation
+- 🔲 Specification reference tool
+- 🔲 Best practices guidance
+- 🔲 Template generation
+
+---
+
+**Built with ❤️ for the Ilograph community**

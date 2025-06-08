@@ -1,19 +1,13 @@
 """
 Tools for the Ilograph MCP Server.
 
-This package contains all the MCP tools (@mcp.tool() decorated functions)
-for syntax validation, icon recommendations, and specification queries.
+This package contains all MCP tools that provide functionality to AI agents,
+including documentation fetching, diagram validation, example access, and more.
 """
 
-# Tools will be imported here when implemented
-# from .syntax_validator import validate_ilograph_syntax
-# from .icon_recommender import recommend_icons
-# from .icon_search import search_icons_by_keyword
-# from .spec_query import query_specification
+from .fetch_documentation_tool import register_fetch_documentation_tool, get_tool_info
 
 __all__ = [
-    # "validate_ilograph_syntax",
-    # "recommend_icons",
-    # "search_icons_by_keyword", 
-    # "query_specification",
+    "register_fetch_documentation_tool",
+    "get_tool_info"
 ] 
