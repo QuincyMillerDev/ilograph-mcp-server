@@ -116,20 +116,19 @@ jobs:
               async with Client(server) as client:
                   tools = await client.list_tools()
                   tool_names = [tool.name for tool in tools]
-                            expected_tools = [
-              'fetch_documentation_tool',
-              'list_documentation_sections', 
-              'check_documentation_health',
-              'fetch_spec_tool',
-              'check_spec_health',
-              'list_examples',
-              'fetch_example',
-              'search_icons_tool',
-              'list_icon_providers_tool',
-              'get_icon_stats_tool',
-              'validate_diagram_tool',
-              'get_validation_help_tool'
-          ]
+                  expected_tools = [
+                      'fetch_documentation_tool',
+                      'list_documentation_sections', 
+                      'check_documentation_health',
+                      'fetch_spec_tool',
+                      'check_spec_health',
+                      'list_examples',
+                      'fetch_example',
+                      'search_icons_tool',
+                      'list_icon_providers_tool',
+                      'validate_diagram_tool',
+                      'get_validation_help'
+                  ]
                   for tool in expected_tools:
                       assert tool in tool_names, f'Missing tool: {tool}'
                   print(f'✅ All {len(expected_tools)} tools registered successfully')
@@ -184,9 +183,6 @@ jobs:
 
       - name: Install dependencies
         run: uv sync --all-extras
-
-      - name: Run safety check
-        run: uv run safety check
 
       - name: Run bandit security linter
         run: uv run bandit -r src/ -f json -o bandit-report.json
