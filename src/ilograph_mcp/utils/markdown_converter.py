@@ -298,7 +298,7 @@ class IlographMarkdownConverter:
                         if isinstance(current, BeautifulSoup):
                             root_soup = current
                             break
-                        current = current.find_parent() if hasattr(current, "find_parent") else None # type: ignore
+                        current = current.find_parent() if hasattr(current, "find_parent") else None  # type: ignore
 
                 if root_soup is not None and hasattr(root_soup, "new_tag"):
                     new_tag_method = getattr(root_soup, "new_tag")
@@ -310,11 +310,13 @@ class IlographMarkdownConverter:
                     else:
                         # Fallback: create text node
                         from bs4 import NavigableString
+
                         text_node = NavigableString("\n" + table_text + "\n")
                         table.replace_with(text_node)
                 else:
                     # Fallback: create text node
                     from bs4 import NavigableString
+
                     text_node = NavigableString("\n" + table_text + "\n")
                     table.replace_with(text_node)
 

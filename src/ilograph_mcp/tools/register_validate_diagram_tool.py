@@ -158,7 +158,7 @@ class IlographValidator:
                     line_num = e.problem_mark.line
                 if hasattr(e.problem_mark, "column"):
                     col_num = e.problem_mark.column
-            
+
             result.add_error(
                 f"Invalid YAML syntax: {str(e)}",
                 line=line_num,

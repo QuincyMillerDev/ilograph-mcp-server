@@ -7,7 +7,8 @@ and error handling for reliable content delivery to AI agents.
 """
 
 import logging
-from typing import Any, Dict, Optional
+import re
+from typing import Any, Dict, List, Optional
 
 from ..utils.http_client import get_http_client
 from ..utils.markdown_converter import get_markdown_converter
@@ -150,6 +151,214 @@ class IlographContentFetcher:
             logger.error(f"Error fetching icon catalog: {e}")
             return None
 
+    def _parse_icon_catalog(self, catalog_content: str) -> List[Dict[str, Any]]:
+        """
+        Parse the icon catalog text into structured data.
+
+        Args:
+            catalog_content: Raw icon catalog text content
+
+        Returns:
+            List of icon dictionaries with path, provider, category, and name
+        """
+        icons = []
+        lines = catalog_content.strip().split('\n')
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # Example line: "AWS/Analytics/AWS-Athena"
+            # Split by '/' to get provider, category, name
+            parts = line.split('/')
+            if len(parts) >= 3:
+                provider = parts[0]
+                category = parts[1]
+                name = parts[2]
+
+                # Generate usage example
+                usage = f'iconStyle: "{line}"'
+
+                icons.append({
+                    "path": line,
+                    "provider": provider,
+                    "category": category,
+                    "name": name,
+                    "usage": usage
+                })
+
+        return icons
+
+    async def search_icons(self, query: str, provider: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+        """
+        Search icons with semantic matching and optional provider filtering.
+
+        Args:
+            query: Search term (e.g., 'database', 'aws lambda', 'kubernetes')
+            provider: Optional provider filter ('AWS', 'Azure', 'GCP', 'Networking')
+
+        Returns:
+            List of matching icons or None if catalog unavailable
+        """
+        try:
+            # Fetch catalog content
+            catalog_content = await self.fetch_icon_catalog()
+            if catalog_content is None:
+                return None
+
+            # Parse catalog into structured data
+            all_icons = self._parse_icon_catalog(catalog_content)
+
+            # Apply provider filter if specified
+            if provider:
+                all_icons = [icon for icon in all_icons if icon["provider"] == provider]
+
+            # Perform semantic search
+            query_lower = query.lower()
+            matching_icons = []
+
+            for icon in all_icons:
+                # Check if query matches any part of the icon
+                searchable_text = f"{icon['name']} {icon['category']} {icon['provider']} {icon['path']}".lower()
+                
+                # Score based on different types of matches
+                score = 0
+                
+                # Exact name match (highest priority)
+                if query_lower in icon['name'].lower():
+                    score += 100
+                
+                # Category match
+                if query_lower in icon['category'].lower():
+                    score += 50
+                
+                # Provider match
+                if query_lower in icon['provider'].lower():
+                    score += 25
+                
+                # Path match
+                if query_lower in icon['path'].lower():
+                    score += 10
+                
+                # General text match
+                if query_lower in searchable_text:
+                    score += 5
+
+                if score > 0:
+                    icon_with_score = icon.copy()
+                    icon_with_score['_score'] = score
+                    matching_icons.append(icon_with_score)
+
+            # Sort by score (descending) and limit results
+            matching_icons.sort(key=lambda x: x['_score'], reverse=True)
+            
+            # Remove the score from the final results and limit to top 50
+            for icon in matching_icons[:50]:
+                if '_score' in icon:
+                    del icon['_score']
+
+            return matching_icons[:50]
+
+        except Exception as e:
+            logger.error(f"Error searching icons: {e}")
+            return None
+
+    async def get_icon_providers(self) -> Optional[Dict[str, Any]]:
+        """
+        Get information about all available icon providers and their categories.
+
+        Returns:
+            Dictionary with provider information or None if catalog unavailable
+        """
+        try:
+            # Fetch catalog content
+            catalog_content = await self.fetch_icon_catalog()
+            if catalog_content is None:
+                return None
+
+            # Parse catalog into structured data
+            all_icons = self._parse_icon_catalog(catalog_content)
+
+            # Organize by provider
+            providers: Dict[str, Any] = {}
+            for icon in all_icons:
+                provider = icon["provider"]
+                category = icon["category"]
+
+                if provider not in providers:
+                    providers[provider] = {
+                        "categories": {},
+                        "total_icons": 0
+                    }
+
+                if category not in providers[provider]["categories"]:
+                    providers[provider]["categories"][category] = 0
+
+                providers[provider]["categories"][category] += 1
+                providers[provider]["total_icons"] += 1
+
+            return {
+                "providers": providers,
+                "total_providers": len(providers),
+                "message": f"Found {len(providers)} icon providers with {len(all_icons)} total icons"
+            }
+
+        except Exception as e:
+            logger.error(f"Error getting icon providers: {e}")
+            return None
+
+    async def get_icon_catalog_stats(self) -> Optional[Dict[str, Any]]:
+        """
+        Get comprehensive statistics about the icon catalog.
+
+        Returns:
+            Dictionary with catalog statistics or None if catalog unavailable
+        """
+        try:
+            # Fetch catalog content
+            catalog_content = await self.fetch_icon_catalog()
+            if catalog_content is None:
+                return None
+
+            # Parse catalog into structured data
+            all_icons = self._parse_icon_catalog(catalog_content)
+
+            # Generate statistics
+            providers: Dict[str, int] = {}
+            categories: Dict[str, int] = {}
+
+            for icon in all_icons:
+                provider = icon["provider"]
+                category = icon["category"]
+
+                # Count by provider
+                if provider not in providers:
+                    providers[provider] = 0
+                providers[provider] += 1
+
+                # Count by category
+                if category not in categories:
+                    categories[category] = 0
+                categories[category] += 1
+
+            # Most common categories
+            top_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:10]
+
+            return {
+                "total_icons": len(all_icons),
+                "providers": providers,
+                "total_providers": len(providers),
+                "total_categories": len(categories),
+                "top_categories": [{"name": name, "count": count} for name, count in top_categories],
+                "catalog_url": self.http_client.base_urls["icons"],
+                "last_updated": "Live from ilograph.com"
+            }
+
+        except Exception as e:
+            logger.error(f"Error getting icon catalog stats: {e}")
+            return None
+
     def get_supported_documentation_sections(self) -> Dict[str, str]:
         """
         Get the list of supported documentation sections with descriptions.
@@ -217,6 +426,22 @@ class IlographContentFetcher:
                 "status": "unhealthy",
                 "error": str(e),
                 "url": self.http_client.base_urls["spec"],
+            }
+
+        try:
+            # Test icons endpoint
+            test_response = await self.http_client.fetch_with_retry(
+                self.http_client.base_urls["icons"], method="HEAD"
+            )
+            health["services"]["icons"] = {
+                "status": "healthy" if test_response else "unhealthy",
+                "url": self.http_client.base_urls["icons"],
+            }
+        except Exception as e:
+            health["services"]["icons"] = {
+                "status": "unhealthy",
+                "error": str(e),
+                "url": self.http_client.base_urls["icons"],
             }
 
         # Overall status
