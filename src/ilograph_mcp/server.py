@@ -12,6 +12,7 @@ from ilograph_mcp.tools.register_example_tools import register_example_tools
 from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
 from ilograph_mcp.tools.register_fetch_spec_tool import register_fetch_spec_tool
 from ilograph_mcp.tools.register_validate_diagram_tool import register_validate_diagram_tool
+from ilograph_mcp.tools.register_fetch_icons_tool import register_fetch_icons_tool
 
 # Configure logging
 logging.basicConfig(
@@ -60,6 +61,9 @@ def create_server() -> FastMCP:
 
     register_validate_diagram_tool(mcp)
     logger.info("Registered validate_diagram_tool")
+
+    register_fetch_icons_tool(mcp)
+    logger.info("Registered fetch_icons_tool")
 
     return mcp
 

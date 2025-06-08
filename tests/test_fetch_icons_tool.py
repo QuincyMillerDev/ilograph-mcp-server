@@ -42,7 +42,7 @@ def mock_fetcher():
                 "total_entries": 3,
                 "valid_entries": 3,
                 "expired_entries": 0,
-                "keys": ["docs_resources", "specification", "icons"],
+                "keys": ["docs_resources", "specification", "icon_catalog"],
             },
         }
     )
