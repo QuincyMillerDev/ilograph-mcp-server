@@ -313,6 +313,7 @@ class TestToolIntegration:
 class TestRealFetcher:
     """Integration tests that test the tools with the actual fetcher to ensure they work end-to-end."""
 
+    @pytest.mark.integration
     async def test_fetch_actual_specification(self):
         """Test fetching actual specification without mocking."""
         mcp_server = create_test_server()
@@ -329,6 +330,7 @@ class TestRealFetcher:
             # Should contain actual specification content
             assert len(response_text) > 1000  # Real content should be substantial
 
+    @pytest.mark.integration
     async def test_actual_spec_health_check(self):
         """Test actual spec health check without mocking."""
         mcp_server = create_test_server()
@@ -344,6 +346,7 @@ class TestRealFetcher:
             assert "## Specification Endpoint" in response_text
             assert "## Specification Cache" in response_text
 
+    @pytest.mark.integration
     async def test_workflow_with_actual_fetcher(self):
         """Test a complete workflow with the actual fetcher."""
         mcp_server = create_test_server()

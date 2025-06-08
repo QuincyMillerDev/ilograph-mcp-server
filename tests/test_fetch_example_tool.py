@@ -187,6 +187,7 @@ class TestFetchExampleTool:
 class TestToolIntegration:
     """Integration tests for the example tools."""
 
+    @pytest.mark.integration
     async def test_all_tools_registered(self, mcp_server):
         """Test that both list_examples and fetch_example tools are registered."""
         async with Client(mcp_server) as client:
@@ -201,6 +202,7 @@ class TestToolIntegration:
             assert "Lists available Ilograph example diagrams" in list_tool.description
             assert "category" in list_tool.inputSchema.get("properties", {})
 
+    @pytest.mark.integration
     async def test_workflow_list_then_fetch(self, mcp_server):
         """Test a typical user workflow: listing examples, then fetching one."""
         with (

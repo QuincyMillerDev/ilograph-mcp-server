@@ -396,6 +396,7 @@ class TestToolIntegration:
 class TestRealFetcher:
     """Integration tests that test the tools with the actual fetcher to ensure they work end-to-end."""
 
+    @pytest.mark.integration
     async def test_fetch_actual_documentation(self):
         """Test fetching actual documentation without mocking."""
         mcp_server = create_test_server()
@@ -413,6 +414,7 @@ class TestRealFetcher:
             # Should contain actual documentation content
             assert len(response_text) > 1000  # Real content should be substantial
 
+    @pytest.mark.integration
     async def test_list_actual_sections(self):
         """Test listing actual sections without mocking."""
         mcp_server = create_test_server()
@@ -429,6 +431,7 @@ class TestRealFetcher:
             assert "tutorial" in response_text
             assert "contexts" in response_text
 
+    @pytest.mark.integration
     async def test_actual_health_check(self):
         """Test actual health check without mocking."""
         mcp_server = create_test_server()

@@ -529,6 +529,7 @@ class TestToolIntegration:
 class TestRealFetcher:
     """Test with actual fetcher implementation (when available)."""
 
+    @pytest.mark.integration
     async def test_search_actual_icons(self):
         """Test searching actual icons (integration test)."""
         # This test uses the real fetcher and makes actual HTTP requests
@@ -572,6 +573,7 @@ class TestRealFetcher:
             # Skip if fetcher is not available
             pytest.skip("Fetcher implementation not available")
 
+    @pytest.mark.integration
     async def test_workflow_with_actual_fetcher(self):
         """Test a complete workflow with the actual fetcher."""
         try:
