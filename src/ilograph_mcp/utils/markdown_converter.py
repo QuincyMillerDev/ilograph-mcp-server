@@ -82,7 +82,7 @@ class IlographMarkdownConverter:
         # Remove elements with common unwanted classes
         unwanted_classes = ["skip-link", "screen-reader-text", "sr-only", "visually-hidden"]
         for class_name in unwanted_classes:
-            for element in soup.find_all(class_=class_name):
+            for element in soup.find_all(class_=class_name):  # type: ignore
                 element.decompose()
 
     def find_main_content(self, soup: BeautifulSoup) -> Optional[Tag]:

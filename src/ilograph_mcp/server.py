@@ -10,6 +10,7 @@ from fastmcp import FastMCP
 
 from ilograph_mcp.tools.register_example_tools import register_example_tools
 from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
+from ilograph_mcp.tools.register_fetch_spec_tool import register_fetch_spec_tool
 
 # Configure logging
 logging.basicConfig(
@@ -37,6 +38,8 @@ def create_server() -> FastMCP:
         - fetch_documentation_tool: Fetches comprehensive documentation from Ilograph's official docs
         - list_documentation_sections: Lists all available documentation sections
         - check_documentation_health: Checks service connectivity and cache status
+        - fetch_spec_tool: Fetches the official Ilograph specification with property definitions
+        - check_spec_health: Checks specification service connectivity and cache status
         - list_examples: Lists available example diagrams
         - fetch_example: Fetches a specific example diagram by name
         """,
@@ -45,6 +48,9 @@ def create_server() -> FastMCP:
     # Register all tools
     register_fetch_documentation_tool(mcp)
     logger.info("Registered fetch_documentation_tool")
+
+    register_fetch_spec_tool(mcp)
+    logger.info("Registered fetch_spec_tool")
 
     register_example_tools(mcp)
     logger.info("Registered example_tools")

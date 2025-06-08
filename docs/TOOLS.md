@@ -119,6 +119,48 @@ example = await client.call_tool("fetch_example", {
 })
 ```
 
+### 6. `fetch_spec_tool`
+
+Fetches the official Ilograph specification from the authoritative source with complete property definitions.
+
+**Parameters:**
+None
+
+**Returns:**
+Complete specification in markdown format containing:
+- Top-level properties table (resources, perspectives, imports, contexts, etc.)
+- Resource properties and types (name, subtitle, description, color, style, etc.)
+- Perspective properties and types (id, name, notes, color, extends, relations, etc.)
+- Relation, Sequence, Step definitions with all properties
+- Context, Layout, Import specifications
+- All property types and required/optional flags
+
+This tool provides the authoritative reference for all Ilograph properties, perfect for validation and quick property lookups.
+
+**Example Usage:**
+```python
+spec = await client.call_tool("fetch_spec_tool", {})
+```
+
+### 7. `check_spec_health`
+
+Performs health checks specifically on the specification fetching service.
+
+**Parameters:**
+None
+
+**Returns:**
+Health status report focused on specification service including:
+- Specification endpoint connectivity status
+- Specification cache information
+- Response time metrics
+- Service availability status
+
+**Example Usage:**
+```python
+spec_health = await client.call_tool("check_spec_health", {})
+```
+
 ## Tool Design Principles
 
 ### Compatibility
@@ -144,12 +186,11 @@ All tools implement comprehensive error handling with:
 
 ## Future Tools (Planned)
 
-> **Note:** Additional tools for validation, icon search, and specification reference are planned for future releases.
+> **Note:** Additional tools for validation, icon search, and advanced features are planned for future releases.
 
 ### Planned Tools
 - **Diagram Syntax Validation**: Validate Ilograph YAML syntax and structure
 - **Icon Search and Recommendation**: Search the live icon catalog with semantic matching
-- **Specification Reference**: Access to concise Ilograph specification for quick lookups
 - **Best Practices Guidance**: AI-powered suggestions for diagram improvements
 - **Template Generation**: Generate diagram templates based on common patterns
 
@@ -187,10 +228,18 @@ async def create_diagram_workflow():
             "example_name": "serverless-on-aws.ilograph"
         })
         
-        # Now use the documentation and examples to create diagrams
+        # 6. Get specification for property reference
+        spec = await client.call_tool("fetch_spec_tool", {})
+        
+        # 7. Check specification service health
+        spec_health = await client.call_tool("check_spec_health", {})
+        
+        # Now use the documentation, examples, and specification to create diagrams
         return {
             "documentation": resources_docs,
-            "example": example
+            "example": example,
+            "specification": spec,
+            "spec_health": spec_health
         }
 ```
 

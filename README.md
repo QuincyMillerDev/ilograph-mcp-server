@@ -59,13 +59,15 @@ mcp.run()
 
 ## Available Tools
 
-The server provides 5 main tools for accessing Ilograph documentation and examples:
+The server provides 7 main tools for accessing Ilograph documentation, specifications, and examples:
 
 1. **`fetch_documentation_tool`** - Fetches comprehensive documentation from Ilograph's official website
 2. **`list_documentation_sections`** - Lists all available documentation sections with descriptions
 3. **`check_documentation_health`** - Performs health checks and returns cache statistics
 4. **`list_examples`** - Lists available Ilograph example diagrams with categories
 5. **`fetch_example`** - Retrieves specific example diagrams with metadata and learning context
+6. **`fetch_spec_tool`** - Fetches the official Ilograph specification with complete property definitions
+7. **`check_spec_health`** - Performs health checks specifically on the specification service
 
 For detailed tool documentation, see [docs/TOOLS.md](docs/TOOLS.md).
 
@@ -91,6 +93,12 @@ async def example_usage():
         examples = await client.call_tool("list_examples", {
             "category": "intermediate"
         })
+        
+        # Fetch specification for property reference
+        spec = await client.call_tool("fetch_spec_tool", {})
+        
+        # Check specification service health
+        spec_health = await client.call_tool("check_spec_health", {})
 ```
 
 ## Documentation
