@@ -1,5 +1,5 @@
 # Use multi-stage build for better caching and smaller final image
-FROM python:3.12-slim as builder
+FROM python:3.13-slim as builder
 
 # Add metadata labels
 LABEL org.opencontainers.image.title="Ilograph MCP Server"
@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-editable
 
 # Production stage
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # Add metadata labels to final image
 LABEL org.opencontainers.image.title="Ilograph MCP Server"
