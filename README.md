@@ -21,9 +21,8 @@ The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontext
 
 ## Prerequisites
 
-1. **Docker**: To run the server in a container, you will need [Docker](https://www.docker.com/) installed and running.
-2. **Python 3.11+**: For local installation (alternative to Docker)
-3. **MCP-compatible client**: Such as Claude Desktop, VS Code with Copilot, or Cursor
+1. **Docker**: [Docker](https://www.docker.com/) installed and running
+2. **MCP-compatible client**: Claude Desktop, VS Code, Cursor, etc.
 
 ## Quick Start
 
@@ -93,66 +92,18 @@ The following tools are available for comprehensive Ilograph workflow support:
 | **Icons** | `search_icons_tool` | Searches the live Ilograph icon catalog with semantic matching and provider filtering |
 | **Icons** | `list_icon_providers_tool` | Lists all available icon providers (AWS, Azure, GCP, etc.) and their service categories |
 
-### What You Can Do
 
-**"Create an AWS microservices architecture diagram"**
-→ Generates complete Ilograph diagram with proper AWS icons, relationships, and best practices
-
-**"Validate my existing Ilograph diagram and suggest improvements"** 
-→ Provides detailed error analysis, performance suggestions, and architecture pattern recommendations
-
-**"Show me examples of serverless architectures"**
-→ Returns curated examples with explanations, learning objectives, and implementation patterns
-
-**"Find icons for Kubernetes components"**
-→ Returns relevant icons with usage examples and provider information
-
-**"Explain Ilograph perspectives and how to use them"**
-→ Provides comprehensive documentation with examples and best practices
 
 ## Contributing
 
-Want to help improve this project? Great! 
-
-### Development Setup
-
-**Prerequisites**: Python 3.11+ and [uv](https://docs.astral.sh/uv/)
-
-```bash
-# Fork and clone
-git clone https://github.com/your-username/ilograph-mcp-server.git
-cd ilograph-mcp-server
-
-# Install dependencies
-uv sync
-
-# Run tests
-uv run pytest
-
-# Test the server works
-uv run python -m ilograph_mcp.server --help
-```
-
-### Before Submitting
-
-```bash
-# Format code
-uv run black src/ tests/
-uv run isort src/ tests/
-
-# Run tests and checks
-uv run pytest
-uv run mypy src/
-```
-
-### What We're Looking For
+Contributions are welcome! This project needs:
 
 - 🐛 **Bug fixes** - Always appreciated!
-- 📚 **Documentation improvements** - Help make things clearer
+- 📚 **Documentation improvements** - Help make things clearer  
 - ✨ **New tools** - Add more Ilograph functionality
 - 🔧 **Code quality** - Better error handling, etc.
 
-Keep changes focused and test locally! 🚀
+**📖 See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed development setup, testing, and submission guidelines.**
 
 ## Features
 
