@@ -169,49 +169,6 @@ def register_fetch_icons_tool(mcp: FastMCP) -> None:
                 await ctx.error(error_msg)
             return {"error": error_msg}
 
-    @mcp.tool(
-        annotations={
-            "title": "Get Icon Catalog Stats",
-            "readOnlyHint": True,
-            "description": "Gets statistics about the icon catalog including total counts and provider breakdown",
-        }
-    )
-    async def get_icon_stats_tool(ctx: Optional[Context] = None) -> Dict[str, Any]:
-        """
-        Gets comprehensive statistics about the icon catalog.
-
-        This tool provides detailed statistics about the icon catalog,
-        including total counts, provider breakdown, and category information.
-
-        Returns:
-            dict: Comprehensive icon catalog statistics
-        """
-        try:
-            if ctx:
-                await ctx.info("Generating icon catalog statistics")
-
-            # Get fetcher instance
-            fetcher = get_fetcher()
-
-            # Get catalog statistics
-            stats = await fetcher.get_icon_catalog_stats()
-
-            if stats is None:
-                error_msg = "Failed to generate icon catalog statistics. The service may be temporarily unavailable."
-                if ctx:
-                    await ctx.error(error_msg)
-                return {"error": error_msg}
-
-            if ctx:
-                await ctx.info("Successfully generated icon catalog statistics")
-            return stats
-
-        except Exception as e:
-            error_msg = f"Error generating icon catalog statistics: {str(e)}"
-            if ctx:
-                await ctx.error(error_msg)
-            return {"error": error_msg}
-
 
 def get_tool_info() -> dict:
     """Get information about the icon tools for registration."""
@@ -221,6 +178,5 @@ def get_tool_info() -> dict:
         "tools": [
             "search_icons_tool",
             "list_icon_providers_tool",
-            "get_icon_stats_tool",
         ],
     }

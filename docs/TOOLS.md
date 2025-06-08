@@ -285,25 +285,7 @@ Dictionary containing provider information with categories and icon counts for e
 providers = await client.call_tool("list_icon_providers_tool", {})
 ```
 
-### 12. `get_icon_stats_tool`
 
-Gets comprehensive statistics about the icon catalog.
-
-**Parameters:**
-None
-
-**Returns:**
-Dictionary containing:
-- `total_icons`: Total number of icons available
-- `providers`: Breakdown by provider with icon counts
-- `categories`: Breakdown by category with icon counts
-- `last_updated`: When the catalog was last updated
-
-**Example Usage:**
-```python
-stats = await client.call_tool("get_icon_stats_tool", {})
-print(f"Total icons available: {stats['total_icons']}")
-```
 
 ## Tool Design Principles
 
@@ -401,9 +383,6 @@ async def create_diagram_workflow():
         # 11. Get icon provider information
         icon_providers = await client.call_tool("list_icon_providers_tool", {})
         
-        # 12. Get icon catalog statistics
-        icon_stats = await client.call_tool("get_icon_stats_tool", {})
-        
         # Now use the documentation, examples, specification, and icons to create diagrams
         return {
             "documentation": resources_docs,
@@ -413,7 +392,6 @@ async def create_diagram_workflow():
             "validation": validation_result,
             "icons": database_icons,
             "icon_providers": icon_providers,
-            "icon_stats": icon_stats
         }
 ```
 

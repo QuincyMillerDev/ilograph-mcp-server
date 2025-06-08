@@ -69,28 +69,6 @@ def mock_fetcher():
         }
     )
 
-    # Mock catalog statistics
-    mock.get_icon_catalog_stats = AsyncMock(
-        return_value={
-            "total_icons": 315,
-            "providers": {
-                "AWS": 150,
-                "Azure": 80,
-                "GCP": 60,
-                "Networking": 25,
-            },
-            "categories": {
-                "Compute": 45,
-                "Database": 35,
-                "Analytics": 30,
-                "Networking": 40,
-                "Storage": 25,
-                "AI and ML": 20,
-            },
-            "last_updated": "2025-01-13T10:00:00Z",
-        }
-    )
-
     return mock
 
 
@@ -406,63 +384,6 @@ class TestListIconProvidersTool:
                 assert "Failed to fetch icon provider information" in response_data["error"]
 
 
-class TestGetIconStatsTool:
-    """Test cases for the get_icon_stats_tool."""
-
-    async def test_get_stats_success(self, mock_fetcher):
-        """Test successfully getting icon catalog statistics."""
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("get_icon_stats_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check JSON stats structure
-                import json
-
-                response_data = json.loads(response_text)
-                assert isinstance(response_data, dict)
-                assert response_data["total_icons"] == 315
-                assert "providers" in response_data
-                assert "categories" in response_data
-                assert "last_updated" in response_data
-
-                # Check provider breakdown
-                providers = response_data["providers"]
-                assert providers["AWS"] == 150
-                assert providers["Azure"] == 80
-                assert providers["GCP"] == 60
-                assert providers["Networking"] == 25
-
-    async def test_get_stats_failure(self, mock_fetcher):
-        """Test handling of stats generation failure."""
-        mock_fetcher.get_icon_catalog_stats = AsyncMock(return_value=None)
-
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("get_icon_stats_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check JSON error response
-                import json
-
-                response_data = json.loads(response_text)
-                assert isinstance(response_data, dict)
-                assert "error" in response_data
-                assert "Failed to generate icon catalog statistics" in response_data["error"]
-
-
 class TestToolIntegration:
     """Test integration between different tools."""
 
@@ -477,7 +398,6 @@ class TestToolIntegration:
             expected_tools = [
                 "search_icons_tool",
                 "list_icon_providers_tool",
-                "get_icon_stats_tool",
             ]
 
             for tool_name in expected_tools:
@@ -589,9 +509,6 @@ class TestRealFetcher:
                 search_result = await client.call_tool("search_icons_tool", {"query": "compute"})
                 assert len(search_result) == 1
 
-                # Get stats
-                stats_result = await client.call_tool("get_icon_stats_tool", {})
-                assert len(stats_result) == 1
         except ImportError:
             # Skip if fetcher is not available
             pytest.skip("Fetcher implementation not available")
