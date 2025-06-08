@@ -1,31 +1,164 @@
-# Ilograph MCP Server
+# 🎯 Ilograph MCP Server
 
-> **⚠️ Important Note (2025):** Most MCP clients (Cursor, GitHub Copilot, etc.) currently only support MCP **tools**, not resources or prompts. This server is designed with tool-first architecture to ensure compatibility with all current MCP clients.
+The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server that provides AI agents with comprehensive access to Ilograph documentation, validation tools, and diagram creation guidance. Transform complex architecture documentation with intelligent assistance.
 
-A FastMCP server that provides AI agents with comprehensive access to Ilograph documentation and guidance for creating accurate, valid Ilograph diagrams. The server acts as a dynamic domain expert, fetching live content from official Ilograph sources.
-
-[![CI/CD Pipeline](https://github.com/your-org/ilograph-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/docker.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/docker.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.7.0+-green.svg)](https://github.com/jlowin/fastmcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+## Use Cases
 
-- **📚 Live Documentation Access**: Fetches up-to-date documentation from official Ilograph sources
-- **🔍 Comprehensive Section Coverage**: Access to all major Ilograph concepts (resources, perspectives, contexts, etc.)
-- **✅ Diagram Validation**: Comprehensive YAML and Ilograph schema validation with detailed error messages
-- **⚡ Intelligent Caching**: TTL-based caching with fallback strategies for optimal performance
-- **🛠️ Tool-First Design**: Compatible with all current MCP clients (Cursor, GitHub Copilot, etc.)
-- **📋 Example Library**: Curated collection of real-world Ilograph diagrams
-- **🔄 Health Monitoring**: Built-in service health checks and status reporting
+- **Automated Diagram Creation**: Generate Ilograph diagrams through natural language descriptions
+- **Real-time Validation**: Validate existing diagrams with detailed error analysis and suggestions
+- **Documentation Access**: Get instant access to comprehensive Ilograph documentation and best practices
+- **Architecture Guidance**: Receive expert recommendations for diagram structure and icon selection
+- **Learning & Examples**: Explore curated diagram examples with detailed explanations
 
-## Quick Start
+> **Important**: This is an **unofficial, community-driven project** and is **not affiliated with or endorsed by Ilograph LLC**. The server provides educational and development assistance by accessing publicly available Ilograph documentation and resources.
 
-### Installation
+> **Caution**: The outputs and recommendations provided by the MCP server are generated dynamically and may vary based on the query and model. Users should **thoroughly review all outputs** to ensure they align with their project requirements and **verify against official Ilograph documentation** before implementation.
+
+## Prerequisites
+
+1. **Docker**: To run the server in a container, you will need [Docker](https://www.docker.com/) installed and running.
+2. **Python 3.11+**: For local installation (alternative to Docker)
+3. **MCP-compatible client**: Such as Claude Desktop, VS Code with Copilot, or Cursor
+
+## Installation
+
+### Usage with VS Code
+
+Add the following JSON block to your User Settings (JSON) file in VS Code. Access this by pressing `Ctrl + Shift + P` and typing `Preferences: Open User Settings (JSON)`.
+
+More about using MCP server tools in VS Code's [agent mode documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "ilograph": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+        ]
+      }
+    }
+  }
+}
+```
+
+Optionally, add this configuration to `.vscode/mcp.json` in your workspace to share with your team:
+
+```json
+{
+  "servers": {
+    "ilograph": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+      ]
+    }
+  }
+}
+```
+
+### Usage with Claude Desktop
+
+Add this configuration to your Claude Desktop MCP settings file:
+
+```json
+{
+  "mcpServers": {
+    "ilograph": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+      ]
+    }
+  }
+}
+```
+
+### Usage with Cursor
+
+Add this to your Cursor MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "ilograph": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+      ]
+    }
+  }
+}
+```
+
+## Tool Configuration
+
+### Available Tools
+
+The following tools are available for comprehensive Ilograph workflow support:
+
+| Category | Tool | Description |
+|----------|------|-------------|
+| **Documentation** | `fetch_documentation_tool` | Fetches comprehensive documentation from Ilograph's official sources with intelligent caching |
+| **Documentation** | `list_documentation_sections` | Lists all available documentation sections with descriptions and coverage areas |
+| **Documentation** | `check_documentation_health` | Performs health checks and returns cache statistics for documentation service |
+| **Specification** | `fetch_spec_tool` | Fetches the official Ilograph specification with complete property definitions and types |
+| **Specification** | `check_spec_health` | Performs health checks specifically on the specification service connectivity |
+| **Examples** | `list_examples` | Lists available Ilograph example diagrams categorized by complexity and use case |
+| **Examples** | `fetch_example` | Retrieves specific example diagrams with metadata, learning context, and explanations |
+| **Validation** | `validate_diagram_tool` | Validates Ilograph diagram syntax and provides detailed error messages with suggestions |
+| **Validation** | `get_validation_help` | Provides comprehensive guidance on diagram validation and common issues resolution |
+| **Icons** | `search_icons_tool` | Searches the live Ilograph icon catalog with semantic matching and provider filtering |
+| **Icons** | `list_icon_providers_tool` | Lists all available icon providers (AWS, Azure, GCP, etc.) and their service categories |
+
+### What You Can Do
+
+**"Create an AWS microservices architecture diagram"**
+→ Generates complete Ilograph diagram with proper AWS icons, relationships, and best practices
+
+**"Validate my existing Ilograph diagram and suggest improvements"** 
+→ Provides detailed error analysis, performance suggestions, and architecture pattern recommendations
+
+**"Show me examples of serverless architectures"**
+→ Returns curated examples with explanations, learning objectives, and implementation patterns
+
+**"Find icons for Kubernetes components"**
+→ Returns relevant icons with usage examples and provider information
+
+**"Explain Ilograph perspectives and how to use them"**
+→ Provides comprehensive documentation with examples and best practices
+
+## Local Installation
+
+### Install from PyPI (Coming Soon)
+
+```bash
+pip install ilograph-mcp-server
+```
+
+### Install from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/ilograph-mcp-server.git
+git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
 cd ilograph-mcp-server
 
 # Install with uv (recommended)
@@ -35,64 +168,191 @@ uv sync
 pip install -e .
 ```
 
-### Running the Server
+### Local Configuration
 
+For local installation, use this configuration:
+
+```json
+{
+  "mcpServers": {
+    "ilograph": {
+      "command": "ilograph-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+Or if installed from source:
+
+```json
+{
+  "mcpServers": {
+    "ilograph": {
+      "command": "python",
+      "args": ["-m", "ilograph_mcp.server"]
+    }
+  }
+}
+```
+
+## Building the Docker Image Locally
+
+To build and use a local Docker image:
+
+1. **Clone the repository:**
 ```bash
-# Using uv
+git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
+cd ilograph-mcp-server
+```
+
+2. **Build the Docker image:**
+```bash
+docker build -t ilograph-mcp-server .
+```
+
+3. **Use the local image in your MCP configuration:**
+```json
+{
+  "mcpServers": {
+    "ilograph": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "ilograph-mcp-server"
+      ]
+    }
+  }
+}
+```
+
+## Development
+
+### Prerequisites
+- **Python 3.11+** (check [pyproject.toml](./pyproject.toml) for specific version)
+- **uv** (recommended) or **pip** for dependency management
+- **Docker** (optional, for container builds)
+
+### Development Setup
+```bash
+# Clone and setup
+git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
+cd ilograph-mcp-server
+
+# Install dependencies
+uv sync
+
+# Run the server locally
+uv run python -m ilograph_mcp.server
+```
+
+### Running Tests
+```bash
+# Run all tests
+uv run pytest
+
+# Run with coverage
+uv run pytest --cov=ilograph_mcp
+
+# Run specific test categories
+uv run pytest -m unit
+uv run pytest -m integration
+```
+
+### Available Scripts
+```bash
+# Development server
 uv run python -m ilograph_mcp.server
 
-# Or using the installed script
-ilograph-mcp
+# Code formatting
+uv run black .
+uv run isort .
 
-# Or directly
-python src/ilograph_mcp/server.py
+# Type checking
+uv run mypy .
+
+# Security scanning
+uv run bandit -r src/
+
+# Build package
+uv build
 ```
 
-### Using as a Library
+## Features
 
-```python
-from ilograph_mcp import create_server
-
-# Create and run the server
-mcp = create_server()
-mcp.run()
-```
-
-## Available Tools
-
-The server provides 11 main tools for accessing Ilograph documentation, specifications, examples, validation, and icon searching:
-
-1. **`fetch_documentation_tool`** - Fetches comprehensive documentation from Ilograph's official website
-2. **`list_documentation_sections`** - Lists all available documentation sections with descriptions
-3. **`check_documentation_health`** - Performs health checks and returns cache statistics
-4. **`list_examples`** - Lists available Ilograph example diagrams with categories
-5. **`fetch_example`** - Retrieves specific example diagrams with metadata and learning context
-6. **`fetch_spec_tool`** - Fetches the official Ilograph specification with complete property definitions
-7. **`check_spec_health`** - Performs health checks specifically on the specification service
-8. **`validate_diagram_tool`** - Validates Ilograph diagram syntax and provides detailed error messages
-9. **`get_validation_help`** - Provides comprehensive guidance on diagram validation and common issues
-10. **`search_icons_tool`** - Searches the live Ilograph icon catalog with semantic matching and provider filtering
-11. **`list_icon_providers_tool`** - Lists all available icon providers and their categories
-
-For detailed tool documentation, see [docs/TOOLS.md](docs/TOOLS.md).
-
+- **📚 Live Documentation Access**: Fetches up-to-date documentation from official Ilograph sources
+- **🔍 Comprehensive Section Coverage**: Access to all major Ilograph concepts (resources, perspectives, contexts, etc.)
+- **✅ Advanced Diagram Validation**: YAML and Ilograph schema validation with detailed error messages and suggestions
+- **⚡ Intelligent Caching**: TTL-based caching with fallback strategies for optimal performance
+- **🛠️ Tool-First Design**: Compatible with all current MCP clients (Cursor, Claude Desktop, VS Code, etc.)
+- **📋 Curated Example Library**: Real-world Ilograph diagrams with learning context and explanations
+- **🎨 Smart Icon Search**: Semantic search through Ilograph's icon catalog with provider filtering
+- **🔄 Health Monitoring**: Built-in service health checks and status reporting
+- **🏗️ Architecture Pattern Detection**: Identifies common patterns and provides optimization suggestions
 
 ## Documentation
 
-- **[Tools Reference](docs/TOOLS.md)** - Detailed documentation for all available tools
-- **[Architecture](docs/ARCHITECTURE.md)** - Technical architecture and design decisions
-- **[Contributing](docs/CONTRIBUTING.md)** - Development setup and contribution guidelines
+- **[Tools Reference](docs/TOOLS.md)** - Detailed documentation for all available tools and their usage
+- **[Architecture](docs/ARCHITECTURE.md)** - Technical architecture, design decisions, and system overview
+- **[Contributing](docs/CONTRIBUTING.md)** - Development setup, guidelines, and contribution process
+
+## Contributing
+
+This is a **community-driven side project** - contributions are welcome! 
+
+### Quick Start for Contributors
+
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/your-username/ilograph-mcp-server.git`
+3. **Install**: `cd ilograph-mcp-server && uv sync`
+4. **Test**: `uv run python -m ilograph_mcp.server`
+5. **Make changes** and test locally
+6. **Submit a Pull Request**
+
+### What We're Looking For
+
+- 🐛 **Bug fixes** - Always appreciated!
+- 📚 **Documentation improvements** - Help make things clearer
+- ✨ **New Ilograph tools** - Add more functionality
+- 🔧 **Code quality** - Refactoring, type hints, etc.
+
+### Before Contributing
+
+- Check [existing issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues) first
+- For major changes, open an issue to discuss
+- Keep changes focused and atomic
+- Test your changes locally
+
+**Note**: This is a personal side project, so response times may vary. Thanks for understanding!
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Legal Disclaimer
+
+**This project is not affiliated with, endorsed by, or connected to Ilograph LLC.** This is an independent, community-driven tool that accesses publicly available Ilograph documentation and resources for educational and development purposes.
+
+- The Ilograph name and related trademarks are property of Ilograph LLC
+- This tool accesses publicly available documentation under fair use principles
+- Users should refer to official Ilograph documentation for authoritative information
+- No commercial relationship exists between this project and Ilograph LLC
+
+## Support
+
+- **Bug Reports**: [GitHub Issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
+- **Feature Requests**: [GitHub Issues](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
+- **Questions & Discussions**: [GitHub Discussions](https://github.com/QuincyMillerDev/ilograph-mcp-server/discussions)
+- **Documentation**: [docs/](docs/) directory
+
 ## Links
 
+- [Ilograph Official Website](https://www.ilograph.com/)
 - [Ilograph Documentation](https://www.ilograph.com/docs/)
-- [FastMCP Framework](https://github.com/jlowin/fastmcp)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Issue Tracker](https://github.com/QuincyMillerDev/ilograph-mcp-server/issues)
+- [FastMCP Framework](https://github.com/jlowin/fastmcp)
 
 ---
 
