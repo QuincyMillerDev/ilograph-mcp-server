@@ -29,7 +29,7 @@ class IlographContentFetcher:
         self.cache_ttl = {
             "documentation": 86400,  # 24 hours
             "specification": 86400,  # 24 hours
-            "icons": 86400,          # 12 hours
+            "icons": 86400,          # 24 hours
         }
     
     async def fetch_documentation_section(self, section: str) -> Optional[str]:
