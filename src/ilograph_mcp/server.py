@@ -10,9 +10,9 @@ from fastmcp import FastMCP
 
 from ilograph_mcp.tools.register_example_tools import register_example_tools
 from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
+from ilograph_mcp.tools.register_fetch_icons_tool import register_fetch_icons_tool
 from ilograph_mcp.tools.register_fetch_spec_tool import register_fetch_spec_tool
 from ilograph_mcp.tools.register_validate_diagram_tool import register_validate_diagram_tool
-from ilograph_mcp.tools.register_fetch_icons_tool import register_fetch_icons_tool
 
 # Configure logging
 logging.basicConfig(

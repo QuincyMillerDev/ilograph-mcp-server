@@ -162,7 +162,7 @@ class IlographContentFetcher:
             List of icon dictionaries with path, provider, category, and name
         """
         icons = []
-        lines = catalog_content.strip().split('\n')
+        lines = catalog_content.strip().split("\n")
 
         for line in lines:
             line = line.strip()
@@ -171,7 +171,7 @@ class IlographContentFetcher:
 
             # Example line: "AWS/Analytics/AWS-Athena"
             # Split by '/' to get provider, category, name
-            parts = line.split('/')
+            parts = line.split("/")
             if len(parts) >= 3:
                 provider = parts[0]
                 category = parts[1]
@@ -180,17 +180,21 @@ class IlographContentFetcher:
                 # Generate usage example
                 usage = f'iconStyle: "{line}"'
 
-                icons.append({
-                    "path": line,
-                    "provider": provider,
-                    "category": category,
-                    "name": name,
-                    "usage": usage
-                })
+                icons.append(
+                    {
+                        "path": line,
+                        "provider": provider,
+                        "category": category,
+                        "name": name,
+                        "usage": usage,
+                    }
+                )
 
         return icons
 
-    async def search_icons(self, query: str, provider: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+    async def search_icons(
+        self, query: str, provider: Optional[str] = None
+    ) -> Optional[List[Dict[str, Any]]]:
         """
         Search icons with semantic matching and optional provider filtering.
 
@@ -220,43 +224,45 @@ class IlographContentFetcher:
 
             for icon in all_icons:
                 # Check if query matches any part of the icon
-                searchable_text = f"{icon['name']} {icon['category']} {icon['provider']} {icon['path']}".lower()
-                
+                searchable_text = (
+                    f"{icon['name']} {icon['category']} {icon['provider']} {icon['path']}".lower()
+                )
+
                 # Score based on different types of matches
                 score = 0
-                
+
                 # Exact name match (highest priority)
-                if query_lower in icon['name'].lower():
+                if query_lower in icon["name"].lower():
                     score += 100
-                
+
                 # Category match
-                if query_lower in icon['category'].lower():
+                if query_lower in icon["category"].lower():
                     score += 50
-                
+
                 # Provider match
-                if query_lower in icon['provider'].lower():
+                if query_lower in icon["provider"].lower():
                     score += 25
-                
+
                 # Path match
-                if query_lower in icon['path'].lower():
+                if query_lower in icon["path"].lower():
                     score += 10
-                
+
                 # General text match
                 if query_lower in searchable_text:
                     score += 5
 
                 if score > 0:
                     icon_with_score = icon.copy()
-                    icon_with_score['_score'] = score
+                    icon_with_score["_score"] = score
                     matching_icons.append(icon_with_score)
 
             # Sort by score (descending) and limit results
-            matching_icons.sort(key=lambda x: x['_score'], reverse=True)
-            
+            matching_icons.sort(key=lambda x: x["_score"], reverse=True)
+
             # Remove the score from the final results and limit to top 50
             for icon in matching_icons[:50]:
-                if '_score' in icon:
-                    del icon['_score']
+                if "_score" in icon:
+                    del icon["_score"]
 
             return matching_icons[:50]
 
@@ -287,10 +293,7 @@ class IlographContentFetcher:
                 category = icon["category"]
 
                 if provider not in providers:
-                    providers[provider] = {
-                        "categories": {},
-                        "total_icons": 0
-                    }
+                    providers[provider] = {"categories": {}, "total_icons": 0}
 
                 if category not in providers[provider]["categories"]:
                     providers[provider]["categories"][category] = 0
@@ -301,7 +304,7 @@ class IlographContentFetcher:
             return {
                 "providers": providers,
                 "total_providers": len(providers),
-                "message": f"Found {len(providers)} icon providers with {len(all_icons)} total icons"
+                "message": f"Found {len(providers)} icon providers with {len(all_icons)} total icons",
             }
 
         except Exception as e:
@@ -350,9 +353,11 @@ class IlographContentFetcher:
                 "providers": providers,
                 "total_providers": len(providers),
                 "total_categories": len(categories),
-                "top_categories": [{"name": name, "count": count} for name, count in top_categories],
+                "top_categories": [
+                    {"name": name, "count": count} for name, count in top_categories
+                ],
                 "catalog_url": self.http_client.base_urls["icons"],
-                "last_updated": "Live from ilograph.com"
+                "last_updated": "Live from ilograph.com",
             }
 
         except Exception as e:

@@ -157,7 +157,7 @@ uv run isort src/ tests/
 # Run all checks
 uv run pytest
 uv run mypy src/
-uv run safety scan
+uv run bandit -r src/
 ```
 
 ### 4. Commit and Push

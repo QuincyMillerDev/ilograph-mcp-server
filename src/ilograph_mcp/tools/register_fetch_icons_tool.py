@@ -158,7 +158,9 @@ def register_fetch_icons_tool(mcp: FastMCP) -> None:
                 return {"error": error_msg}
 
             if ctx:
-                await ctx.info(f"Retrieved information for {len(provider_info.get('providers', {}))} icon providers")
+                await ctx.info(
+                    f"Retrieved information for {len(provider_info.get('providers', {}))} icon providers"
+                )
             return provider_info
 
         except Exception as e:
@@ -276,9 +278,11 @@ def register_fetch_icons_tool(mcp: FastMCP) -> None:
                         health_md += (
                             f"- **Providers Available:** {len(stats.get('providers', {}))}\n"
                         )
-                except Exception:
+                except Exception as e:
                     # Don't fail health check if stats aren't available
-                    pass
+                    # Log at debug level to avoid cluttering health check output
+                    if ctx:
+                        await ctx.debug(f"Icon stats unavailable during health check: {str(e)}")
 
             health_md += "\n---\n\n"
 
