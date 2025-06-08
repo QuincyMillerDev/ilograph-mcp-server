@@ -7,7 +7,7 @@ and proper error handling for fetching content from Ilograph sources.
 
 import asyncio
 import logging
-from typing import Optional
+from typing import Any, Optional, Union
 from urllib.parse import urljoin
 
 import httpx
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class IlographHTTPClient:
     """HTTP client with retry logic and error handling for Ilograph sources."""
 
-    def __init__(self, timeout: int = 30, max_retries: int = 3):
+    def __init__(self, timeout: int = 30, max_retries: int = 3) -> None:
         """
         Initialize the HTTP client.
 
@@ -46,7 +46,9 @@ class IlographHTTPClient:
             "Upgrade-Insecure-Requests": "1",
         }
 
-    async def fetch_with_retry(self, url: str, method: str = "GET", **kwargs) -> Optional[Response]:
+    async def fetch_with_retry(
+        self, url: str, method: str = "GET", **kwargs: Any
+    ) -> Optional[Response]:
         """
         Fetch URL with retry logic and comprehensive error handling.
 
@@ -58,7 +60,7 @@ class IlographHTTPClient:
         Returns:
             Response object if successful, None if all retries failed
         """
-        last_exception = None
+        last_exception: Optional[Union[HTTPStatusError, RequestError, Exception]] = None
 
         for attempt in range(self.max_retries + 1):
             try:

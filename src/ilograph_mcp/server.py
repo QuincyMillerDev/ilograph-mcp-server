@@ -26,13 +26,13 @@ def create_server() -> FastMCP:
         FastMCP: Configured server instance
     """
     # Create server with comprehensive metadata and instructions
-    mcp = FastMCP(
+    mcp: FastMCP = FastMCP(
         name="Ilograph Context Server",
         instructions="""
         This server provides comprehensive Ilograph diagram creation and validation tools.
         It acts as a dynamic domain expert for Ilograph syntax, best practices, and validation.
         It can also provide documentation about Ilograph concepts, such as perspectives, resources, and contexts.
-        
+
         Available tools:
         - fetch_documentation_tool: Fetches comprehensive documentation from Ilograph's official docs
         - list_documentation_sections: Lists all available documentation sections
@@ -52,7 +52,7 @@ def create_server() -> FastMCP:
     return mcp
 
 
-def main():
+def main() -> None:
     """Main entry point for the Ilograph MCP server."""
     mcp = create_server()
     mcp.run()

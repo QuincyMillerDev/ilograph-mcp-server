@@ -8,7 +8,7 @@ link resolution, and content sanitization.
 
 import logging
 import re
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, Tag
@@ -98,20 +98,20 @@ class IlographMarkdownConverter:
         # Try content selectors in order
         for selector in self.content_selectors:
             content = soup.select_one(selector)
-            if content:
+            if content and isinstance(content, Tag):
                 logger.debug(f"Found main content using selector: {selector}")
                 return content
 
         # Fallback: look for the body content
         body = soup.find("body")
-        if body:
+        if body and isinstance(body, Tag):
             logger.debug("Using body as main content")
             return body
 
         logger.warning("Could not find main content area")
         return None
 
-    def resolve_links(self, soup: BeautifulSoup) -> None:
+    def resolve_links(self, soup: Union[BeautifulSoup, Tag]) -> None:
         """
         Convert relative links to absolute URLs.
 
@@ -141,7 +141,7 @@ class IlographMarkdownConverter:
                 img["src"] = absolute_url
                 logger.debug(f"Converted relative image: {src} -> {absolute_url}")
 
-    def extract_code_blocks(self, soup: BeautifulSoup) -> List[Tuple[str, str]]:
+    def extract_code_blocks(self, soup: Union[BeautifulSoup, Tag]) -> List[Tuple[str, str]]:
         """
         Extract code blocks with their language information.
 
@@ -154,26 +154,32 @@ class IlographMarkdownConverter:
         code_blocks = []
 
         # Look for pre > code combinations
-        for pre in soup.find_all("pre"):
+        pre_tags = soup.find_all("pre")
+        for pre in pre_tags:
+            if not isinstance(pre, Tag):
+                continue
+
             code = pre.find("code")
-            if code:
+            if code and isinstance(code, Tag):
                 # Try to determine language from class
                 language = "yaml"  # Default for Ilograph
-                if code.get("class"):
-                    for class_name in code["class"]:
-                        if class_name.startswith("language-"):
-                            language = class_name[9:]  # Remove "language-"
-                            break
-                        elif class_name in [
-                            "yaml",
-                            "json",
-                            "javascript",
-                            "python",
-                            "bash",
-                            "shell",
-                        ]:
-                            language = class_name
-                            break
+                class_attr = code.get("class")
+                if class_attr and isinstance(class_attr, list):
+                    for class_name in class_attr:
+                        if isinstance(class_name, str):
+                            if class_name.startswith("language-"):
+                                language = class_name[9:]  # Remove "language-"
+                                break
+                            elif class_name in [
+                                "yaml",
+                                "json",
+                                "javascript",
+                                "python",
+                                "bash",
+                                "shell",
+                            ]:
+                                language = class_name
+                                break
 
                 code_text = code.get_text().strip()
                 if code_text:
@@ -181,7 +187,7 @@ class IlographMarkdownConverter:
 
         return code_blocks
 
-    def convert_headers(self, soup: BeautifulSoup) -> None:
+    def convert_headers(self, soup: Union[BeautifulSoup, Tag]) -> None:
         """
         Ensure proper header hierarchy and formatting.
 
@@ -190,16 +196,18 @@ class IlographMarkdownConverter:
         """
         # Convert headers to maintain hierarchy
         for level in range(1, 7):  # h1 to h6
-            for header in soup.find_all(f"h{level}"):
-                # Clean header text
-                header_text = header.get_text().strip()
-                if header_text:
-                    # Create markdown header
-                    markdown_header = "#" * level + " " + header_text
-                    header.string = markdown_header
-                    header.name = "p"  # Convert to paragraph for markdown processing
+            headers = soup.find_all(f"h{level}")
+            for header in headers:
+                if isinstance(header, Tag):
+                    # Clean header text
+                    header_text = header.get_text().strip()
+                    if header_text:
+                        # Create markdown header
+                        markdown_header = "#" * level + " " + header_text
+                        header.string = markdown_header
+                        header.name = "p"  # Convert to paragraph for markdown processing
 
-    def process_lists(self, soup: BeautifulSoup) -> None:
+    def process_lists(self, soup: Union[BeautifulSoup, Tag]) -> None:
         """
         Process and format lists for markdown conversion.
 
@@ -207,37 +215,50 @@ class IlographMarkdownConverter:
             soup: BeautifulSoup object to process
         """
         # Process unordered lists
-        for ul in soup.find_all("ul"):
-            for li in ul.find_all("li", recursive=False):
-                li_text = li.get_text().strip()
-                if li_text:
-                    li.string = f"- {li_text}"
-                    li.name = "p"
+        unordered_lists = soup.find_all("ul")
+        for ul in unordered_lists:
+            if isinstance(ul, Tag):
+                list_items = ul.find_all("li", recursive=False)
+                for li in list_items:
+                    if isinstance(li, Tag):
+                        li_text = li.get_text().strip()
+                        if li_text:
+                            li.string = f"- {li_text}"
+                            li.name = "p"
 
         # Process ordered lists
-        for ol in soup.find_all("ol"):
-            for i, li in enumerate(ol.find_all("li", recursive=False), 1):
-                li_text = li.get_text().strip()
-                if li_text:
-                    li.string = f"{i}. {li_text}"
-                    li.name = "p"
+        ordered_lists = soup.find_all("ol")
+        for ol in ordered_lists:
+            if isinstance(ol, Tag):
+                list_items = ol.find_all("li", recursive=False)
+                for i, li in enumerate(list_items, 1):
+                    if isinstance(li, Tag):
+                        li_text = li.get_text().strip()
+                        if li_text:
+                            li.string = f"{i}. {li_text}"
+                            li.name = "p"
 
-    def format_tables(self, soup: BeautifulSoup) -> None:
+    def format_tables(self, soup: Union[BeautifulSoup, Tag]) -> None:
         """
         Convert HTML tables to markdown format.
 
         Args:
             soup: BeautifulSoup object to process
         """
-        for table in soup.find_all("table"):
+        tables = soup.find_all("table")
+        for table in tables:
+            if not isinstance(table, Tag):
+                continue
+
             markdown_table = []
 
             # Process headers
             thead = table.find("thead")
-            if thead:
+            if thead and isinstance(thead, Tag):
                 header_row = thead.find("tr")
-                if header_row:
-                    headers = [th.get_text().strip() for th in header_row.find_all(["th", "td"])]
+                if header_row and isinstance(header_row, Tag):
+                    header_cells = header_row.find_all(["th", "td"])
+                    headers = [th.get_text().strip() for th in header_cells if isinstance(th, Tag)]
                     if headers:
                         # Create markdown header
                         markdown_table.append("| " + " | ".join(headers) + " |")
@@ -245,17 +266,45 @@ class IlographMarkdownConverter:
 
             # Process body rows
             tbody = table.find("tbody") or table
-            for row in tbody.find_all("tr"):
-                cells = [td.get_text().strip() for td in row.find_all(["td", "th"])]
-                if cells:
-                    markdown_table.append("| " + " | ".join(cells) + " |")
+            if isinstance(tbody, Tag):
+                table_rows = tbody.find_all("tr")
+                for row in table_rows:
+                    if isinstance(row, Tag):
+                        row_cells = row.find_all(["td", "th"])
+                        cells = [td.get_text().strip() for td in row_cells if isinstance(td, Tag)]
+                        if cells:
+                            markdown_table.append("| " + " | ".join(cells) + " |")
 
             if markdown_table:
                 # Replace table with markdown
                 table_text = "\n".join(markdown_table)
-                new_tag = soup.new_tag("div")
-                new_tag.string = "\n" + table_text + "\n"
-                table.replace_with(new_tag)
+                # Get a soup object that can create new tags
+                root_soup: Optional[BeautifulSoup] = None
+                if isinstance(soup, BeautifulSoup):
+                    root_soup = soup
+                else:
+                    # Safely traverse up the parent hierarchy to find BeautifulSoup
+                    current: Union[Tag, BeautifulSoup, None] = soup
+
+                    while current is not None:
+                        if isinstance(current, BeautifulSoup):
+                            root_soup = current
+                            break
+                        current = current.find_parent() if hasattr(current, "find_parent") else None
+
+                if root_soup is not None and hasattr(root_soup, "new_tag"):
+                    new_tag_method = getattr(root_soup, "new_tag")
+                    if callable(new_tag_method):
+                        new_tag = new_tag_method("div")
+                        if hasattr(new_tag, "string"):
+                            new_tag.string = "\n" + table_text + "\n"
+                        table.replace_with(new_tag)
+                    else:
+                        # Fallback: just replace with text
+                        table.replace_with("\n" + table_text + "\n")
+                else:
+                    # Fallback: just replace with text
+                    table.replace_with("\n" + table_text + "\n")
 
     def clean_and_format_text(self, text: str) -> str:
         """
@@ -279,7 +328,7 @@ class IlographMarkdownConverter:
 
         return text.strip()
 
-    def convert_html_to_markdown(self, html: str, source_url: str = None) -> str:
+    def convert_html_to_markdown(self, html: str, source_url: Optional[str] = None) -> str:
         """
         Convert HTML content to clean markdown format.
 
@@ -305,7 +354,18 @@ class IlographMarkdownConverter:
             main_content = self.find_main_content(soup)
             if main_content is None:
                 logger.warning("No main content found, using entire document")
-                main_content = soup
+                # Use body as fallback, or create a wrapper
+                body = soup.find("body")
+                if isinstance(body, Tag):
+                    main_content = body
+                else:
+                    # Create a temporary wrapper tag for processing
+                    main_content = soup.new_tag("div")
+                    # Move all body content into our wrapper
+                    for child in list(soup.children):
+                        if hasattr(child, "extract"):
+                            child.extract()
+                            main_content.append(child)
 
             # Resolve relative links
             self.resolve_links(main_content)

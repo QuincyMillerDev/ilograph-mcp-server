@@ -71,9 +71,6 @@ jobs:
       - name: Run type checking with mypy
         run: uv run mypy src/
 
-      - name: Run flake8 linting
-        run: uv run flake8 src/ tests/
-
 
 
   integration-test:

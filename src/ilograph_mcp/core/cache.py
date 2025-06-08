@@ -40,7 +40,7 @@ class CacheEntry:
 class MemoryCache:
     """Simple in-memory cache with TTL support."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the cache."""
         self._cache: Dict[str, CacheEntry] = {}
 

@@ -122,7 +122,7 @@ def register_example_tools(mcp: FastMCP) -> None:
         Returns:
             A dictionary containing a list of available examples and a message guiding the user.
         """
-        examples_to_list = EXAMPLES_DATABASE.values()
+        examples_to_list: List[ExampleMetadata] = list(EXAMPLES_DATABASE.values())
         if category:
             examples_to_list = [ex for ex in examples_to_list if ex.category == category]
 

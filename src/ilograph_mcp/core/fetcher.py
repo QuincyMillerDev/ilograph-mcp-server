@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class IlographContentFetcher:
     """Handles fetching and processing content from Ilograph sources."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the content fetcher."""
         self.http_client = get_http_client()
         self.markdown_converter = get_markdown_converter()
@@ -48,7 +48,7 @@ class IlographContentFetcher:
         cached_content = self.cache.get(cache_key)
         if cached_content is not None:
             logger.debug(f"Returning cached documentation for section: {section}")
-            return cached_content
+            return str(cached_content)
 
         try:
             logger.info(f"Fetching documentation section: {section}")
@@ -90,7 +90,7 @@ class IlographContentFetcher:
         cached_content = self.cache.get(cache_key)
         if cached_content is not None:
             logger.debug("Returning cached specification")
-            return cached_content
+            return str(cached_content)
 
         try:
             logger.info("Fetching Ilograph specification")
@@ -129,7 +129,7 @@ class IlographContentFetcher:
         cached_content = self.cache.get(cache_key)
         if cached_content is not None:
             logger.debug("Returning cached icon catalog")
-            return cached_content
+            return str(cached_content)
 
         try:
             logger.info("Fetching Ilograph icon catalog")
@@ -181,7 +181,11 @@ class IlographContentFetcher:
         Returns:
             Dictionary with health status information
         """
-        health = {"status": "healthy", "services": {}, "cache_stats": self.cache.stats()}
+        health: Dict[str, Any] = {
+            "status": "healthy",
+            "services": {},
+            "cache_stats": self.cache.stats(),
+        }
 
         try:
             # Test documentation endpoint
