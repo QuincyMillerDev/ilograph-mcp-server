@@ -463,128 +463,6 @@ class TestGetIconStatsTool:
                 assert "Failed to generate icon catalog statistics" in response_data["error"]
 
 
-class TestCheckIconsHealthTool:
-    """Test cases for the check_icons_health_tool."""
-
-    async def test_icons_health_check_healthy(self, mock_fetcher):
-        """Test icon health check when service is healthy."""
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("check_icons_health_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check response format
-                assert "# Icon Service Health Report" in response_text
-                assert "**Overall Status:** HEALTHY" in response_text
-
-                # Check icon endpoint status
-                assert "## Icon Catalog Endpoint" in response_text
-                assert "✅ **Ilograph Icon List**: HEALTHY" in response_text
-                assert "https://www.ilograph.com/docs/iconlist.txt" in response_text
-
-                # Check cache information
-                assert "## Icon Catalog Cache" in response_text
-                assert "**Cached:** Yes" in response_text
-                assert "**Total Cache Entries:** 3" in response_text
-
-                # Check status message
-                assert "Icon service is operational" in response_text
-
-    async def test_icons_health_check_unhealthy(self, mock_fetcher):
-        """Test icon health check when service is unhealthy."""
-        # Mock unhealthy icon status
-        mock_fetcher.health_check = AsyncMock(
-            return_value={
-                "status": "degraded",
-                "services": {
-                    "documentation": {"status": "healthy", "url": "https://www.ilograph.com/docs/"},
-                    "specification": {
-                        "status": "healthy",
-                        "url": "https://www.ilograph.com/docs/spec/",
-                    },
-                    "icons": {
-                        "status": "unhealthy",
-                        "url": "https://www.ilograph.com/docs/iconlist.txt",
-                        "error": "Connection timeout",
-                    },
-                },
-                "cache_stats": {
-                    "total_entries": 2,
-                    "valid_entries": 2,
-                    "expired_entries": 0,
-                    "keys": ["docs_resources", "specification"],
-                },
-            }
-        )
-
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("check_icons_health_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check response format
-                assert "# Icon Service Health Report" in response_text
-                assert "**Overall Status:** UNHEALTHY" in response_text
-
-                # Check icon endpoint status
-                assert "❌ **Ilograph Icon List**: UNHEALTHY" in response_text
-                assert "Connection timeout" in response_text
-
-                # Check cache information
-                assert "**Cached:** No" in response_text
-
-                # Check status message
-                assert "Icon service is experiencing issues" in response_text
-
-    async def test_icons_health_check_with_stats(self, mock_fetcher):
-        """Test icon health check that includes catalog statistics."""
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("check_icons_health_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check that stats are included when service is healthy and cached
-                assert "**Total Icons Available:** 315" in response_text
-                assert "**Providers Available:** 4" in response_text
-
-    async def test_icons_health_check_error(self, mock_fetcher):
-        """Test icon health check when an error occurs."""
-        mock_fetcher.health_check = AsyncMock(side_effect=Exception("Health check failed"))
-
-        with patch(
-            "ilograph_mcp.tools.register_fetch_icons_tool.get_fetcher",
-            return_value=mock_fetcher,
-        ):
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("check_icons_health_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Check error response
-                assert "Error:" in response_text
-                assert "Error performing icon health check" in response_text
-
-
 class TestToolIntegration:
     """Test integration between different tools."""
 
@@ -600,7 +478,6 @@ class TestToolIntegration:
                 "search_icons_tool",
                 "list_icon_providers_tool",
                 "get_icon_stats_tool",
-                "check_icons_health_tool",
             ]
 
             for tool_name in expected_tools:
@@ -695,25 +572,6 @@ class TestRealFetcher:
             # Skip if fetcher is not available
             pytest.skip("Fetcher implementation not available")
 
-    async def test_actual_icon_health_check(self):
-        """Test actual icon health check (integration test)."""
-        try:
-            from ilograph_mcp.core.fetcher import get_fetcher
-
-            mcp_server = create_test_server()
-            async with Client(mcp_server) as client:
-                result = await client.call_tool("check_icons_health_tool", {})
-
-                assert len(result) == 1
-                response_text = result[0].text
-
-                # Should contain health report structure
-                assert "# Icon Service Health Report" in response_text
-                assert "Icon Catalog Endpoint" in response_text
-        except ImportError:
-            # Skip if fetcher is not available
-            pytest.skip("Fetcher implementation not available")
-
     async def test_workflow_with_actual_fetcher(self):
         """Test a complete workflow with the actual fetcher."""
         try:
@@ -721,10 +579,6 @@ class TestRealFetcher:
 
             mcp_server = create_test_server()
             async with Client(mcp_server) as client:
-                # Check health
-                health_result = await client.call_tool("check_icons_health_tool", {})
-                assert len(health_result) == 1
-
                 # Get providers
                 providers_result = await client.call_tool("list_icon_providers_tool", {})
                 assert len(providers_result) == 1

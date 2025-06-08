@@ -60,7 +60,7 @@ mcp.run()
 
 ## Available Tools
 
-The server provides 9 main tools for accessing Ilograph documentation, specifications, examples, and validation:
+The server provides 12 main tools for accessing Ilograph documentation, specifications, examples, validation, and icon searching:
 
 1. **`fetch_documentation_tool`** - Fetches comprehensive documentation from Ilograph's official website
 2. **`list_documentation_sections`** - Lists all available documentation sections with descriptions
@@ -71,6 +71,9 @@ The server provides 9 main tools for accessing Ilograph documentation, specifica
 7. **`check_spec_health`** - Performs health checks specifically on the specification service
 8. **`validate_diagram_tool`** - Validates Ilograph diagram syntax and provides detailed error messages
 9. **`get_validation_help`** - Provides comprehensive guidance on diagram validation and common issues
+10. **`search_icons_tool`** - Searches the live Ilograph icon catalog with semantic matching and provider filtering
+11. **`list_icon_providers_tool`** - Lists all available icon providers and their categories
+12. **`get_icon_stats_tool`** - Gets comprehensive statistics about the icon catalog
 
 For detailed tool documentation, see [docs/TOOLS.md](docs/TOOLS.md).
 

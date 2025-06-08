@@ -1,6 +1,6 @@
 # Tools Reference
 
-The Ilograph MCP Server provides comprehensive tools for accessing Ilograph documentation, examples, and diagram validation. All tools are designed to be compatible with current MCP clients (Cursor, GitHub Copilot, etc.) that support the tools specification.
+The Ilograph MCP Server provides comprehensive tools for accessing Ilograph documentation, examples, diagram validation, and icon searching. All tools are designed to be compatible with current MCP clients (Cursor, GitHub Copilot, etc.) that support the tools specification.
 
 ## Available Tools
 
@@ -240,6 +240,71 @@ help_content = await client.call_tool("get_validation_help", {})
 print(help_content)  # Displays comprehensive validation guidance
 ```
 
+### 10. `search_icons_tool`
+
+Searches the current icon catalog with semantic matching and provider filtering.
+
+**Parameters:**
+- `query` (str): Search term (e.g., 'database', 'aws lambda', 'kubernetes', 'storage')
+- `provider` (optional str): Filter by provider ('AWS', 'Azure', 'GCP', 'Networking')
+
+**Returns:**
+List of matching icons with paths, categories, and usage information. Each icon dict contains:
+- `path`: The icon path for use in Ilograph diagrams
+- `provider`: The cloud provider or category (AWS, Azure, GCP, Networking)
+- `category`: The service category (e.g., 'Compute', 'Database', 'Analytics')
+- `name`: The specific icon name
+- `usage`: Example usage string for Ilograph diagrams
+
+**Example Usage:**
+```python
+# Search for database icons
+database_icons = await client.call_tool("search_icons_tool", {
+    "query": "database"
+})
+
+# Search for AWS compute icons
+aws_compute = await client.call_tool("search_icons_tool", {
+    "query": "compute",
+    "provider": "AWS"
+})
+```
+
+### 11. `list_icon_providers_tool`
+
+Lists all available icon providers and their categories.
+
+**Parameters:**
+None
+
+**Returns:**
+Dictionary containing provider information with categories and icon counts for each provider (AWS, Azure, GCP, Networking).
+
+**Example Usage:**
+```python
+providers = await client.call_tool("list_icon_providers_tool", {})
+```
+
+### 12. `get_icon_stats_tool`
+
+Gets comprehensive statistics about the icon catalog.
+
+**Parameters:**
+None
+
+**Returns:**
+Dictionary containing:
+- `total_icons`: Total number of icons available
+- `providers`: Breakdown by provider with icon counts
+- `categories`: Breakdown by category with icon counts
+- `last_updated`: When the catalog was last updated
+
+**Example Usage:**
+```python
+stats = await client.call_tool("get_icon_stats_tool", {})
+print(f"Total icons available: {stats['total_icons']}")
+```
+
 ## Tool Design Principles
 
 ### Compatibility
@@ -265,10 +330,9 @@ All tools implement comprehensive error handling with:
 
 ## Future Tools (Planned)
 
-> **Note:** Additional tools for icon search and advanced features are planned for future releases.
+> **Note:** Additional advanced tools are planned for future releases.
 
 ### Planned Tools
-- **Icon Search and Recommendation**: Search the live icon catalog with semantic matching
 - **Best Practices Guidance**: AI-powered suggestions for diagram improvements
 - **Template Generation**: Generate diagram templates based on common patterns
 - **Advanced Validation**: Extended validation with cross-reference checking and best practice analysis
@@ -328,13 +392,28 @@ async def create_diagram_workflow():
         if not validation_result["success"]:
             help_content = await client.call_tool("get_validation_help", {})
         
-        # Now use the documentation, examples, and specification to create diagrams
+        # 10. Search for appropriate icons
+        database_icons = await client.call_tool("search_icons_tool", {
+            "query": "database",
+            "provider": "AWS"
+        })
+        
+        # 11. Get icon provider information
+        icon_providers = await client.call_tool("list_icon_providers_tool", {})
+        
+        # 12. Get icon catalog statistics
+        icon_stats = await client.call_tool("get_icon_stats_tool", {})
+        
+        # Now use the documentation, examples, specification, and icons to create diagrams
         return {
             "documentation": resources_docs,
             "example": example,
             "specification": spec,
             "spec_health": spec_health,
-            "validation": validation_result
+            "validation": validation_result,
+            "icons": database_icons,
+            "icon_providers": icon_providers,
+            "icon_stats": icon_stats
         }
 ```
 

@@ -212,97 +212,6 @@ def register_fetch_icons_tool(mcp: FastMCP) -> None:
                 await ctx.error(error_msg)
             return {"error": error_msg}
 
-    @mcp.tool(
-        annotations={
-            "title": "Check Icon Service Health",
-            "readOnlyHint": True,
-            "description": "Checks the health and connectivity of the icon catalog service",
-        }
-    )
-    async def check_icons_health_tool(ctx: Optional[Context] = None) -> str:
-        """
-        Checks the health and connectivity of the icon catalog service.
-
-        This tool performs connectivity tests specifically for the icon catalog endpoint
-        and returns status information about icon fetching capabilities.
-
-        Returns:
-            str: Health status report with icon service connectivity and cache information
-        """
-        try:
-            if ctx:
-                await ctx.info("Performing icon service health check")
-
-            fetcher = get_fetcher()
-
-            # Get overall health info and extract icon-specific information
-            health_info = await fetcher.health_check()
-
-            # Extract icon service status
-            icon_service = health_info["services"].get("icons", {})
-            icon_status = icon_service.get("status", "unknown")
-
-            # Format health report
-            health_md = "# Icon Service Health Report\n\n"
-            health_md += f"**Overall Status:** {icon_status.upper()}\n\n"
-
-            # Icon endpoint status
-            health_md += "## Icon Catalog Endpoint\n\n"
-            status_emoji = "✅" if icon_status == "healthy" else "❌"
-            health_md += f"{status_emoji} **Ilograph Icon List**: {icon_status.upper()}\n"
-            health_md += f"   - URL: {icon_service.get('url', 'https://www.ilograph.com/docs/iconlist.txt')}\n"
-
-            if "error" in icon_service:
-                health_md += f"   - Error: {icon_service['error']}\n"
-
-            # Cache information for icons
-            cache_stats = health_info.get("cache_stats", {})
-            cached_keys = cache_stats.get("keys", [])
-            icons_cached = "icon_catalog" in cached_keys
-
-            health_md += "\n## Icon Catalog Cache\n\n"
-            health_md += f"- **Cached:** {'Yes' if icons_cached else 'No'}\n"
-            health_md += (
-                f"- **Total Cache Entries:** {cache_stats.get('total_entries', 'Unknown')}\n"
-            )
-            health_md += (
-                f"- **Valid Cache Entries:** {cache_stats.get('valid_entries', 'Unknown')}\n"
-            )
-
-            # Icon catalog statistics if available
-            if icons_cached and icon_status == "healthy":
-                try:
-                    stats = await fetcher.get_icon_catalog_stats()
-                    if stats and "total_icons" in stats:
-                        health_md += f"- **Total Icons Available:** {stats['total_icons']}\n"
-                        health_md += (
-                            f"- **Providers Available:** {len(stats.get('providers', {}))}\n"
-                        )
-                except Exception as e:
-                    # Don't fail health check if stats aren't available
-                    # Log at debug level to avoid cluttering health check output
-                    if ctx:
-                        await ctx.debug(f"Icon stats unavailable during health check: {str(e)}")
-
-            health_md += "\n---\n\n"
-
-            if icon_status == "healthy":
-                health_md += (
-                    "*Icon service is operational and ready to search the latest icon catalog.*"
-                )
-            else:
-                health_md += "*Icon service is experiencing issues. Icon searching may be limited.*"
-
-            if ctx:
-                await ctx.info(f"Icon health check completed - Status: {icon_status}")
-            return health_md
-
-        except Exception as e:
-            error_msg = f"Error performing icon health check: {str(e)}"
-            if ctx:
-                await ctx.error(error_msg)
-            return f"Error: {error_msg}"
-
 
 def get_tool_info() -> dict:
     """Get information about the icon tools for registration."""
@@ -313,6 +222,5 @@ def get_tool_info() -> dict:
             "search_icons_tool",
             "list_icon_providers_tool",
             "get_icon_stats_tool",
-            "check_icons_health_tool",
         ],
     }
