@@ -97,7 +97,7 @@ class ValidationResult(BaseModel):
 class IlographValidator:
     """Core validator for Ilograph diagrams."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.known_top_level_properties = {
             "resources",
             "perspectives",
@@ -148,20 +148,21 @@ class IlographValidator:
             # Try to parse the YAML
             data = yaml.safe_load(content)
             result.yaml_valid = True
-            return data
+            return data if isinstance(data, dict) else None
         except yaml.YAMLError as e:
+            # Handle problem_mark attribute safely
+            line_num = None
+            col_num = None
+            if hasattr(e, "problem_mark") and e.problem_mark is not None:
+                if hasattr(e.problem_mark, "line"):
+                    line_num = e.problem_mark.line
+                if hasattr(e.problem_mark, "column"):
+                    col_num = e.problem_mark.column
+            
             result.add_error(
                 f"Invalid YAML syntax: {str(e)}",
-                line=(
-                    getattr(e, "problem_mark", {}).line
-                    if hasattr(e, "problem_mark") and e.problem_mark
-                    else None
-                ),
-                column=(
-                    getattr(e, "problem_mark", {}).column
-                    if hasattr(e, "problem_mark") and e.problem_mark
-                    else None
-                ),
+                line=line_num,
+                column=col_num,
                 suggestion="Check for indentation issues, missing colons, or invalid characters",
             )
             return None
@@ -201,7 +202,7 @@ class IlographValidator:
             )
             return
 
-        resource_ids = set()
+        resource_ids: Set[str] = set()
         for i, resource in enumerate(resources):
             self.validate_resource(resource, result, f"resources[{i}]", resource_ids)
 

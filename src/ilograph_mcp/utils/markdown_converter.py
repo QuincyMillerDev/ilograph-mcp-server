@@ -120,7 +120,11 @@ class IlographMarkdownConverter:
         """
         # Process all links
         for link in soup.find_all("a", href=True):
-            href = link["href"]
+            if not isinstance(link, Tag):
+                continue
+            href = link.get("href")
+            if not isinstance(href, str):
+                continue
             if href.startswith("#"):
                 # Keep anchor links as-is
                 continue
@@ -135,7 +139,11 @@ class IlographMarkdownConverter:
 
         # Process all images
         for img in soup.find_all("img", src=True):
-            src = img["src"]
+            if not isinstance(img, Tag):
+                continue
+            src = img.get("src")
+            if not isinstance(src, str):
+                continue
             if not src.startswith(("http://", "https://", "data:")):
                 absolute_url = urljoin(self.base_url, src)
                 img["src"] = absolute_url
@@ -290,7 +298,7 @@ class IlographMarkdownConverter:
                         if isinstance(current, BeautifulSoup):
                             root_soup = current
                             break
-                        current = current.find_parent() if hasattr(current, "find_parent") else None
+                        current = current.find_parent() if hasattr(current, "find_parent") else None # type: ignore
 
                 if root_soup is not None and hasattr(root_soup, "new_tag"):
                     new_tag_method = getattr(root_soup, "new_tag")
@@ -300,11 +308,15 @@ class IlographMarkdownConverter:
                             new_tag.string = "\n" + table_text + "\n"
                         table.replace_with(new_tag)
                     else:
-                        # Fallback: just replace with text
-                        table.replace_with("\n" + table_text + "\n")
+                        # Fallback: create text node
+                        from bs4 import NavigableString
+                        text_node = NavigableString("\n" + table_text + "\n")
+                        table.replace_with(text_node)
                 else:
-                    # Fallback: just replace with text
-                    table.replace_with("\n" + table_text + "\n")
+                    # Fallback: create text node
+                    from bs4 import NavigableString
+                    text_node = NavigableString("\n" + table_text + "\n")
+                    table.replace_with(text_node)
 
     def clean_and_format_text(self, text: str) -> str:
         """
