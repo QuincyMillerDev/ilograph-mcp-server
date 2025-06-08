@@ -107,7 +107,7 @@ Based on analysis of Ilograph documentation and successful MCP server patterns, 
         "description": "Validates Ilograph diagram syntax and provides detailed error messages"
     }
 )
-async def validate_ilograph_diagram(content: str, ctx: Context) -> dict:
+async def validate_diagram_tool(content: str, ctx: Context) -> dict:
     """
     Validates Ilograph YAML syntax and structure.
     
@@ -128,7 +128,7 @@ async def validate_ilograph_diagram(content: str, ctx: Context) -> dict:
         "description": "Retrieves example Ilograph diagrams with metadata and learning context"
     }
 )
-async def get_example_diagram(example_name: str = None, category: str = None) -> dict:
+async def fetch_example_tool(example_name: str = None, category: str = None) -> dict:
     """
     Retrieves static example diagrams with learning context.
     

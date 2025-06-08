@@ -9,16 +9,6 @@ import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 from fastmcp import FastMCP, Client
 
-from src.ilograph_mcp.tools.fetch_documentation_tool import register_fetch_documentation_tool
-
-
-@pytest.fixture
-def mcp_server():
-    """Create a test FastMCP server with documentation tools registered."""
-    server = FastMCP("TestIlographServer")
-    register_fetch_documentation_tool(server)
-    return server
-
 
 @pytest.fixture
 def mock_fetcher():
@@ -51,10 +41,18 @@ def mock_fetcher():
     return mock
 
 
+def create_test_server():
+    """Create a test server with documentation tools registered."""
+    from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
+    server = FastMCP("TestIlographServer")
+    register_fetch_documentation_tool(server)
+    return server
+
+
 class TestFetchDocumentationTool:
     """Test cases for the fetch_documentation_tool."""
     
-    async def test_fetch_valid_section(self, mcp_server, mock_fetcher):
+    async def test_fetch_valid_section(self, mock_fetcher):
         """Test fetching a valid documentation section."""
         mock_content = """# Resources in Ilograph
 
@@ -76,7 +74,8 @@ This example shows a basic service with a database component."""
         
         mock_fetcher.fetch_documentation_section = AsyncMock(return_value=mock_content)
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("fetch_documentation_tool", {"section": "resources"})
                 
@@ -93,9 +92,10 @@ This example shows a basic service with a database component."""
                 # Verify the fetcher was called correctly
                 mock_fetcher.fetch_documentation_section.assert_called_once_with("resources")
     
-    async def test_fetch_invalid_section(self, mcp_server, mock_fetcher):
+    async def test_fetch_invalid_section(self, mock_fetcher):
         """Test fetching an invalid documentation section."""
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("fetch_documentation_tool", {"section": "invalid-section"})
                 
@@ -108,9 +108,10 @@ This example shows a basic service with a database component."""
                 assert "Available sections:" in response_text
                 assert "resources" in response_text
     
-    async def test_fetch_empty_section(self, mcp_server, mock_fetcher):
+    async def test_fetch_empty_section(self, mock_fetcher):
         """Test fetching with empty section parameter."""
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("fetch_documentation_tool", {"section": ""})
                 
@@ -121,11 +122,12 @@ This example shows a basic service with a database component."""
                 assert "Error:" in response_text
                 assert "Section parameter is required" in response_text
     
-    async def test_fetch_network_failure(self, mcp_server, mock_fetcher):
+    async def test_fetch_network_failure(self, mock_fetcher):
         """Test handling of network failures when fetching documentation."""
         mock_fetcher.fetch_documentation_section = AsyncMock(return_value=None)
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("fetch_documentation_tool", {"section": "resources"})
                 
@@ -137,11 +139,12 @@ This example shows a basic service with a database component."""
                 assert "Failed to fetch documentation for section 'resources'" in response_text
                 assert "temporarily unavailable" in response_text
     
-    async def test_fetch_unexpected_error(self, mcp_server, mock_fetcher):
+    async def test_fetch_unexpected_error(self, mock_fetcher):
         """Test handling of unexpected errors during fetching."""
         mock_fetcher.fetch_documentation_section = AsyncMock(side_effect=Exception("Network timeout"))
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("fetch_documentation_tool", {"section": "resources"})
                 
@@ -157,9 +160,10 @@ This example shows a basic service with a database component."""
 class TestListDocumentationSections:
     """Test cases for the list_documentation_sections tool."""
     
-    async def test_list_sections_success(self, mcp_server, mock_fetcher):
+    async def test_list_sections_success(self, mock_fetcher):
         """Test successfully listing documentation sections."""
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("list_documentation_sections", {})
                 
@@ -181,11 +185,12 @@ class TestListDocumentationSections:
                 # Check usage instructions
                 assert "fetch_documentation_tool(section='resources')" in response_text
     
-    async def test_list_sections_error(self, mcp_server, mock_fetcher):
+    async def test_list_sections_error(self, mock_fetcher):
         """Test error handling when listing sections fails."""
         mock_fetcher.get_supported_documentation_sections.side_effect = Exception("Cache error")
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("list_documentation_sections", {})
                 
@@ -200,9 +205,10 @@ class TestListDocumentationSections:
 class TestCheckDocumentationHealth:
     """Test cases for the check_documentation_health tool."""
     
-    async def test_health_check_healthy(self, mcp_server, mock_fetcher):
+    async def test_health_check_healthy(self, mock_fetcher):
         """Test health check when all services are healthy."""
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("check_documentation_health", {})
                 
@@ -229,7 +235,7 @@ class TestCheckDocumentationHealth:
                 # Check status message
                 assert "All services are operational" in response_text
     
-    async def test_health_check_degraded(self, mcp_server, mock_fetcher):
+    async def test_health_check_degraded(self, mock_fetcher):
         """Test health check when some services are unhealthy."""
         # Mock degraded health status
         mock_fetcher.health_check = AsyncMock(return_value={
@@ -247,7 +253,8 @@ class TestCheckDocumentationHealth:
             }
         })
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("check_documentation_health", {})
                 
@@ -261,11 +268,12 @@ class TestCheckDocumentationHealth:
                 assert "Error: Connection timeout" in response_text
                 assert "Some services are experiencing issues: specification" in response_text
     
-    async def test_health_check_error(self, mcp_server, mock_fetcher):
+    async def test_health_check_error(self, mock_fetcher):
         """Test error handling when health check fails."""
         mock_fetcher.health_check = AsyncMock(side_effect=Exception("Health check failed"))
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 result = await client.call_tool("check_documentation_health", {})
                 
@@ -280,8 +288,9 @@ class TestCheckDocumentationHealth:
 class TestToolIntegration:
     """Integration tests for the documentation tools."""
     
-    async def test_all_tools_registered(self, mcp_server):
+    async def test_all_tools_registered(self):
         """Test that all expected tools are registered with the server."""
+        mcp_server = create_test_server()
         async with Client(mcp_server) as client:
             tools = await client.list_tools()
             
@@ -299,12 +308,13 @@ class TestToolIntegration:
             # Check that the section parameter is present in the schema
             assert "section" in fetch_tool.inputSchema.get("properties", {})
     
-    async def test_workflow_list_then_fetch(self, mcp_server, mock_fetcher):
+    async def test_workflow_list_then_fetch(self, mock_fetcher):
         """Test a typical workflow: list sections, then fetch one."""
         mock_content = "# Tutorial Content\nThis is tutorial content."
         mock_fetcher.fetch_documentation_section = AsyncMock(return_value=mock_content)
         
-        with patch('src.ilograph_mcp.tools.fetch_documentation_tool.get_fetcher', return_value=mock_fetcher):
+        with patch('ilograph_mcp.tools.register_fetch_documentation_tools.get_fetcher', return_value=mock_fetcher):
+            mcp_server = create_test_server()
             async with Client(mcp_server) as client:
                 # First, list available sections
                 list_result = await client.call_tool("list_documentation_sections", {})
@@ -318,3 +328,55 @@ class TestToolIntegration:
                 # Verify calls
                 mock_fetcher.get_supported_documentation_sections.assert_called()
                 mock_fetcher.fetch_documentation_section.assert_called_with("tutorial") 
+
+
+class TestRealFetcher:
+    """Integration tests that test the tools with the actual fetcher to ensure they work end-to-end."""
+    
+    async def test_fetch_actual_documentation(self):
+        """Test fetching actual documentation without mocking."""
+        mcp_server = create_test_server()
+        async with Client(mcp_server) as client:
+            # Test fetching a real section
+            result = await client.call_tool("fetch_documentation_tool", {"section": "resources"})
+            
+            assert len(result) == 1
+            response_text = result[0].text
+            
+            # Check that we get real content
+            assert "# Ilograph Documentation: Resources" in response_text
+            assert "**Section:** resources" in response_text
+            assert "https://www.ilograph.com/docs/editing/resources/" in response_text
+            # Should contain actual documentation content
+            assert len(response_text) > 1000  # Real content should be substantial
+    
+    async def test_list_actual_sections(self):
+        """Test listing actual sections without mocking."""
+        mcp_server = create_test_server()
+        async with Client(mcp_server) as client:
+            result = await client.call_tool("list_documentation_sections", {})
+            
+            assert len(result) == 1
+            response_text = result[0].text
+            
+            # Check response format
+            assert "# Available Ilograph Documentation Sections" in response_text
+            # Should contain all the real sections
+            assert "resources" in response_text
+            assert "tutorial" in response_text
+            assert "contexts" in response_text
+    
+    async def test_actual_health_check(self):
+        """Test actual health check without mocking."""
+        mcp_server = create_test_server()
+        async with Client(mcp_server) as client:
+            result = await client.call_tool("check_documentation_health", {})
+            
+            assert len(result) == 1
+            response_text = result[0].text
+            
+            # Check response format
+            assert "# Documentation Service Health Report" in response_text
+            assert "**Overall Status:**" in response_text
+            assert "## Service Connectivity" in response_text
+            assert "## Cache Statistics" in response_text 

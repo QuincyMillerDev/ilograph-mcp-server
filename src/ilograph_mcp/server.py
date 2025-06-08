@@ -7,7 +7,8 @@ This module sets up the FastMCP server and registers all tools, resources, and p
 import logging
 from fastmcp import FastMCP
 
-from ilograph_mcp.tools.fetch_documentation_tool import register_fetch_documentation_tool
+from ilograph_mcp.tools.register_fetch_documentation_tools import register_fetch_documentation_tool
+from ilograph_mcp.tools.register_example_tools import register_example_tools
 
 # Configure logging
 logging.basicConfig(
@@ -36,13 +37,18 @@ def create_server() -> FastMCP:
         - fetch_documentation_tool: Fetches comprehensive documentation from Ilograph's official docs
         - list_documentation_sections: Lists all available documentation sections
         - check_documentation_health: Checks service connectivity and cache status
+        - list_examples: Lists available example diagrams
+        - fetch_example: Fetches a specific example diagram by name
         """
     )
     
     # Register all tools
     register_fetch_documentation_tool(mcp)
     logger.info("Registered fetch_documentation_tool")
-
+    
+    register_example_tools(mcp)
+    logger.info("Registered example_tools")
+    
     return mcp
 
 

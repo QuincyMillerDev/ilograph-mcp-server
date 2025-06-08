@@ -1,0 +1,22 @@
+[bandit]
+exclude_dirs = [
+    "tests",
+    ".venv",
+    "venv", 
+    "env",
+    ".env",
+    "build",
+    "dist"
+]
+
+# Skip certain tests that are common false positives
+skips = [
+    "B101",  # Skip assert_used_test (common in tests)
+    "B601",  # Skip paramiko_calls (if using SSH)
+]
+
+# Confidence levels: LOW, MEDIUM, HIGH
+confidence = "MEDIUM"
+
+# Severity levels: LOW, MEDIUM, HIGH  
+severity = "MEDIUM" 

@@ -4,6 +4,7 @@
 
 A FastMCP server that provides AI agents with comprehensive access to Ilograph documentation and guidance for creating accurate, valid Ilograph diagrams. The server acts as a dynamic domain expert, fetching live content from official Ilograph sources.
 
+[![CI/CD Pipeline](https://github.com/your-org/ilograph-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.7.0+-green.svg)](https://github.com/jlowin/fastmcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -58,7 +59,7 @@ mcp.run()
 
 ## Available Tools
 
-The server currently provides three documentation-focused tools:
+The server provides comprehensive tools for accessing Ilograph documentation and examples:
 
 ### 1. `fetch_documentation_tool`
 Fetches comprehensive documentation from Ilograph's official website.
@@ -88,7 +89,30 @@ Lists all available documentation sections with descriptions and usage examples.
 ### 3. `check_documentation_health`
 Performs health checks on the documentation service and returns cache statistics.
 
-> **Note:** This is the current implementation. Additional tools for validation, icon search, and example access are planned but not yet implemented.
+### 4. `list_examples`
+Lists available Ilograph example diagrams with their categories and descriptions.
+
+**Parameters:**
+- `category` (optional): Filter examples by complexity ('beginner', 'intermediate', 'advanced')
+
+**Available Examples:**
+- `serverless-on-aws.ilograph` - Serverless web application architecture on AWS (intermediate)
+- `stack-overflow-architecture-2016.ilograph` - High-traffic web application with .NET, Redis, SQL Server (advanced)
+- `aws-distributed-load-testing.ilograph` - Distributed load testing solution with containerized tasks (advanced)
+
+### 5. `fetch_example`
+Retrieves a specific Ilograph example diagram with its content and rich metadata.
+
+**Parameters:**
+- `example_name` (str): The filename of the example to fetch (e.g., 'serverless-on-aws.ilograph')
+
+**Returns:**
+- Complete diagram content
+- Learning objectives
+- Patterns demonstrated
+- Category and description
+
+> **Note:** Additional tools for validation, icon search, and specification reference are planned for future releases.
 
 ## Example Usage
 
@@ -110,6 +134,18 @@ async def example_usage():
         })
         print("Documentation:", docs)
         
+        # List example diagrams
+        examples = await client.call_tool("list_examples", {
+            "category": "intermediate"
+        })
+        print("Available examples:", examples)
+        
+        # Fetch specific example
+        example = await client.call_tool("fetch_example", {
+            "example_name": "serverless-on-aws.ilograph"
+        })
+        print("Example diagram:", example)
+        
         # Check service health
         health = await client.call_tool("check_documentation_health", {})
         print("Health status:", health)
@@ -125,7 +161,8 @@ src/ilograph_mcp/
 │   ├── fetcher.py          # HTTP content fetching
 │   └── cache.py            # TTL-based caching system
 ├── tools/
-│   └── fetch_documentation_tool.py  # Documentation tools
+│   ├── fetch_documentation_tool.py  # Documentation tools
+│   └── register_example_tools.py    # Example diagram tools
 ├── utils/
 │   ├── http_client.py      # HTTP client with retry logic
 │   └── markdown_converter.py       # HTML to Markdown conversion
