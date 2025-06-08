@@ -12,8 +12,7 @@ from ilograph_mcp.tools.register_example_tools import register_example_tools
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 def create_server() -> FastMCP:
     """
     Create and configure the Ilograph MCP server.
-    
+
     Returns:
         FastMCP: Configured server instance
     """
@@ -39,16 +38,16 @@ def create_server() -> FastMCP:
         - check_documentation_health: Checks service connectivity and cache status
         - list_examples: Lists available example diagrams
         - fetch_example: Fetches a specific example diagram by name
-        """
+        """,
     )
-    
+
     # Register all tools
     register_fetch_documentation_tool(mcp)
     logger.info("Registered fetch_documentation_tool")
-    
+
     register_example_tools(mcp)
     logger.info("Registered example_tools")
-    
+
     return mcp
 
 

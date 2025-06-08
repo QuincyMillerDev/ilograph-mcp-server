@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 # Base path for example files
 EXAMPLES_DIR = Path(__file__).parent.parent / "static" / "examples"
 
+
 class ExampleMetadata(BaseModel):
     """Defines the metadata structure for an Ilograph example."""
+
     name: str
     category: Literal["beginner", "intermediate", "advanced"]
     description: str
@@ -31,6 +33,7 @@ class ExampleMetadata(BaseModel):
         """Returns the full path to the example file."""
         return EXAMPLES_DIR / self.name
 
+
 # In-memory database of example diagrams and their metadata.
 # This acts as a manifest, providing rich context for each example.
 EXAMPLES_DATABASE: Dict[str, ExampleMetadata] = {
@@ -41,9 +44,16 @@ EXAMPLES_DATABASE: Dict[str, ExampleMetadata] = {
         learning_objectives=[
             "Understand how to model serverless architectures.",
             "Learn the relationships between API Gateway, Lambda, and DynamoDB.",
-            "See how to represent S3 buckets for static content hosting."
+            "See how to represent S3 buckets for static content hosting.",
         ],
-        patterns_demonstrated=["Serverless", "AWS", "API Gateway", "Lambda", "DynamoDB", "Microservices"]
+        patterns_demonstrated=[
+            "Serverless",
+            "AWS",
+            "API Gateway",
+            "Lambda",
+            "DynamoDB",
+            "Microservices",
+        ],
     ),
     "stack-overflow-architecture-2016.ilograph": ExampleMetadata(
         name="stack-overflow-architecture-2016.ilograph",
@@ -52,9 +62,16 @@ EXAMPLES_DATABASE: Dict[str, ExampleMetadata] = {
         learning_objectives=[
             "Analyze a real-world, high-scale web architecture.",
             "Understand patterns for redundancy, caching, and load balancing.",
-            "Learn to model complex interactions between various services and data stores."
+            "Learn to model complex interactions between various services and data stores.",
         ],
-        patterns_demonstrated=["Web Architecture", "High Availability", "Caching", "Load Balancing", "SQL", "Redis"]
+        patterns_demonstrated=[
+            "Web Architecture",
+            "High Availability",
+            "Caching",
+            "Load Balancing",
+            "SQL",
+            "Redis",
+        ],
     ),
     "aws-distributed-load-testing.ilograph": ExampleMetadata(
         name="aws-distributed-load-testing.ilograph",
@@ -63,15 +80,23 @@ EXAMPLES_DATABASE: Dict[str, ExampleMetadata] = {
         learning_objectives=[
             "Model complex, event-driven systems on AWS.",
             "Understand how to represent container orchestration with Fargate.",
-            "Learn advanced networking concepts like VPCs, subnets, and security groups."
+            "Learn advanced networking concepts like VPCs, subnets, and security groups.",
         ],
-        patterns_demonstrated=["Cloud Architecture", "Distributed Systems", "Event-Driven", "AWS Fargate", "Networking", "Scalability"]
+        patterns_demonstrated=[
+            "Cloud Architecture",
+            "Distributed Systems",
+            "Event-Driven",
+            "AWS Fargate",
+            "Networking",
+            "Scalability",
+        ],
     ),
 }
 
+
 def _get_example_summary(metadata: ExampleMetadata) -> Dict[str, Any]:
     """Returns a concise summary of an example."""
-    return metadata.model_dump(include={'name', 'category', 'description'})
+    return metadata.model_dump(include={"name", "category", "description"})
 
 
 def register_example_tools(mcp: FastMCP) -> None:
@@ -82,11 +107,11 @@ def register_example_tools(mcp: FastMCP) -> None:
         annotations={
             "title": "List Available Example Diagrams",
             "readOnlyHint": True,
-            "description": "Lists available Ilograph example diagrams with their categories and descriptions."
-        }
+            "description": "Lists available Ilograph example diagrams with their categories and descriptions.",
+        },
     )
     async def list_examples_tool(
-        category: Optional[Literal["beginner", "intermediate", "advanced"]] = None
+        category: Optional[Literal["beginner", "intermediate", "advanced"]] = None,
     ) -> Dict[str, Any]:
         """
         Lists available Ilograph example diagrams, optionally filtering by category.
@@ -108,7 +133,7 @@ def register_example_tools(mcp: FastMCP) -> None:
 
         return {
             "examples": [_get_example_summary(ex) for ex in examples_to_list],
-            "message": "To get the full content of an example, use the 'fetch_example' tool with its 'example_name'."
+            "message": "To get the full content of an example, use the 'fetch_example' tool with its 'example_name'.",
         }
 
     @mcp.tool(
@@ -116,8 +141,8 @@ def register_example_tools(mcp: FastMCP) -> None:
         annotations={
             "title": "Get Example Diagram",
             "readOnlyHint": True,
-            "description": "Retrieves a specific Ilograph example diagram with its content and rich metadata."
-        }
+            "description": "Retrieves a specific Ilograph example diagram with its content and rich metadata.",
+        },
     )
     async def fetch_example_tool(example_name: str, ctx: Context) -> Dict[str, Any]:
         """
@@ -138,7 +163,7 @@ def register_example_tools(mcp: FastMCP) -> None:
             return {
                 "error": "not_found",
                 "message": f"Example '{example_name}' not found. Use the 'list_examples' tool to see available examples.",
-                "available_examples": available.split(", ")
+                "available_examples": available.split(", "),
             }
 
         file_path = metadata.file_path
@@ -146,7 +171,7 @@ def register_example_tools(mcp: FastMCP) -> None:
             await ctx.error(f"Example file not found on disk: {file_path}")
             return {
                 "error": "internal_error",
-                "message": "The example file could not be found on the server, even though it is listed in the database."
+                "message": "The example file could not be found on the server, even though it is listed in the database.",
             }
 
         try:
@@ -160,7 +185,7 @@ def register_example_tools(mcp: FastMCP) -> None:
             logger.exception(f"Error reading example file {file_path}")
             return {
                 "error": "internal_error",
-                "message": f"An unexpected error occurred while reading the example file: {e}"
+                "message": f"An unexpected error occurred while reading the example file: {e}",
             }
 
 
@@ -169,8 +194,5 @@ def get_example_tool_info() -> dict:
     return {
         "name": "example_tools",
         "description": "Provides access to static Ilograph example diagrams with rich metadata.",
-        "tools": [
-            "list_examples",
-            "fetch_example"
-        ]
-    } 
+        "tools": ["list_examples", "fetch_example"],
+    }

@@ -20,14 +20,14 @@ MOCK_EXAMPLES_DATABASE = {
         category="intermediate",
         description="An intermediate test example.",
         learning_objectives=["Understand intermediate concepts"],
-        patterns_demonstrated=["Intermediate Patterns"]
+        patterns_demonstrated=["Intermediate Patterns"],
     ),
     "test-example-advanced.ilograph": ExampleMetadata(
         name="test-example-advanced.ilograph",
         category="advanced",
         description="An advanced test example.",
         learning_objectives=["Understand advanced concepts"],
-        patterns_demonstrated=["Advanced Patterns", "Scalability"]
+        patterns_demonstrated=["Advanced Patterns", "Scalability"],
     ),
 }
 
@@ -45,7 +45,9 @@ class TestListExamplesTool:
 
     async def test_list_all_examples(self, mcp_server):
         """Test listing all available examples."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE):
+        with patch(
+            "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE", MOCK_EXAMPLES_DATABASE
+        ):
             async with Client(mcp_server) as client:
                 result = await client.call_tool("list_examples", {})
                 assert len(result) == 1
@@ -53,7 +55,10 @@ class TestListExamplesTool:
 
                 assert "examples" in response_data
                 assert len(response_data["examples"]) == 2
-                assert response_data["message"] == "To get the full content of an example, use the 'fetch_example' tool with its 'example_name'."
+                assert (
+                    response_data["message"]
+                    == "To get the full content of an example, use the 'fetch_example' tool with its 'example_name'."
+                )
                 # Check if summaries are correct
                 names = {ex["name"] for ex in response_data["examples"]}
                 assert "test-example-intermediate.ilograph" in names
@@ -61,7 +66,9 @@ class TestListExamplesTool:
 
     async def test_list_examples_by_category_found(self, mcp_server):
         """Test filtering examples by a category that exists."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE):
+        with patch(
+            "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE", MOCK_EXAMPLES_DATABASE
+        ):
             async with Client(mcp_server) as client:
                 result = await client.call_tool("list_examples", {"category": "advanced"})
                 assert len(result) == 1
@@ -74,7 +81,9 @@ class TestListExamplesTool:
 
     async def test_list_examples_by_category_not_found(self, mcp_server):
         """Test filtering examples by a category that has no entries."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE):
+        with patch(
+            "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE", MOCK_EXAMPLES_DATABASE
+        ):
             async with Client(mcp_server) as client:
                 result = await client.call_tool("list_examples", {"category": "beginner"})
                 assert len(result) == 1
@@ -90,11 +99,18 @@ class TestFetchExampleTool:
 
     async def test_fetch_valid_example(self, mcp_server):
         """Test fetching a valid and existing example diagram."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE), \
-             patch('pathlib.Path.is_file', return_value=True), \
-             patch('pathlib.Path.read_text', return_value='---\ntitle: Test Example Content\n---') as mock_read_text, \
-             patch('importlib.metadata.version', return_value='1.0.0'):
-            
+        with (
+            patch(
+                "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE",
+                MOCK_EXAMPLES_DATABASE,
+            ),
+            patch("pathlib.Path.is_file", return_value=True),
+            patch(
+                "pathlib.Path.read_text", return_value="---\ntitle: Test Example Content\n---"
+            ) as mock_read_text,
+            patch("importlib.metadata.version", return_value="1.0.0"),
+        ):
+
             async with Client(mcp_server) as client:
                 example_name = "test-example-advanced.ilograph"
                 result = await client.call_tool("fetch_example", {"example_name": example_name})
@@ -104,13 +120,15 @@ class TestFetchExampleTool:
                 assert response_data["name"] == example_name
                 assert response_data["category"] == "advanced"
                 assert "content" in response_data
-                assert response_data["content"] == '---\ntitle: Test Example Content\n---'
+                assert response_data["content"] == "---\ntitle: Test Example Content\n---"
                 assert "learning_objectives" in response_data
                 mock_read_text.assert_called_once()
 
     async def test_fetch_non_existent_example(self, mcp_server):
         """Test fetching an example name that is not in the database."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE):
+        with patch(
+            "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE", MOCK_EXAMPLES_DATABASE
+        ):
             async with Client(mcp_server) as client:
                 example_name = "non-existent-example.ilograph"
                 result = await client.call_tool("fetch_example", {"example_name": example_name})
@@ -124,9 +142,14 @@ class TestFetchExampleTool:
 
     async def test_fetch_example_file_missing_on_disk(self, mcp_server):
         """Test fetching an example that is in the database but missing from disk."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE), \
-             patch('pathlib.Path.is_file', return_value=False) as mock_is_file:
-            
+        with (
+            patch(
+                "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE",
+                MOCK_EXAMPLES_DATABASE,
+            ),
+            patch("pathlib.Path.is_file", return_value=False) as mock_is_file,
+        ):
+
             async with Client(mcp_server) as client:
                 example_name = "test-example-intermediate.ilograph"
                 result = await client.call_tool("fetch_example", {"example_name": example_name})
@@ -139,10 +162,15 @@ class TestFetchExampleTool:
 
     async def test_fetch_example_read_io_error(self, mcp_server):
         """Test handling of an IOError when reading an example file."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE), \
-             patch('pathlib.Path.is_file', return_value=True), \
-             patch('pathlib.Path.read_text', side_effect=IOError("Disk read failed")):
-            
+        with (
+            patch(
+                "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE",
+                MOCK_EXAMPLES_DATABASE,
+            ),
+            patch("pathlib.Path.is_file", return_value=True),
+            patch("pathlib.Path.read_text", side_effect=IOError("Disk read failed")),
+        ):
+
             async with Client(mcp_server) as client:
                 example_name = "test-example-advanced.ilograph"
                 result = await client.call_tool("fetch_example", {"example_name": example_name})
@@ -150,7 +178,10 @@ class TestFetchExampleTool:
                 response_data = json.loads(result[0].text)
 
                 assert response_data["error"] == "internal_error"
-                assert "An unexpected error occurred while reading the example file" in response_data["message"]
+                assert (
+                    "An unexpected error occurred while reading the example file"
+                    in response_data["message"]
+                )
 
 
 class TestToolIntegration:
@@ -172,11 +203,18 @@ class TestToolIntegration:
 
     async def test_workflow_list_then_fetch(self, mcp_server):
         """Test a typical user workflow: listing examples, then fetching one."""
-        with patch('ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE', MOCK_EXAMPLES_DATABASE), \
-             patch('pathlib.Path.is_file', return_value=True), \
-             patch('pathlib.Path.read_text', return_value='---\ncontent for advanced\n---') as mock_read_text, \
-             patch('importlib.metadata.version', return_value='1.0.0'):
-            
+        with (
+            patch(
+                "ilograph_mcp.tools.register_example_tools.EXAMPLES_DATABASE",
+                MOCK_EXAMPLES_DATABASE,
+            ),
+            patch("pathlib.Path.is_file", return_value=True),
+            patch(
+                "pathlib.Path.read_text", return_value="---\ncontent for advanced\n---"
+            ) as mock_read_text,
+            patch("importlib.metadata.version", return_value="1.0.0"),
+        ):
+
             async with Client(mcp_server) as client:
                 # 1. List all examples
                 list_result = await client.call_tool("list_examples", {})
@@ -188,10 +226,12 @@ class TestToolIntegration:
                 assert example_to_fetch == "test-example-advanced.ilograph"
 
                 # 3. Fetch that specific example
-                fetch_result = await client.call_tool("fetch_example", {"example_name": example_to_fetch})
+                fetch_result = await client.call_tool(
+                    "fetch_example", {"example_name": example_to_fetch}
+                )
                 fetch_data = json.loads(fetch_result[0].text)
 
                 assert fetch_data["name"] == example_to_fetch
                 assert fetch_data["category"] == "advanced"
-                assert fetch_data["content"] == '---\ncontent for advanced\n---'
-                mock_read_text.assert_called_once() 
+                assert fetch_data["content"] == "---\ncontent for advanced\n---"
+                mock_read_text.assert_called_once()

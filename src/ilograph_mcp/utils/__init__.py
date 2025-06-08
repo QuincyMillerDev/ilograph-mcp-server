@@ -10,7 +10,7 @@ from .markdown_converter import IlographMarkdownConverter, get_markdown_converte
 
 __all__ = [
     "IlographHTTPClient",
-    "get_http_client", 
+    "get_http_client",
     "IlographMarkdownConverter",
-    "get_markdown_converter"
-] 
+    "get_markdown_converter",
+]

@@ -1,1 +1,1 @@
-"""Tests for the Ilograph MCP Server.""" 
+"""Tests for the Ilograph MCP Server."""
