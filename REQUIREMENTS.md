@@ -1,5 +1,18 @@
 # Ilograph MCP Server Requirements Document
 
+# ⚠️ IMPORTANT: MCP Client Support Limitation (2025)
+
+> **Note (2025):**
+> As of early 2025, **Cursor, GitHub Copilot, and most agent IDEs only support MCP tools** (not resources or prompts). This means:
+> - **All critical server functionality must be exposed as tools.**
+> - Resources and prompts are currently ignored by these clients, though they may be supported in the future.
+> - When designing or maintaining this server, prioritize tool-based interfaces for all essential features (validation, example access, spec queries, etc.).
+> - Resources and prompts can be included for future compatibility, but should not be relied upon for agent workflows today.
+>
+> _Revisit this note regularly as MCP client support evolves._
+> https://docs.github.com/en/copilot/customizing-copilot/extending-copilot-coding-agent-with-mcp
+> As above, Github Copilot only supports Tools as part of the protocol, not resources or prompts
+
 ## Overview
 
 Build a **FastMCP server** that acts as a **dynamic Ilograph domain expert**, providing AI agents with comprehensive, up-to-date Ilograph knowledge through intelligent content sourcing. Based on research of successful MCP server patterns and the actual Ilograph platform, this server will fetch and cache content from official sources rather than maintaining static copies, **except for a small set of example diagrams, which are stored as static .ilograph files in the server**.
