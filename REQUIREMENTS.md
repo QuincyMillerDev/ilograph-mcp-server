@@ -135,132 +135,132 @@ ilograph-mcp-server/
 
 #### 2.1 Enhanced Syntax Validation
 ```python
-from fastmcp import FastMCP
+# from fastmcp import FastMCP
 
-mcp = FastMCP("Ilograph Expert")
+# mcp = FastMCP("Ilograph Expert")
 
-@mcp.tool()
-async def validate_ilograph_syntax(diagram_code: str) -> dict:
-    """
-    Validate Ilograph markup syntax against live official specification.
+# @mcp.tool()
+# async def validate_ilograph_syntax(diagram_code: str) -> dict:
+#     """
+#     Validate Ilograph markup syntax against live official specification.
     
-    Uses real-time specification data to ensure validation is always current.
-    Provides detailed error reporting with suggestions for fixes.
+#     Uses real-time specification data to ensure validation is always current.
+#     Provides detailed error reporting with suggestions for fixes.
     
-    Args:
-        diagram_code: The Ilograph YAML markup to validate
+#     Args:
+#         diagram_code: The Ilograph YAML markup to validate
         
-    Returns:
-        Dictionary with validation results including errors, warnings, and suggestions
-    """
-    # Implementation will validate against live spec
-    return {
-        "valid": bool,
-        "errors": [{"line": int, "message": str, "severity": str}],
-        "warnings": [{"line": int, "message": str, "suggestion": str}],
-        "suggestions": [{"type": str, "description": str, "example": str}]
-    }
+#     Returns:
+#         Dictionary with validation results including errors, warnings, and suggestions
+#     """
+#     # Implementation will validate against live spec
+#     return {
+#         "valid": bool,
+#         "errors": [{"line": int, "message": str, "severity": str}],
+#         "warnings": [{"line": int, "message": str, "suggestion": str}],
+#         "suggestions": [{"type": str, "description": str, "example": str}]
+#     }
 ```
 
 #### 2.2 Smart Icon Recommendation
 ```python
-@mcp.tool()
-async def recommend_icons(component_names: list[str]) -> dict:
-    """
-    Recommend appropriate icons for given component names using live icon catalog.
+# @mcp.tool()
+# async def recommend_icons(component_names: list[str]) -> dict:
+#     """
+#     Recommend appropriate icons for given component names using live icon catalog.
     
-    Uses semantic matching and pattern recognition against the current icon set.
-    Considers AWS, Azure, GCP, and generic icon categories.
+#     Uses semantic matching and pattern recognition against the current icon set.
+#     Considers AWS, Azure, GCP, and generic icon categories.
     
-    Args:
-        component_names: List of component names to get icon recommendations for
+#     Args:
+#         component_names: List of component names to get icon recommendations for
         
-    Returns:
-        Dictionary mapping component names to icon recommendations
-    """
-    # Implementation will use live icon catalog
-    return {
-        "component_name": {
-            "icon": "primary_recommendation",
-            "alternatives": ["alt1", "alt2", "alt3"],
-            "category": "aws|azure|gcp|networking|general",
-            "confidence": "high|medium|low",
-            "reasoning": "why this icon was recommended"
-        }
-    }
+#     Returns:
+#         Dictionary mapping component names to icon recommendations
+#     """
+#     # Implementation will use live icon catalog
+#     return {
+#         "component_name": {
+#             "icon": "primary_recommendation",
+#             "alternatives": ["alt1", "alt2", "alt3"],
+#             "category": "aws|azure|gcp|networking|general",
+#             "confidence": "high|medium|low",
+#             "reasoning": "why this icon was recommended"
+#         }
+#     }
 ```
 
 #### 2.3 Advanced Icon Search
 ```python
-@mcp.tool()
-async def search_icons_by_keyword(
-    keyword: str, 
-    category: str = "", 
-    limit: int = 10
-) -> dict:
-    """
-    Search live icon catalog by keyword with fuzzy matching and semantic search.
+# @mcp.tool()
+# async def search_icons_by_keyword(
+#     keyword: str, 
+#     category: str = "", 
+#     limit: int = 10
+# ) -> dict:
+#     """
+#     Search live icon catalog by keyword with fuzzy matching and semantic search.
     
-    Searches across icon names, paths, and inferred categories.
-    Supports cloud provider filtering and semantic similarity.
+#     Searches across icon names, paths, and inferred categories.
+#     Supports cloud provider filtering and semantic similarity.
     
-    Args:
-        keyword: Search term (e.g., "database", "compute", "lambda")
-        category: Optional filter (AWS, Azure, GCP, Networking)
-        limit: Maximum results to return
+#     Args:
+#         keyword: Search term (e.g., "database", "compute", "lambda")
+#         category: Optional filter (AWS, Azure, GCP, Networking)
+#         limit: Maximum results to return
         
-    Returns:
-        Dictionary with search results and metadata
-    """
-    # Implementation will search live icon catalog
-    return {
-        "results": [
-            {
-                "name": "extracted_name",
-                "path": "full/icon/path",
-                "category": "service_category", 
-                "provider": "aws|azure|gcp|general",
-                "relevance_score": 0.95
-            }
-        ],
-        "total_found": int,
-        "search_metadata": {
-            "query_time_ms": int,
-            "cache_hit": bool
-        }
-    }
+#     Returns:
+#         Dictionary with search results and metadata
+#     """
+#     # Implementation will search live icon catalog
+#     return {
+#         "results": [
+#             {
+#                 "name": "extracted_name",
+#                 "path": "full/icon/path",
+#                 "category": "service_category", 
+#                 "provider": "aws|azure|gcp|general",
+#                 "relevance_score": 0.95
+#             }
+#         ],
+#         "total_found": int,
+#         "search_metadata": {
+#             "query_time_ms": int,
+#             "cache_hit": bool
+#         }
+#     }
 ```
 
 #### 2.4 Specification Query Tool
 ```python
-@mcp.tool()
-async def query_specification(
-    query_type: str,
-    property_name: str = "",
-    context: str = ""
-) -> dict:
-    """
-    Query live Ilograph specification for specific syntax or property information.
+# @mcp.tool()
+# async def query_specification(
+#     query_type: str,
+#     property_name: str = "",
+#     context: str = ""
+# ) -> dict:
+#     """
+#     Query live Ilograph specification for specific syntax or property information.
     
-    Provides precise, current specification details for any Ilograph feature.
-    Includes examples and usage patterns from official documentation.
+#     Provides precise, current specification details for any Ilograph feature.
+#     Includes examples and usage patterns from official documentation.
     
-    Args:
-        query_type: "property", "perspective", "relation", "sequence", "context"
-        property_name: Specific property to query (e.g., "arrowDirection")
-        context: Additional context for the query
+#     Args:
+#         query_type: "property", "perspective", "relation", "sequence", "context"
+#         property_name: Specific property to query (e.g., "arrowDirection")
+#         context: Additional context for the query
         
-    Returns:
-        Dictionary with specification details and examples
-    """
-    # Implementation will query live specification
-    return {
-        "specification": "detailed_spec_info",
-        "valid_values": ["allowed_values"],
-        "examples": ["usage_examples"],
-        "best_practices": ["recommendations"],
-        "related_properties": ["related_properties"]
-    }
+#     Returns:
+#         Dictionary with specification details and examples
+#     """
+#     # Implementation will query live specification
+#     return {
+#         "specification": "detailed_spec_info",
+#         "valid_values": ["allowed_values"],
+#         "examples": ["usage_examples"],
+#         "best_practices": ["recommendations"],
+#         "related_properties": ["related_properties"]
+#     }
 ```
 
 ### 3. **Caching and Performance System**
