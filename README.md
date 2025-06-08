@@ -2,7 +2,7 @@
 
 The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server that provides AI agents with comprehensive access to Ilograph documentation, validation tools, and diagram creation guidance. Transform complex architecture documentation with intelligent assistance.
 
-[![Docker Build](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/docker.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/docker.yml)
+[![CI](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.7.0+-green.svg)](https://github.com/jlowin/fastmcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -25,89 +25,53 @@ The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontext
 2. **Python 3.11+**: For local installation (alternative to Docker)
 3. **MCP-compatible client**: Such as Claude Desktop, VS Code with Copilot, or Cursor
 
-## Installation
+## Quick Start
 
-### Usage with VS Code
+**Prerequisites**: [Docker](https://www.docker.com/) installed and running
 
-Add the following JSON block to your User Settings (JSON) file in VS Code. Access this by pressing `Ctrl + Shift + P` and typing `Preferences: Open User Settings (JSON)`.
+### Add to Your MCP Client
 
-More about using MCP server tools in VS Code's [agent mode documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
+Add this configuration to your MCP client:
 
+**VS Code** (Settings → User Settings JSON or `.vscode/mcp.json`):
 ```json
 {
   "mcp": {
     "servers": {
       "ilograph": {
         "command": "docker",
-        "args": [
-          "run",
-          "-i",
-          "--rm",
-          "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
-        ]
+        "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
       }
     }
   }
 }
 ```
 
-Optionally, add this configuration to `.vscode/mcp.json` in your workspace to share with your team:
-
-```json
-{
-  "servers": {
-    "ilograph": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
-      ]
-    }
-  }
-}
-```
-
-### Usage with Claude Desktop
-
-Add this configuration to your Claude Desktop MCP settings file:
-
+**Claude Desktop**:
 ```json
 {
   "mcpServers": {
     "ilograph": {
       "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
-      ]
+      "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
     }
   }
 }
 ```
 
-### Usage with Cursor
-
-Add this to your Cursor MCP configuration:
-
+**Cursor**:
 ```json
 {
   "mcpServers": {
     "ilograph": {
       "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
-      ]
+      "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
     }
   }
 }
 ```
+
+That's it! 🎉
 
 ## Tool Configuration
 
@@ -146,87 +110,28 @@ The following tools are available for comprehensive Ilograph workflow support:
 **"Explain Ilograph perspectives and how to use them"**
 → Provides comprehensive documentation with examples and best practices
 
-## Local Installation
+## Development Setup
 
-### Install from PyPI (Coming Soon)
-
-```bash
-pip install ilograph-mcp-server
-```
-
-### Install from Source
+Want to contribute or run locally?
 
 ```bash
-# Clone the repository
+# Clone and build
 git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
 cd ilograph-mcp-server
+docker build -t ilograph-mcp-local .
 
-# Install with uv (recommended)
-uv sync
-
-# Or with pip
-pip install -e .
-```
-
-### Local Configuration
-
-For local installation, use this configuration:
-
-```json
-{
-  "mcpServers": {
-    "ilograph": {
-      "command": "ilograph-mcp",
-      "args": []
-    }
-  }
-}
-```
-
-Or if installed from source:
-
-```json
-{
-  "mcpServers": {
-    "ilograph": {
-      "command": "python",
-      "args": ["-m", "ilograph_mcp.server"]
-    }
-  }
-}
-```
-
-## Building the Docker Image Locally
-
-To build and use a local Docker image:
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/QuincyMillerDev/ilograph-mcp-server.git
-cd ilograph-mcp-server
-```
-
-2. **Build the Docker image:**
-```bash
-docker build -t ilograph-mcp-server .
-```
-
-3. **Use the local image in your MCP configuration:**
-```json
+# Use local build
 {
   "mcpServers": {
     "ilograph": {
       "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "ilograph-mcp-server"
-      ]
+      "args": ["run", "-i", "--rm", "ilograph-mcp-local"]
     }
   }
 }
 ```
+
+
 
 ## Development
 
