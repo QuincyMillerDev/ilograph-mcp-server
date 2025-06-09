@@ -6,9 +6,7 @@ accurate, valid Ilograph diagrams. The server acts as a domain expert for
 Ilograph syntax, best practices, and validation.
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.2"
 __author__ = "Quincy Miller"
 
-from .server import create_server
-
-__all__ = ["create_server"]
+__all__ = []
