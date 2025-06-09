@@ -103,11 +103,11 @@ jobs:
       - name: Run integration tests
         run: |
           # Test that the server can be imported and started
-          uv run python -c "from ilograph_mcp import create_server; print('✅ Server import successful')"
+          uv run python -c "from ilograph_mcp.server import create_server; print('✅ Server import successful')"
           
           # Test that tools are properly registered
           uv run python -c "
-          from ilograph_mcp import create_server
+          from ilograph_mcp.server import create_server
           from fastmcp import Client
           import asyncio
           

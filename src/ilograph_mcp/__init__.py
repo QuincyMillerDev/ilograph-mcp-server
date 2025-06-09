@@ -9,4 +9,4 @@ Ilograph syntax, best practices, and validation.
 __version__ = "1.0.2"
 __author__ = "Quincy Miller"
 
-__all__ = []
+__all__: list[str] = []
