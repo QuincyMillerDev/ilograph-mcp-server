@@ -35,12 +35,10 @@ Add this configuration to your MCP client:
 **VS Code** (Settings → User Settings JSON or `.vscode/mcp.json`):
 ```json
 {
-  "mcp": {
-    "servers": {
-      "ilograph": {
-        "command": "docker",
-        "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
-      }
+  "servers": {
+    "ilograph": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
     }
   }
 }
