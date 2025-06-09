@@ -12,7 +12,6 @@ The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontext
 - **Automated Diagram Creation**: Generate Ilograph diagrams through natural language descriptions
 - **Real-time Validation**: Validate existing diagrams with detailed error analysis and suggestions
 - **Documentation Access**: Get instant access to comprehensive Ilograph documentation and best practices
-- **Architecture Guidance**: Receive expert recommendations for diagram structure and icon selection
 - **Learning & Examples**: Explore curated diagram examples with detailed explanations
 
 > **Important**: This is an **unofficial, community-driven project** and is **not affiliated with or endorsed by Ilograph LLC**. The server provides educational and development assistance by accessing publicly available Ilograph documentation and resources.
@@ -25,38 +24,50 @@ The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontext
 2. **MCP-compatible client**: Claude Desktop, VS Code, Cursor, etc.
 
 ## Quick Start
-
-**Prerequisites**: [Docker](https://www.docker.com/) installed and running
-
 ### Add to Your MCP Client
 
 Add this configuration to your MCP client:
 
-**VS Code** (Settings → User Settings JSON or `.vscode/mcp.json`):
+**VS Code**:
+
+Add the following JSON block to your User Settings (JSON) file in VS Code. You can do this by pressing Ctrl + Shift + P and typing Preferences: Open User Settings (JSON).
+
+More about using MCP server tools in VS Code's agent mode documentation.
+```json
+{
+  "mcp": {
+    "servers": {
+      "terraform": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+        ]
+      }
+    }
+  }
+}
+```
+Optionally, you can add a similar example (i.e. without the mcp key) to a file called .vscode/mcp.json in your workspace. This will allow you to share the configuration with others.
 ```json
 {
   "servers": {
-    "ilograph": {
+    "terraform": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"
+      ]
     }
   }
 }
 ```
 
-**Claude Desktop**:
-```json
-{
-  "mcpServers": {
-    "ilograph": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "ghcr.io/quincymillerdev/ilograph-mcp-server:latest"]
-    }
-  }
-}
-```
-
-**Cursor**:
+**Claude Desktop / Cursor / Jetbrains AI Assistant**:
 ```json
 {
   "mcpServers": {
