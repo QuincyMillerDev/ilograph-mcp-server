@@ -68,4 +68,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import ilograph_mcp.server; print('Health check passed')" || exit 1
 
 # Run the MCP server
-CMD ["python", "-m", "ilograph_mcp.server"] 
+CMD ["python", "-m", "ilograph_mcp"] 

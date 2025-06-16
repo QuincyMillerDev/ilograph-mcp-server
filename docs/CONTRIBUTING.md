@@ -55,7 +55,7 @@ uv run bandit -r src/
 
 ```bash
 # Start server locally (for testing)
-uv run python -m ilograph_mcp.server
+uv run python -m ilograph_mcp
 
 # Test tool registration
 uv run python -c "

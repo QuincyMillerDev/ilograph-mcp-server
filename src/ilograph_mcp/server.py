@@ -4,7 +4,11 @@ Main FastMCP server implementation for Ilograph.
 This module sets up the FastMCP server and registers all tools, resources, and prompts.
 """
 
+import asyncio
 import logging
+import signal
+import sys
+from typing import Any, Optional
 
 from fastmcp import FastMCP
 
@@ -19,6 +23,9 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+# Global server instance for signal handling
+_server_instance: Optional[FastMCP] = None
 
 
 def create_server() -> FastMCP:
@@ -49,29 +56,67 @@ def create_server() -> FastMCP:
         """,
     )
 
-    # Register all tools
-    register_fetch_documentation_tool(mcp)
-    logger.info("Registered fetch_documentation_tool")
+    try:
+        # Register all tools with error handling
+        register_fetch_documentation_tool(mcp)
+        logger.info("Registered fetch_documentation_tool")
 
-    register_fetch_spec_tool(mcp)
-    logger.info("Registered fetch_spec_tool")
+        register_fetch_spec_tool(mcp)
+        logger.info("Registered fetch_spec_tool")
 
-    register_example_tools(mcp)
-    logger.info("Registered example_tools")
+        register_example_tools(mcp)
+        logger.info("Registered example_tools")
 
-    register_validate_diagram_tool(mcp)
-    logger.info("Registered validate_diagram_tool")
+        register_validate_diagram_tool(mcp)
+        logger.info("Registered validate_diagram_tool")
 
-    register_fetch_icons_tool(mcp)
-    logger.info("Registered fetch_icons_tool")
+        register_fetch_icons_tool(mcp)
+        logger.info("Registered fetch_icons_tool")
+
+    except Exception as e:
+        logger.error(f"Error registering tools: {e}")
+        raise
 
     return mcp
 
 
+def setup_signal_handlers() -> None:
+    """Set up signal handlers for graceful shutdown."""
+
+    def signal_handler(signum: int, frame: Any) -> None:
+        logger.info(f"Received signal {signum}, shutting down gracefully...")
+        if _server_instance:
+            # For FastMCP, we'll let the framework handle the shutdown
+            logger.info("Server shutdown initiated")
+        sys.exit(0)
+
+    # Set up signal handlers for SIGINT and SIGTERM
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+
 def main() -> None:
     """Main entry point for the Ilograph MCP server."""
-    mcp = create_server()
-    mcp.run()
+    global _server_instance
+
+    try:
+        # Set up signal handlers
+        setup_signal_handlers()
+
+        # Create server instance
+        _server_instance = create_server()
+        logger.info("Server created successfully")
+
+        # Run the server - FastMCP handles the async event loop
+        _server_instance.run()
+
+    except KeyboardInterrupt:
+        logger.info("Server interrupted by user")
+    except Exception as e:
+        logger.error(f"Server error: {e}")
+        sys.exit(1)
+    finally:
+        logger.info("Server shutdown complete")
 
 
 if __name__ == "__main__":
