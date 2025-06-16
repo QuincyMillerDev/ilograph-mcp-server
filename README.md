@@ -37,7 +37,7 @@ More about using MCP server tools in VS Code's agent mode documentation.
 {
   "mcp": {
     "servers": {
-      "terraform": {
+      "ilograph": {
         "command": "docker",
         "args": [
           "run",
@@ -54,7 +54,7 @@ Optionally, you can add a similar example (i.e. without the mcp key) to a file c
 ```json
 {
   "servers": {
-    "terraform": {
+    "ilograph": {
       "command": "docker",
       "args": [
         "run",
