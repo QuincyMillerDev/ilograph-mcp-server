@@ -2,6 +2,10 @@
 
 The Ilograph MCP Server is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server that provides AI agents with comprehensive access to Ilograph documentation, validation tools, and diagram creation guidance. Transform complex architecture documentation with intelligent assistance.
 
+<a href="https://glama.ai/mcp/servers/@QuincyMillerDev/ilograph-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@QuincyMillerDev/ilograph-mcp-server/badge" alt="Ilograph MCP server" />
+</a>
+
 [![CI](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/QuincyMillerDev/ilograph-mcp-server/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.7.0+-green.svg)](https://github.com/jlowin/fastmcp)
